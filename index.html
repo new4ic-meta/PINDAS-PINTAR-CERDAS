@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#4F46E5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PINDAS" />
+  <title>PINDAS – PINTAR CERDAS | Ilmu Membina Masa Depan.</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+  <link rel="apple-touch-icon" href="./icons/icon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Pengepala Utama -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="brand-wrap">
+          <div class="brand-logo" aria-hidden="true">🌟</div>
+          <div>
+            <div class="brand-title">PINDAS – PINTAR CERDAS</div>
+            <div class="brand-slogan">Ilmu Membina Masa Depan.</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" onclick="openInstallModal()" title="Pasang Aplikasi" aria-label="Pasang Aplikasi">📲</button>
+          <button class="icon-btn" onclick="switchView('viewParent')" title="Kawalan Ibu Bapa" aria-label="Kawalan Ibu Bapa">🔒</button>
+        </div>
+      </div>
+
+      <div class="stats-strip">
+        <div class="stat-pill">
+          <span class="stat-pill-label">Jumlah Mata</span>
+          <span class="stat-pill-value" id="statScore">0</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Bintang</span>
+          <span class="stat-pill-value">⭐ <span id="statStars">0</span></span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Kemajuan</span>
+          <span class="stat-pill-value" id="statLevel">Tahap 1</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Kandungan Utama -->
+    <main class="main-content">
+      <!-- PAPARAN 1: UTAMA -->
+      <section id="viewHome" class="view-section active">
+        <div class="section-heading">
+          <span>Pilih Kategori Umur</span>
+          <span style="font-size:12px;color:var(--primary)">4 – 17 Tahun</span>
+        </div>
+        <div class="age-scroll" id="ageSelector"></div>
+
+        <div class="daily-banner">
+          <div class="daily-info">
+            <h3>📅 Cabaran Harian</h3>
+            <p id="dailyDesc">5 soalan campuran khas hari ini.</p>
+          </div>
+          <button class="daily-btn" id="dailyStartBtn" onclick="startGame('harian')">Mula (+50)</button>
+        </div>
+
+        <div class="section-heading">
+          <span>Pilih Permainan Minda</span>
+          <span style="font-size:12px;color:var(--text-muted)">8 Mod</span>
+        </div>
+        <div class="games-grid" id="gamesGrid"></div>
+
+        <!-- Ruang Iklan Placeholder Sahaja (Tiada Iklan Sebenar) -->
+        <div class="ad-placeholder" id="adPlaceholderBox">
+          <strong>Ruang Iklan Placeholder (Tidak Aktif)</strong>
+          Disediakan khas tanpa penjejakan atau pemprofilan kanak-kanak.
+        </div>
+      </section>
+
+      <!-- PAPARAN 2: ARENA PERMAINAN -->
+      <section id="viewPlay" class="view-section">
+        <div class="play-topbar">
+          <button class="back-btn" onclick="switchView('viewHome')">← Keluar</button>
+          <div class="play-badges">
+            <span class="play-badge" id="playTimerBadge" style="display:none">⏱️ 45s</span>
+            <span class="play-badge" id="playScoreBadge">⭐ 0</span>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" id="playProgress"></div>
+        </div>
+
+        <div class="question-card">
+          <div class="question-tag" id="playGameTitle">Permainan</div>
+          <div style="font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:8px" id="questionCounter">Soalan 1</div>
+          <div class="picture-stage" id="pictureStage" style="display:none"></div>
+          <div class="question-text" id="questionText">Memuatkan soalan...</div>
+          <div class="hint-box" id="hintBox" style="display:none"></div>
+        </div>
+
+        <!-- Pilihan Berganda -->
+        <div class="options-list" id="mcqContainer"></div>
+
+        <!-- Teka Perkataan Interaktif -->
+        <div id="wordContainer" style="display:none">
+          <div class="word-slots" id="wordSlots"></div>
+          <div class="letter-bank" id="letterBank"></div>
+          <div class="word-controls">
+            <button class="secondary-btn" onclick="backspaceLetter()">⌫ Padam Satu</button>
+            <button class="secondary-btn" onclick="clearWordGuess()">🔄 Kosongkan</button>
+          </div>
+        </div>
+
+        <div class="feedback-box" id="feedbackBox"></div>
+        <button class="primary-btn" id="nextQuestionBtn" style="display:none;margin-top:14px" onclick="nextQuestion()">Soalan Seterusnya ➡️</button>
+      </section>
+
+      <!-- PAPARAN 3: KEPUTUSAN SELEPAS PERMAINAN -->
+      <section id="viewResult" class="view-section">
+        <div class="result-card">
+          <div class="result-stars" id="resultStars">⭐⭐⭐</div>
+          <div class="result-title" id="resultTitle">Tahniah!</div>
+          <div class="result-subtitle" id="resultSubtitle">Permainan selesai dengan jayanya.</div>
+
+          <div class="result-grid">
+            <div class="result-box">
+              <span>Mata Sesi</span>
+              <strong id="resScore">0</strong>
+            </div>
+            <div class="result-box">
+              <span>Jawapan Tepat</span>
+              <strong id="resCorrect">0/5</strong>
+            </div>
+            <div class="result-box">
+              <span>Tahap Semasa</span>
+              <strong id="resLevel">Tahap 1</strong>
+            </div>
+          </div>
+
+          <div class="result-actions">
+            <button class="primary-btn" id="replayBtn">🔄 Main Semula</button>
+            <button class="secondary-btn" onclick="switchView('viewHome')">🏠 Kembali ke Utama</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAPARAN 4: PENCAPAIAN & LENCANA -->
+      <section id="viewAchievements" class="view-section">
+        <div class="section-heading">
+          <span>Lencana & Pencapaian</span>
+          <span style="font-size:12px;color:var(--primary)">8 Lencana</span>
+        </div>
+        <div class="card-panel">
+          <div class="badge-grid" id="badgesGrid"></div>
+        </div>
+      </section>
+
+      <!-- PAPARAN 5: REKOD & MARKAH TERTINGGI -->
+      <section id="viewRecords" class="view-section">
+        <div class="section-heading">
+          <span>Markah Tertinggi Setiap Permainan</span>
+        </div>
+        <div class="card-panel" id="highScoresList"></div>
+
+        <div class="section-heading">
+          <span>Rekod Permainan Terkini</span>
+        </div>
+        <div class="card-panel" id="historyList"></div>
+      </section>
+
+      <!-- PAPARAN 6: KAWALAN IBU BAPA (DILINDUNGI PIN) -->
+      <section id="viewParent" class="view-section">
+        <div class="section-heading">
+          <span>Kawalan Ibu Bapa</span>
+          <span style="font-size:12px;color:var(--primary)">Dilindungi PIN</span>
+        </div>
+
+        <!-- Skrin Kunci PIN -->
+        <div class="card-panel pin-box" id="parentLockPanel">
+          <div style="font-size:36px;margin-bottom:6px">🔐</div>
+          <h3 id="pinPromptTitle" style="font-size:17px;font-weight:800">Masukkan PIN Ibu Bapa</h3>
+          <p id="pinPromptSub" style="font-size:12.5px;color:var(--text-muted);margin-top:4px">Lindungi tetapan masa dan data permainan.</p>
+
+          <div class="pin-dots">
+            <span class="pin-dot" id="pinDot_0"></span>
+            <span class="pin-dot" id="pinDot_1"></span>
+            <span class="pin-dot" id="pinDot_2"></span>
+            <span class="pin-dot" id="pinDot_3"></span>
+          </div>
+          <div id="pinErrorMsg" style="color:var(--danger);font-size:12.5px;font-weight:700;min-height:18px;margin-bottom:10px"></div>
+
+          <div class="numpad">
+            <button class="num-btn" onclick="pressPinKey(1)">1</button>
+            <button class="num-btn" onclick="pressPinKey(2)">2</button>
+            <button class="num-btn" onclick="pressPinKey(3)">3</button>
+            <button class="num-btn" onclick="pressPinKey(4)">4</button>
+            <button class="num-btn" onclick="pressPinKey(5)">5</button>
+            <button class="num-btn" onclick="pressPinKey(6)">6</button>
+            <button class="num-btn" onclick="pressPinKey(7)">7</button>
+            <button class="num-btn" onclick="pressPinKey(8)">8</button>
+            <button class="num-btn" onclick="pressPinKey(9)">9</button>
+            <button class="num-btn" onclick="clearPinInput()" style="font-size:13px">Padam</button>
+            <button class="num-btn" onclick="pressPinKey(0)">0</button>
+            <button class="num-btn" onclick="switchView('viewHome')" style="font-size:13px">Batal</button>
+          </div>
+        </div>
+
+        <!-- Panel Tetapan Ibu Bapa -->
+        <div class="card-panel" id="parentDashboardPanel" style="display:none">
+          <div class="setting-row">
+            <div>
+              <strong style="font-size:14px;display:block">Had Masa Bermain Harian</strong>
+              <span id="todayUsageText" style="font-size:12px;color:var(--text-muted)">0 minit digunakan hari ini</span>
+            </div>
+            <select class="setting-select" id="timeLimitSelect" onchange="updateTimeLimit(this.value)">
+              <option value="15">15 Minit</option>
+              <option value="30">30 Minit</option>
+              <option value="45">45 Minit</option>
+              <option value="60">60 Minit</option>
+              <option value="0">Tiada Had</option>
+            </select>
+          </div>
+
+          <div class="setting-row">
+            <div>
+              <strong style="font-size:14px;display:block">Ruang Placeholder Iklan</strong>
+              <span style="font-size:12px;color:var(--text-muted)">Paparan kotak placeholder sahaja</span>
+            </div>
+            <select class="setting-select" id="adToggleSelect" onchange="updateAdSetting(this.value)">
+              <option value="on">Papar</option>
+              <option value="off">Sembunyi</option>
+            </select>
+          </div>
+
+          <div class="setting-row">
+            <div>
+              <strong style="font-size:14px;display:block">Keselamatan & Privasi</strong>
+              <span style="font-size:12px;color:var(--text-muted)">Tiada sembang terbuka. Data disimpan setempat pada peranti ini sahaja.</span>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+            <button class="secondary-btn" onclick="startChangePin()">🔑 Tukar PIN 4-Digit</button>
+            <button class="secondary-btn" onclick="lockParentPanel()">🔒 Kunci Semula Kawalan Ibu Bapa</button>
+            <button class="danger-btn" onclick="resetAllGameData()">🗑️ Tetapkan Semula Semua Data Permainan</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Navigasi Bawah -->
+    <nav class="bottom-nav" aria-label="Navigasi Utama">
+      <button class="nav-item active" data-view="viewHome" onclick="switchView('viewHome')">
+        <span class="nav-icon">🎮</span>
+        <span>Permainan</span>
+      </button>
+      <button class="nav-item" data-view="viewAchievements" onclick="switchView('viewAchievements')">
+        <span class="nav-icon">🏅</span>
+        <span>Lencana</span>
+      </button>
+      <button class="nav-item" data-view="viewRecords" onclick="switchView('viewRecords')">
+        <span class="nav-icon">📊</span>
+        <span>Rekod</span>
+      </button>
+      <button class="nav-item" data-view="viewParent" onclick="switchView('viewParent')">
+        <span class="nav-icon">🛡️</span>
+        <span>Ibu Bapa</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Modal Pemasangan PWA -->
+  <div class="modal-overlay" id="installModal">
+    <div class="modal-card">
+      <div style="font-size:40px;margin-bottom:8px">📲</div>
+      <h3>Pasang PINDAS – PINTAR CERDAS</h3>
+      <p style="text-align:left;line-height:1.6">
+        <strong>iPhone / iPad (Safari):</strong><br/>
+        1. Tekan ikon <strong>Kongsi (Share)</strong> di bar bawah Safari.<br/>
+        2. Pilih <strong>Tambah ke Skrin Utama (Add to Home Screen)</strong>.<br/><br/>
+        <strong>Android (Chrome):</strong><br/>
+        1. Tekan menu <strong>⋮</strong> di penjuru atas pelayar.<br/>
+        2. Pilih <strong>Pasang Apl / Tambah ke Skrin Utama</strong>.
+      </p>
+      <button class="primary-btn" onclick="closeInstallModal()">Faham</button>
+    </div>
+  </div>
+
+  <!-- Modal Had Masa Tamat -->
+  <div class="modal-overlay" id="timeLimitModal">
+    <div class="modal-card">
+      <div style="font-size:42px;margin-bottom:8px">⏰</div>
+      <h3>Masa Bermain Hari Ini Tamat</h3>
+      <p>Anda telah mencapai had masa bermain harian yang ditetapkan oleh ibu bapa. Rehatkan mata anda dahulu!</p>
+      <button class="primary-btn" onclick="closeTimeLimitModal()">Kembali ke Utama</button>
+    </div>
+  </div>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
