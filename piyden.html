@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b1b">
+<title>PIYDEN ARCADE V2.0 — NEON RUSH</title>
+<style>
+:root{color-scheme:dark;--cyan:#43eaff;--blue:#318cff;--pink:#ff477e;--gold:#ffd34e}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100svh;display:grid;place-items:center;font-family:system-ui,sans-serif;color:#f4f7ff;background:radial-gradient(ellipse at 50% 0%,#172a59,#090f25 50%,#050713);overflow:hidden}
+.app{width:min(100%,560px);padding:clamp(12px,3vw,24px);padding-bottom:max(14px,env(safe-area-inset-bottom))}
+header{text-align:center;margin-bottom:14px}
+.brand{font-size:clamp(1.45rem,6vw,2.2rem);font-weight:950;letter-spacing:.12em;color:var(--cyan);text-shadow:0 0 18px #25baff88}
+.sub{font-size:.72rem;letter-spacing:.28em;color:#a9b9df;margin-top:3px}
+.panel{background:rgba(14,23,52,.9);border:1px solid #5a8bff55;border-radius:22px;padding:clamp(12px,3vw,18px);box-shadow:0 18px 55px #0008}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#080f26;border:1px solid #344b7d;border-radius:14px;padding:9px 5px;text-align:center}
+.label{font-size:.65rem;color:#9fb2df;letter-spacing:.12em}
+.value{font-size:clamp(1.15rem,5vw,1.55rem);font-weight:850;margin-top:2px}
+#score{color:var(--cyan)}#timer{color:white}#best{color:var(--gold)}
+.combo{text-align:center;margin:4px 0 12px;color:#c5d5ff}.combo strong{color:var(--gold);font-size:1.2rem}
+.controls{display:flex;gap:9px;margin-bottom:12px}
+button{font:inherit;cursor:pointer;touch-action:manipulation}
+.control{flex:1;border:1px solid #4d70b5;background:#101c3c;color:white;border-radius:12px;padding:10px 8px;font-weight:700}
+#gameArea{height:clamp(300px,55vh,470px);min-height:280px;position:relative;overflow:hidden;border-radius:18px;border:1px solid #4d7cff88;background:radial-gradient(circle at center,#142750,#09142c 65%,#070d20);isolation:isolate;touch-action:manipulation}
+#gameArea::before{content:"";position:absolute;inset:0;background-image:linear-gradient(#4c80ff12 1px,transparent 1px),linear-gradient(90deg,#4c80ff12 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+.orb{position:absolute;width:clamp(42px,11vw,58px);height:clamp(42px,11vw,58px);border:0;border-radius:50%;padding:0;z-index:2;display:grid;place-items:center;font-weight:950;font-size:1rem;user-select:none;-webkit-user-select:none;touch-action:manipulation;box-shadow:0 0 14px currentColor,0 0 30px currentColor,inset 0 0 12px #fff8;animation:pop .16s ease-out}
+.orb::after{content:"";position:absolute;inset:7px;border:1px solid #ffffff9c;border-radius:50%;pointer-events:none}
+.blue{background:radial-gradient(circle at 35% 30%,#e4ffff,#45dfff 35%,#1671ff 75%);color:#d9ffff}
+.red{background:radial-gradient(circle at 35% 30%,#ffe3ec,#ff477e 38%,#a80048 80%);color:white}
+.gold{background:radial-gradient(circle at 35% 30%,#fffbd0,#ffd34e 42%,#d17a00 82%);color:#fff8d6}
+@keyframes pop{from{transform:scale(.45);opacity:.2}to{transform:scale(1);opacity:1}}
+.overlay{position:absolute;inset:0;z-index:5;display:grid;place-items:center;text-align:center;padding:20px;background:#050a19b8;backdrop-filter:blur(5px)}
+.overlay.hidden{display:none}.overlay-card{max-width:330px}
+.overlay h2{font-size:clamp(1.35rem,6vw,2rem);margin:0 0 8px;color:var(--cyan)}
+.overlay p{color:#c0cce8;line-height:1.5;margin-bottom:18px}
+.start{border:0;border-radius:999px;padding:13px 28px;font-weight:900;letter-spacing:.08em;color:#041020;background:linear-gradient(100deg,#52f2ff,#478dff);box-shadow:0 0 24px #27bfff66}
+.hint{text-align:center;color:#9aabd0;font-size:.76rem;margin-top:12px;line-height:1.5}
+footer{text-align:center;color:#64779f;font-size:.65rem;margin-top:12px;letter-spacing:.12em}
+@media(max-height:650px){.app{padding-top:8px;padding-bottom:8px}header{margin-bottom:8px}.stats{margin-bottom:8px}.combo{margin:2px 0 8px}.controls{margin-bottom:8px}#gameArea{height:clamp(240px,46vh,350px);min-height:240px}.hint{margin-top:7px}footer{margin-top:6px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header><div class="brand">PIYDEN ARCADE</div><div class="sub">V2.0 · NEON RUSH</div></header>
+<section class="panel">
+<div class="stats">
+<div class="stat"><div class="label">SKOR</div><div class="value" id="score">0</div></div>
+<div class="stat"><div class="label">MASA</div><div class="value" id="timer">45</div></div>
+<div class="stat"><div class="label">REKOD</div><div class="value" id="best">0</div></div>
+</div>
+<div class="combo">COMBO <strong id="combo">x3</strong></div>
+<div class="controls"><button class="control" id="soundBtn" type="button">🔊 Bunyi: ON</button><button class="control" id="restartBtn" type="button">↻ Mula Semula</button></div>
+<div id="gameArea"><div class="overlay" id="overlay"><div class="overlay-card"><h2 id="overlayTitle">NEON RUSH</h2><p id="overlayText">Tekan orb biru untuk +10, merah untuk -15 dan emas untuk +50. Bina combo untuk gandakan skor!</p><button class="start" id="startBtn" type="button">MULA MAIN</button></div></div></div>
+<div class="hint">🔵 BIRU +10 &nbsp; 🔴 MERAH −15 &nbsp; 🟡 EMAS +50<br>Combo bermula x3. Kelajuan meningkat apabila masa semakin suntuk.</div>
+</section>
+<footer>PIYDEN ARCADE · MAIN UNTUK KESERONOKAN</footer>
+</main>
+<script>
+(() => {
+"use strict";
+const $=id=>document.getElementById(id),gameArea=$("gameArea"),scoreEl=$("score"),timerEl=$("timer"),bestEl=$("best"),comboEl=$("combo"),overlay=$("overlay");
+let score=0,best=0,combo=3,timeLeft=45,running=false,soundOn=true,audioCtx=null,spawnTimer=null,clockTimer=null,gameEndsAt=0;
+let activePointers=new Set();
+try{best=Number(localStorage.getItem("piydenArcadeV2Best"))||0}catch(_){best=0}
+bestEl.textContent=best;
+function initAudio(){if(!soundOn)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!audioCtx)audioCtx=new C();if(audioCtx.state==="suspended"){const r=audioCtx.resume();if(r&&r.catch)r.catch(()=>{})}}catch(_){}}
+function tone(freq,duration=.09,type="sine"){if(!soundOn)return;initAudio();if(!audioCtx||audioCtx.state!=="running")return;try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.12,audioCtx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+duration);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+duration+.02)}catch(_){}}
+function updateUI(){scoreEl.textContent=score;timerEl.textContent=timeLeft;comboEl.textContent="x"+combo;bestEl.textContent=best}
+function clearAllOrbs(){gameArea.querySelectorAll(".orb").forEach(o=>o.remove())}
+function stopTimers(){if(spawnTimer!==null){clearTimeout(spawnTimer);spawnTimer=null}if(clockTimer!==null){clearInterval(clockTimer);clockTimer=null}}
+function addPoints(points){score=Math.max(0,score+points*combo);if(points>0)combo=Math.min(12,combo+1);else combo=1;updateUI()}
+function hitOrb(orb){if(!running||!orb.isConnected||orb.dataset.hit==="1")return;orb.dataset.hit="1";const kind=orb.dataset.kind;if(kind==="blue"){addPoints(10);tone(620,.07)}else if(kind==="red"){addPoints(-15);tone(180,.12,"sawtooth")}else{addPoints(50);tone(880,.14,"triangle")}orb.remove()}
+function spawnOrb(){if(!running)return;const r=gameArea.getBoundingClientRect(),size=Math.min(58,Math.max(42,r.width*.11)),orb=document.createElement("button");orb.type="button";orb.className="orb";const roll=Math.random(),kind=roll<.68?"blue":roll<.91?"red":"gold";orb.dataset.kind=kind;orb.dataset.hit="0";orb.classList.add(kind);orb.textContent=kind==="blue"?"+10":kind==="red"?"−15":"+50";orb.style.left=Math.random()*Math.max(0,r.width-size)+"px";orb.style.top=Math.random()*Math.max(0,r.height-size)+"px";orb.addEventListener("pointerdown",e=>{if(!running||activePointers.has(e.pointerId))return;activePointers.add(e.pointerId);e.preventDefault();initAudio();hitOrb(orb)});gameArea.appendChild(orb);const life=timeLeft<=5?780:timeLeft<=15?1050:timeLeft<=30?1320:1600;window.setTimeout(()=>{if(orb.isConnected)orb.remove()},life)}
+function getSpawnDelay(){return timeLeft<=5?360:timeLeft<=15?500:timeLeft<=30?680:900}
+function scheduleSpawn(){if(!running)return;spawnTimer=setTimeout(()=>{if(!running)return;spawnOrb();if(timeLeft<=15&&Math.random()<.35)spawnOrb();scheduleSpawn()},getSpawnDelay())}
+function endGame(){if(!running)return;running=false;stopTimers();clearAllOrbs();activePointers.clear();if(score>best){best=score;try{localStorage.setItem("piydenArcadeV2Best",String(best))}catch(_){}}updateUI();$("overlayTitle").textContent="MASA TAMAT";$("overlayText").textContent="Skor akhir: "+score+" · Rekod: "+best+". Cuba pecahkan rekod anda!";$("startBtn").textContent="MAIN LAGI";overlay.classList.remove("hidden");tone(260,.22,"triangle")}
+function startGame(){stopTimers();clearAllOrbs();activePointers.clear();score=0;combo=3;timeLeft=45;running=true;gameEndsAt=Date.now()+45000;updateUI();overlay.classList.add("hidden");initAudio();spawnOrb();spawnOrb();scheduleSpawn();clockTimer=setInterval(()=>{if(!running)return;const remaining=gameEndsAt-Date.now();timeLeft=Math.max(0,Math.ceil(remaining/1000));updateUI();if(remaining<=0)endGame()},100)}
+$("startBtn").addEventListener("click",()=>{initAudio();startGame()});
+$("restartBtn").addEventListener("click",()=>{initAudio();startGame()});
+$("soundBtn").addEventListener("click",()=>{soundOn=!soundOn;$("soundBtn").textContent=soundOn?"🔊 Bunyi: ON":"🔇 Bunyi: OFF";$("soundBtn").setAttribute("aria-pressed",String(soundOn));if(soundOn)initAudio()});
+window.addEventListener("pointerup",e=>activePointers.delete(e.pointerId),true);
+window.addEventListener("pointercancel",e=>activePointers.delete(e.pointerId),true);
+window.addEventListener("blur",()=>activePointers.clear());
+updateUI();
+})();
+</script>
+</body>
+</html>

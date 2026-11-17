@@ -894,3 +894,32 @@ body {
   color: var(--text-muted);
   margin-bottom: 16px;
 }
+
+
+/* PIYDEN ARCADE V2.0 integration */
+.piyden-launch-card {
+  width: 100%;
+  margin: 14px 0 18px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-align: left;
+  border: 1px solid #2563eb;
+  border-radius: 16px;
+  color: #f8fbff;
+  background: linear-gradient(120deg, #08152f, #142b55 60%, #20205a);
+  box-shadow: 0 8px 22px rgba(37, 99, 235, .18);
+}
+.piyden-launch-icon { font-size: 28px; }
+.piyden-launch-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 3px; }
+.piyden-launch-copy strong { font-size: 14px; letter-spacing: .04em; }
+.piyden-launch-copy small { font-size: 11px; color: #c4d8ff; line-height: 1.35; }
+.piyden-launch-arrow { font-size: 11px; font-weight: 900; color: #6ee7ff; white-space: nowrap; }
+.piyden-topbar { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; font-size:13px; }
+.piyden-frame-wrap { width:100%; overflow:hidden; border-radius:18px; background:#070b1b; border:1px solid #31518d; }
+.piyden-frame { display:block; width:100%; height: min(760px, calc(100dvh - 190px)); min-height:540px; border:0; background:#070b1b; }
+@media (max-width: 380px) {
+  .piyden-topbar { align-items:flex-start; flex-direction:column; }
+  .piyden-frame { min-height:520px; height:calc(100dvh - 210px); }
+}

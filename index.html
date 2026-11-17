@@ -71,10 +71,38 @@
         </div>
         <div class="games-grid" id="gamesGrid"></div>
 
+        <button class="piyden-launch-card" type="button" onclick="switchView('viewPiyden')">
+          <span class="piyden-launch-icon">⚡</span>
+          <span class="piyden-launch-copy">
+            <strong>PIYDEN ARCADE V2.0</strong>
+            <small>NEON RUSH · Orb biru +10 · merah −15 · emas +50</small>
+          </span>
+          <span class="piyden-launch-arrow">MAIN →</span>
+        </button>
+
+
         <!-- Ruang Iklan Placeholder Sahaja (Tiada Iklan Sebenar) -->
         <div class="ad-placeholder" id="adPlaceholderBox">
           <strong>Ruang Iklan Placeholder (Tidak Aktif)</strong>
           Disediakan khas tanpa penjejakan atau pemprofilan kanak-kanak.
+        </div>
+      </section>
+
+
+      <!-- PAPARAN 7: PIYDEN ARCADE V2.0 -->
+      <section id="viewPiyden" class="view-section">
+        <div class="piyden-topbar">
+          <button class="back-btn" type="button" onclick="switchView('viewHome')">← Kembali ke PINDAS</button>
+          <strong>⚡ PIYDEN ARCADE V2.0</strong>
+        </div>
+        <div class="piyden-frame-wrap">
+          <iframe
+            src="./piyden.html"
+            title="PIYDEN ARCADE V2.0 NEON RUSH"
+            class="piyden-frame"
+            loading="lazy"
+            allow="autoplay"
+          ></iframe>
         </div>
       </section>
 

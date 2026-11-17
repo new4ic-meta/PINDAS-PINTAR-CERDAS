@@ -1,10 +1,11 @@
-const CACHE_NAME = 'pindas-cache-v1.0.0';
+const CACHE_NAME = 'pindas-cache-v1.1.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './styles.css',
   './data.js',
   './app.js',
+  './piyden.html',
   './manifest.json',
   './icons/icon.svg'
 ];
