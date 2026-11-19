@@ -108,6 +108,8 @@ function renderHome() {
       ${ag.label}
     </button>
   `).join('');
+  const schoolProgress = document.getElementById('schoolProgressText');
+  if (schoolProgress) schoolProgress.textContent = state.gamesPlayed ? `${state.gamesPlayed} kelas diselesaikan` : 'Mulakan kelas pertama!';
 
   const today = new Date().toISOString().slice(0, 10);
   const dailyDone = state.dailyCompletedDate === today;
@@ -156,26 +158,36 @@ function shuffleArray(arr) {
   return copy;
 }
 
+function randomizeQuestionOptions(question) {
+  const copy = { ...question };
+  if (Array.isArray(copy.opts) && Number.isInteger(copy.ans)) {
+    const correctAnswer = copy.opts[copy.ans];
+    copy.opts = shuffleArray(copy.opts);
+    copy.ans = copy.opts.indexOf(correctAnswer);
+  }
+  return copy;
+}
+
 function buildQuestionsForGame(gameId, age) {
+  let pool;
   if (gameId === 'kepantasan') {
-    const pool = [
+    pool = [
       ...QUESTION_BANK.pengetahuan[age],
       ...QUESTION_BANK.matematik[age],
       ...QUESTION_BANK.logik[age]
     ];
-    return shuffleArray(pool);
+  } else if (gameId === 'harian') {
+    // Satu soalan rawak daripada setiap bidang — bukan soalan pertama yang tetap.
+    pool = ['pengetahuan', 'matematik', 'logik', 'gambar', 'tekateki']
+      .map((category) => {
+        const categoryQuestions = QUESTION_BANK[category][age] || [];
+        return categoryQuestions.length ? shuffleArray(categoryQuestions)[0] : null;
+      }).filter(Boolean);
+  } else {
+    pool = QUESTION_BANK[gameId][age] || [];
   }
-  if (gameId === 'harian') {
-    const pool = [
-      QUESTION_BANK.pengetahuan[age][0],
-      QUESTION_BANK.matematik[age][0],
-      QUESTION_BANK.logik[age][0],
-      QUESTION_BANK.gambar[age][0],
-      QUESTION_BANK.tekateki[age][0]
-    ];
-    return shuffleArray(pool);
-  }
-  return shuffleArray(QUESTION_BANK[gameId][age]);
+  // Set soalan dan pilihan jawapan diacak setiap kali sesi bermula.
+  return shuffleArray(pool).map(randomizeQuestionOptions);
 }
 
 /* Mula Permainan */

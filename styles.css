@@ -923,3 +923,30 @@ body {
   .piyden-topbar { align-items:flex-start; flex-direction:column; }
   .piyden-frame { min-height:520px; height:calc(100dvh - 210px); }
 }
+
+
+/* KAMPUS PINDAS — pengalaman sekolah kedua */
+.school-hub {
+  margin: 4px 0 18px; padding: 17px; border-radius: 22px; color: #fff;
+  background: linear-gradient(145deg, #18265c 0%, #3546a8 55%, #1679a8 100%);
+  box-shadow: 0 10px 24px rgba(30, 64, 175, .18);
+}
+.school-hub-head { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.school-eyebrow { display:inline-block; font-size:10px; font-weight:900; letter-spacing:.12em; color:#c7d2fe; margin-bottom:5px; }
+.school-hub h2 { font-size:19px; line-height:1.2; font-weight:900; }
+.school-hub-head p { font-size:11px; color:#e0e7ff; margin-top:5px; max-width:270px; }
+.school-seal { flex:0 0 52px; width:52px; height:52px; display:grid; place-items:center; border-radius:17px; background:rgba(255,255,255,.15); font-size:28px; }
+.school-progress-row { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:15px 0 10px; padding:10px 12px; border-radius:12px; background:rgba(255,255,255,.12); font-size:11px; }
+.school-progress-row strong { color:#fde68a; text-align:right; }
+.school-subject-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+.school-subject { display:flex; flex-direction:column; align-items:flex-start; gap:3px; padding:12px; min-height:100px; border:1px solid rgba(255,255,255,.2); border-radius:14px; background:rgba(255,255,255,.96); color:#1e293b; text-align:left; cursor:pointer; }
+.school-subject span { font-size:22px; }
+.school-subject b { font-size:12px; }
+.school-subject small { font-size:10px; color:#64748b; }
+.school-note { margin-top:11px; font-size:10px; line-height:1.5; color:#e0e7ff; }
+.revenue-launch-card { display:flex; align-items:center; gap:11px; margin:12px 0; padding:13px; border:1px solid #e9d5ff; border-radius:16px; background:linear-gradient(110deg,#fff 0%,#faf5ff 100%); color:#4c1d95; text-decoration:none; box-shadow:0 5px 14px rgba(109,40,217,.07); }
+.revenue-launch-card > span:first-child { font-size:25px; }
+.revenue-launch-card > span:nth-child(2) { display:flex; flex:1; flex-direction:column; gap:3px; }
+.revenue-launch-card strong { font-size:12px; }
+.revenue-launch-card small { font-size:10px; color:#6b5a83; }
+.revenue-launch-card b { font-size:10px; white-space:nowrap; color:#7c3aed; }

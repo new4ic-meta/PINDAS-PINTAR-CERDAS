@@ -1,7 +1,9 @@
-const CACHE_NAME = 'pindas-cache-v1.1.0';
+const CACHE_NAME = 'pindas-cache-v1.3.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
+  './pindas-revenue.html',
+  './pindas-revenue.css',
   './styles.css',
   './data.js',
   './app.js',
