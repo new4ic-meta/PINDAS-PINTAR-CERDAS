@@ -1,71 +1,135 @@
 /* =========================================================
    PINDAS – PINTAR CERDAS
-   APP.JS – VERSI PEMBAIKAN KESELURUHAN
-   Umur 4–17 Tahun
+   APP.JS — FULL REPLACEMENT
+   Fix: pemilihan umur, bank soalan, randomizer dan sesi kuiz
    ========================================================= */
 
-(() => {
+(function () {
   'use strict';
 
-  // Pastikan data.js dimuatkan terlebih dahulu.
-  if (
-    typeof AGE_GROUPS === 'undefined' ||
-    typeof GAMES_CATALOG === 'undefined' ||
-    typeof QUESTION_BANK === 'undefined'
-  ) {
-    console.error('[PINDAS] Data permainan tidak dijumpai.');
-    return;
-  }
-
-  const $ = id => document.getElementById(id);
+  /* =========================
+     1. KONFIGURASI
+  ========================= */
 
   const STORAGE = {
-    score: 'pindas_score',
-    stars: 'pindas_stars',
-    records: 'pindas_records',
-    history: 'pindas_history',
-    badges: 'pindas_badges',
-    age: 'pindas_age',
+    age: 'pindas_selected_age',
+    stats: 'pindas_v4_stats',
+    badges: 'pindas_v4_badges',
+    history: 'pindas_v4_history',
     pin: 'pindas_parent_pin',
-    limit: 'pindas_time_limit',
-    usage: 'pindas_daily_usage',
-    ad: 'pindas_ad_setting',
-    played: 'pindas_played_games'
+    timeLimit: 'pindas_time_limit',
+    adSetting: 'pindas_ad_setting',
+    dailyUsage: 'pindas_daily_usage'
   };
 
-  const QUESTION_COUNT = 5;
-  const SPEED_SECONDS = 45;
-  const DEFAULT_PIN = '1234';
+  const DEFAULT_AGE = '4-6';
+  const QUESTIONS_PER_GAME = 5;
+  const SPEED_DURATION = 45;
 
-  let selectedAge = localStorage.getItem(STORAGE.age) || '4-6';
+  const AGE_GROUPS = window.AGE_GROUPS || [
+    { id: '4-6', label: '4–6 Tahun' },
+    { id: '7-9', label: '7–9 Tahun' },
+    { id: '10-12', label: '10–12 Tahun' },
+    { id: '13-15', label: '13–15 Tahun' },
+    { id: '16-17', label: '16–17 Tahun' }
+  ];
 
-  let session = {
-    gameId: null,
-    questions: [],
-    index: 0,
-    score: 0,
-    correct: 0,
-    answered: false,
-    usedQuestions: new Set(),
-    startTime: 0
+  const GAMES_CATALOG = window.GAMES_CATALOG || [];
+
+  const BADGES_DATA = window.BADGES_DATA || [];
+
+  const QUESTION_BANK = window.QUESTION_BANK || {};
+
+  const GAME_NAMES = {
+    pengetahuan: 'Pengetahuan Am',
+    matematik: 'Matematik',
+    perkataan: 'Permainan Perkataan',
+    logik: 'Logik',
+    kepantasan: 'Kepantasan',
+    harian: 'Cabaran Harian',
+    gambar: 'Teka Gambar',
+    tekateki: 'Teka-teki'
   };
 
-  let wordAnswer = [];
-  let wordLetters = [];
-  let speedTimer = null;
-  let speedRemaining = SPEED_SECONDS;
-  let usageTimer = null;
-  let dailyBonus = false;
+  const CATEGORY_IDS = [
+    'pengetahuan',
+    'matematik',
+    'perkataan',
+    'logik',
+    'gambar',
+    'tekateki'
+  ];
+
+  /* =========================
+     2. STATE PERMAINAN
+  ========================= */
+
+  let selectedAge = load(STORAGE.age, DEFAULT_AGE);
+
+  let currentGame = null;
+  let currentQuestions = [];
+  let currentQuestionIndex = 0;
+  let currentQuestion = null;
+
+  let score = 0;
+  let correctAnswers = 0;
+  let answered = false;
+
+  let wordSlots = [];
+  let letterBank = [];
+
+  let timerInterval = null;
+  let speedTimeLeft = SPEED_DURATION;
+  let sessionStartTime = 0;
+  let sessionElapsed = 0;
+
+  let speedMode = false;
+  let dailyMode = false;
+
+  let lastGameId = null;
   let pinInput = '';
-  let pinChangeMode = false;
-  let currentView = 'viewHome';
+  let changingPin = false;
+  let newPinFirstEntry = '';
 
-  /* =========================================================
-     UTILITI
-     ========================================================= */
+  let stats = load(STORAGE.stats, {
+    totalScore: 0,
+    totalCorrect: 0,
+    totalGames: 0,
+    level: 1,
+    stars: 0,
+    bestScore: 0
+  });
+
+  let badges = load(STORAGE.badges, []);
+  let history = load(STORAGE.history, []);
+
+  /* =========================
+     3. UTILITI
+  ========================= */
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function load(key, fallback) {
+    try {
+      const value = localStorage.getItem(key);
+      return value ? JSON.parse(value) : fallback;
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function save(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.warn('[PINDAS] Gagal menyimpan data:', error);
+    }
+  }
 
   function shuffle(array) {
-    const result = [...array];
+    const result = array.slice();
 
     for (let i = result.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -76,379 +140,705 @@
   }
 
   function escapeHTML(value) {
-    return String(value ?? '').replace(/[&<>"']/g, char => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;'
-    })[char]);
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 
-  function readStorage(key, fallback) {
-    try {
-      const value = localStorage.getItem(key);
-      return value === null ? fallback : JSON.parse(value);
-    } catch {
-      return fallback;
+  function todayKey() {
+    const date = new Date();
+
+    return [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, '0'),
+      String(date.getDate()).padStart(2, '0')
+    ].join('-');
+  }
+
+  function getAgeLabel(ageId) {
+    const group = AGE_GROUPS.find(item => item.id === ageId);
+    return group ? group.label : ageId;
+  }
+
+  function saveAge(ageId) {
+    const valid = AGE_GROUPS.some(item => item.id === ageId);
+
+    if (!valid) return;
+
+    selectedAge = ageId;
+    save(STORAGE.age, selectedAge);
+
+    updateAgeSelector();
+    console.log('[PINDAS] Umur dipilih:', selectedAge);
+  }
+
+  /* =========================
+     4. BANK SOALAN
+  ========================= */
+
+  /*
+     Menyokong dua bentuk data:
+
+     Bentuk A:
+     QUESTION_BANK['4-6'].pengetahuan
+
+     Bentuk B:
+     QUESTION_BANK.pengetahuan['4-6']
+  */
+
+  function getAgeBank(ageId) {
+    if (!QUESTION_BANK || typeof QUESTION_BANK !== 'object') {
+      return {};
     }
-  }
 
-  function saveStorage(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.warn('[PINDAS] Gagal menyimpan data:', error);
+    if (
+      QUESTION_BANK[ageId] &&
+      typeof QUESTION_BANK[ageId] === 'object'
+    ) {
+      return QUESTION_BANK[ageId];
     }
+
+    const result = {};
+
+    CATEGORY_IDS.forEach(category => {
+      if (
+        QUESTION_BANK[category] &&
+        QUESTION_BANK[category][ageId]
+      ) {
+        result[category] = QUESTION_BANK[category][ageId];
+      }
+    });
+
+    return result;
   }
 
-  function getAgeQuestions(gameId, ageId) {
-    const game = QUESTION_BANK[gameId];
-    if (!game) return [];
+  function getCategoryQuestions(ageId, category) {
+    const ageBank = getAgeBank(ageId);
 
-    const questions = game[ageId];
-    return Array.isArray(questions) ? questions : [];
+    let questions = ageBank[category];
+
+    if (!Array.isArray(questions)) {
+      questions = [];
+    }
+
+    return questions.filter(question => {
+      return question && typeof question === 'object';
+    });
   }
 
-  function getQuestionKey(question, gameId) {
-    return gameId + '|' + (question.q || question.word || '') +
-      '|' + (question.hint || '');
+  function normalizeQuestion(question, category) {
+    const copy = JSON.parse(JSON.stringify(question));
+
+    copy.gameId = category;
+
+    if (copy.q == null && copy.question != null) {
+      copy.q = copy.question;
+    }
+
+    if (copy.opts == null && Array.isArray(copy.options)) {
+      copy.opts = copy.options;
+    }
+
+    if (copy.ans == null && copy.answer != null) {
+      copy.ans = copy.answer;
+    }
+
+    if (copy.exp == null && copy.explanation != null) {
+      copy.exp = copy.explanation;
+    }
+
+    if (category === 'perkataan') {
+      copy.word = String(copy.word || '').toUpperCase();
+      copy.hint = copy.hint || 'Susun huruf untuk membentuk perkataan.';
+    }
+
+    return copy;
   }
 
-  /* =========================================================
-     SISTEM PEMILIHAN SOALAN
-     ========================================================= */
+  /*
+     Fungsi utama pemilihan soalan.
+     Didedahkan pada window supaya fail lain boleh mengaksesnya.
+  */
 
-  function buildQuestionsForGame(gameId, ageId = selectedAge, count = QUESTION_COUNT) {
-    const bank = getAgeQuestions(gameId, ageId);
+  function buildQuestionsForGame(gameId, ageId, count) {
+    const age = AGE_GROUPS.some(item => item.id === ageId)
+      ? ageId
+      : selectedAge;
 
-    if (!bank.length) {
-      console.warn('[PINDAS] Tiada soalan:', gameId, ageId);
+    const total = Math.max(1, Number(count) || QUESTIONS_PER_GAME);
+
+    let pool = [];
+
+    if (gameId === 'harian' || gameId === 'kepantasan') {
+      CATEGORY_IDS.forEach(category => {
+        const questions = getCategoryQuestions(age, category);
+
+        questions.forEach(question => {
+          pool.push(normalizeQuestion(question, category));
+        });
+      });
+    } else {
+      const questions = getCategoryQuestions(age, gameId);
+
+      questions.forEach(question => {
+        pool.push(normalizeQuestion(question, gameId));
+      });
+    }
+
+    /*
+       Jangan gunakan bank umur lain sebagai ganti.
+       Jika bank umur pilihan kosong, pulangkan array kosong.
+    */
+
+    if (pool.length === 0) {
+      console.warn(
+        '[PINDAS] Tiada soalan untuk umur',
+        age,
+        'dan kategori',
+        gameId
+      );
+
       return [];
     }
 
-    // Salin bank supaya data asal tidak berubah.
-    const pool = shuffle(bank);
+    /*
+       Fisher-Yates shuffle.
+       Soalan asal dalam data.js tidak diubah.
+    */
 
-    return pool.slice(0, Math.min(count, pool.length)).map(question => ({
-      ...question,
-      gameId,
-      questionKey: getQuestionKey(question, gameId)
-    }));
+    pool = shuffle(pool);
+
+    /*
+       Elakkan soalan yang sama dalam sesi.
+       Setiap objek disalin sebelum digunakan.
+    */
+
+    const selected = pool.slice(0, Math.min(total, pool.length));
+
+    return selected.map(question => {
+      return JSON.parse(JSON.stringify(question));
+    });
   }
 
-  // Fungsi ini turut didedahkan untuk keserasian kod lain.
   window.buildQuestionsForGame = buildQuestionsForGame;
 
-  function buildDailyQuestions(ageId) {
-    const available = [];
+  /* =========================
+     5. PAPARAN PILIHAN UMUR
+  ========================= */
 
-    Object.keys(QUESTION_BANK).forEach(gameId => {
-      getAgeQuestions(gameId, ageId).forEach(question => {
-        available.push({
-          ...question,
-          gameId,
-          questionKey: getQuestionKey(question, gameId)
-        });
-      });
-    });
+  function updateAgeSelector() {
+    const selector = $('ageSelector');
 
-    return shuffle(available).slice(0, QUESTION_COUNT);
-  }
+    if (!selector) return;
 
-  /* =========================================================
-     PAPARAN KATEGORI UMUR
-     ========================================================= */
+    /*
+       Jika elemen ialah SELECT.
+    */
 
-  function renderAgeSelector() {
-    const container = $('ageSelector');
-    if (!container) return;
+    if (selector.tagName === 'SELECT') {
+      selector.value = selectedAge;
 
-    container.innerHTML = AGE_GROUPS.map(age => `
-      <button
-        type="button"
-        class="age-btn ${age.id === selectedAge ? 'active' : ''}"
-        data-age="${age.id}"
-        aria-pressed="${age.id === selectedAge}"
-      >
-        ${escapeHTML(age.label)}
-      </button>
-    `).join('');
+      selector.onchange = function () {
+        saveAge(this.value);
+      };
 
-    container.querySelectorAll('[data-age]').forEach(button => {
-      button.addEventListener('click', () => {
-        selectedAge = button.dataset.age;
-        localStorage.setItem(STORAGE.age, selectedAge);
-        renderAgeSelector();
-        updateSchoolProgress();
-      });
-    });
-  }
-
-  /* =========================================================
-     PAPARAN SENARAI PERMAINAN
-     ========================================================= */
-
-  function renderGames() {
-    const container = $('gamesGrid');
-    if (!container) return;
-
-    container.innerHTML = GAMES_CATALOG.map(game => `
-      <button
-        type="button"
-        class="game-card"
-        onclick="startGame('${game.id}')"
-        style="--game-bg:${escapeHTML(game.bg)}"
-      >
-        <span class="game-icon">${game.icon}</span>
-        <strong>${escapeHTML(game.title)}</strong>
-        <small>${escapeHTML(game.desc)}</small>
-      </button>
-    `).join('');
-  }
-
-  /* =========================================================
-     NAVIGASI
-     ========================================================= */
-
-  function switchView(viewId) {
-    document.querySelectorAll('.view-section').forEach(view => {
-      view.classList.remove('active');
-    });
-
-    const target = $(viewId);
-    if (target) target.classList.add('active');
-
-    document.querySelectorAll('.nav-item').forEach(button => {
-      button.classList.toggle(
-        'active',
-        button.dataset.view === viewId
-      );
-    });
-
-    currentView = viewId;
-
-    if (viewId === 'viewAchievements') renderBadges();
-    if (viewId === 'viewRecords') renderRecords();
-    if (viewId === 'viewParent') openParentPanel();
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  window.switchView = switchView;
-
-  /* =========================================================
-     MULAKAN PERMAINAN
-     ========================================================= */
-
-  function startGame(gameId) {
-    stopSpeedTimer();
-
-    const game = GAMES_CATALOG.find(item => item.id === gameId);
-    if (!game) return;
-
-    if (!canPlayToday()) return;
-
-    let questions;
-
-    if (gameId === 'harian') {
-      questions = buildDailyQuestions(selectedAge);
-      dailyBonus = true;
-    } else if (gameId === 'kepantasan') {
-      questions = buildQuestionsForGame(gameId, selectedAge);
-
-      // Mod kepantasan menggunakan gabungan semua kategori
-      // supaya bank soalan lebih besar.
-      questions = [];
-
-      Object.keys(QUESTION_BANK).forEach(id => {
-        getAgeQuestions(id, selectedAge).forEach(question => {
-          questions.push({
-            ...question,
-            gameId: id,
-            questionKey: getQuestionKey(question, id)
-          });
-        });
-      });
-
-      questions = shuffle(questions);
-      dailyBonus = false;
-    } else {
-      questions = buildQuestionsForGame(gameId, selectedAge);
-      dailyBonus = false;
-    }
-
-    if (!questions.length) {
-      alert('Maaf, soalan untuk kategori ini belum tersedia.');
       return;
     }
 
-    session = {
-      gameId,
-      questions,
-      index: 0,
-      score: 0,
-      correct: 0,
-      answered: false,
-      usedQuestions: new Set(),
-      startTime: Date.now()
-    };
+    /*
+       Jika pilihan umur menggunakan BUTTON.
+    */
 
-    const title = $('playGameTitle');
-    if (title) title.textContent = game.title;
+    const buttons = selector.querySelectorAll(
+      '[data-age], button, .age-option'
+    );
 
-    const timerBadge = $('playTimerBadge');
+    buttons.forEach(button => {
+      const ageId =
+        button.dataset.age ||
+        button.value ||
+        button.getAttribute('data-value');
 
-    if (gameId === 'kepantasan') {
-      speedRemaining = SPEED_SECONDS;
+      if (!ageId) return;
 
-      if (timerBadge) {
-        timerBadge.style.display = 'inline-block';
-        timerBadge.textContent = '⏱️ ' + speedRemaining + 's';
-      }
-    } else if (timerBadge) {
-      timerBadge.style.display = 'none';
+      button.classList.toggle('active', ageId === selectedAge);
+      button.setAttribute(
+        'aria-pressed',
+        ageId === selectedAge ? 'true' : 'false'
+      );
+
+      button.onclick = function () {
+        saveAge(ageId);
+      };
+    });
+  }
+
+  function renderAgeSelector() {
+    const selector = $('ageSelector');
+
+    if (!selector) return;
+
+    if (selector.tagName === 'SELECT') {
+      selector.innerHTML = AGE_GROUPS.map(group => {
+        return `
+          <option value="${escapeHTML(group.id)}">
+            ${escapeHTML(group.label)}
+          </option>
+        `;
+      }).join('');
+
+      selector.value = selectedAge;
+
+      selector.onchange = function () {
+        saveAge(this.value);
+      };
+
+      return;
     }
 
-    switchView('viewPlay');
+    /*
+       Untuk paparan yang menggunakan butang.
+       Jika butang umur sudah tersedia dalam HTML,
+       fungsi updateAgeSelector akan mengendalikannya.
+    */
+
+    const existing = selector.querySelectorAll('[data-age]');
+
+    if (existing.length > 0) {
+      updateAgeSelector();
+      return;
+    }
+
+    selector.innerHTML = AGE_GROUPS.map(group => {
+      return `
+        <button
+          type="button"
+          class="age-option ${group.id === selectedAge ? 'active' : ''}"
+          data-age="${escapeHTML(group.id)}"
+          aria-pressed="${group.id === selectedAge}"
+        >
+          ${escapeHTML(group.label)}
+        </button>
+      `;
+    }).join('');
+
+    updateAgeSelector();
+  }
+
+  /* =========================
+     6. PAPARAN KATALOG PERMAINAN
+  ========================= */
+
+  function renderGames() {
+    const container = $('gamesGrid');
+
+    if (!container) return;
+
+    const games = GAMES_CATALOG.length
+      ? GAMES_CATALOG
+      : [
+          { id: 'pengetahuan', name: 'Pengetahuan Am' },
+          { id: 'matematik', name: 'Matematik' },
+          { id: 'perkataan', name: 'Perkataan' },
+          { id: 'logik', name: 'Logik' },
+          { id: 'kepantasan', name: 'Kepantasan' },
+          { id: 'harian', name: 'Cabaran Harian' },
+          { id: 'gambar', name: 'Teka Gambar' },
+          { id: 'tekateki', name: 'Teka-teki' }
+        ];
+
+    if (container.children.length > 0) {
+      return;
+    }
+
+    container.innerHTML = games.map(game => {
+      const name = game.name || game.title || GAME_NAMES[game.id] || game.id;
+
+      return `
+        <button
+          type="button"
+          class="game-card"
+          onclick="startGame('${escapeHTML(game.id)}')"
+        >
+          <span>${escapeHTML(name)}</span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  /* =========================
+     7. KAWALAN PAPARAN
+  ========================= */
+
+  function switchView(viewName) {
+    const targetId = viewName.startsWith('view')
+      ? viewName
+      : 'view' + viewName.charAt(0).toUpperCase() + viewName.slice(1);
+
+    document.querySelectorAll('.view-section').forEach(view => {
+      view.classList.remove('active');
+      view.style.display = 'none';
+    });
+
+    const target = $(targetId);
+
+    if (target) {
+      target.classList.add('active');
+      target.style.display = '';
+    }
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+
+      if (
+        item.dataset.view === viewName ||
+        item.dataset.view === targetId
+      ) {
+        item.classList.add('active');
+      }
+    });
+
+    if (viewName === 'achievements') {
+      renderAchievements();
+    }
+
+    if (viewName === 'records') {
+      renderRecords();
+    }
+  }
+
+  /* =========================
+     8. HAD PENGGUNAAN HARIAN
+  ========================= */
+
+  function getDailyUsage() {
+    const usage = load(STORAGE.dailyUsage, {
+      date: todayKey(),
+      seconds: 0
+    });
+
+    if (usage.date !== todayKey()) {
+      return {
+        date: todayKey(),
+        seconds: 0
+      };
+    }
+
+    return usage;
+  }
+
+  function getTimeLimit() {
+    return Number(load(STORAGE.timeLimit, 0)) || 0;
+  }
+
+  function isTimeLimitReached() {
+    const limit = getTimeLimit();
+
+    if (limit <= 0) return false;
+
+    return getDailyUsage().seconds >= limit * 60;
+  }
+
+  function updateDailyUsage(seconds) {
+    const usage = getDailyUsage();
+
+    usage.seconds += Math.max(0, Math.floor(seconds));
+
+    save(STORAGE.dailyUsage, usage);
+
+    updateParentDashboard();
+  }
+
+  /* =========================
+     9. MULAKAN PERMAINAN
+  ========================= */
+
+  function startGame(gameId) {
+    if (!gameId) return;
+
+    /*
+       Pastikan umur sah sebelum membina soalan.
+    */
+
+    if (!AGE_GROUPS.some(group => group.id === selectedAge)) {
+      selectedAge = DEFAULT_AGE;
+      save(STORAGE.age, selectedAge);
+    }
+
+    if (isTimeLimitReached()) {
+      const modal = $('timeLimitModal');
+
+      if (modal) modal.style.display = 'flex';
+
+      return;
+    }
+
+    stopTimer();
+
+    currentGame = gameId;
+    lastGameId = gameId;
+
+    speedMode = gameId === 'kepantasan';
+    dailyMode = gameId === 'harian';
+
+    currentQuestionIndex = 0;
+    currentQuestion = null;
+
+    score = 0;
+    correctAnswers = 0;
+    answered = false;
+
+    speedTimeLeft = SPEED_DURATION;
+
+    const numberOfQuestions = speedMode
+      ? 20
+      : QUESTIONS_PER_GAME;
+
+    currentQuestions = buildQuestionsForGame(
+      gameId,
+      selectedAge,
+      numberOfQuestions
+    );
+
+    if (!currentQuestions.length) {
+      alert(
+        'Maaf, belum ada soalan untuk kategori ' +
+        getAgeLabel(selectedAge) +
+        '. Sila semak bank soalan dalam data.js.'
+      );
+
+      return;
+    }
+
+    sessionStartTime = Date.now();
+    sessionElapsed = 0;
+
+    const title = $('playGameTitle');
+
+    if (title) {
+      title.textContent =
+        (GAME_NAMES[gameId] || gameId) +
+        ' • ' +
+        getAgeLabel(selectedAge);
+    }
+
+    switchView('play');
 
     renderQuestion();
 
-    if (gameId === 'kepantasan') {
+    if (speedMode) {
       startSpeedTimer();
     }
   }
 
-  window.startGame = startGame;
-
-  /* =========================================================
-     PAPAR SOALAN
-     ========================================================= */
+  /* =========================
+     10. PAPAR SOALAN
+  ========================= */
 
   function renderQuestion() {
-    const question = session.questions[session.index];
-
-    if (!question) {
+    if (currentQuestionIndex >= currentQuestions.length) {
       finishGame();
       return;
     }
 
-    session.answered = false;
+    currentQuestion = currentQuestions[currentQuestionIndex];
+    answered = false;
+
+    const question = currentQuestion;
 
     const counter = $('questionCounter');
+    const progress = $('playProgress');
     const questionText = $('questionText');
-    const hintBox = $('hintBox');
     const pictureStage = $('pictureStage');
-    const mcq = $('mcqContainer');
+    const hintBox = $('hintBox');
+    const mcqContainer = $('mcqContainer');
     const wordContainer = $('wordContainer');
-    const feedback = $('feedbackBox');
     const nextButton = $('nextQuestionBtn');
+    const feedback = $('feedbackBox');
 
     if (counter) {
       counter.textContent =
-        'Soalan ' + (session.index + 1) +
-        ' daripada ' + session.questions.length;
+        'Soalan ' +
+        (currentQuestionIndex + 1) +
+        ' / ' +
+        currentQuestions.length;
+    }
+
+    if (progress) {
+      progress.style.width =
+        ((currentQuestionIndex + 1) / currentQuestions.length * 100) + '%';
     }
 
     if (questionText) {
-      questionText.textContent = question.q || question.hint || '';
-    }
-
-    if (hintBox) {
-      if (question.hint) {
-        hintBox.style.display = 'block';
-        hintBox.textContent = '💡 Petunjuk: ' + question.hint;
-      } else {
-        hintBox.style.display = 'none';
-        hintBox.textContent = '';
-      }
+      questionText.textContent =
+        question.q ||
+        question.question ||
+        question.word ||
+        'Sila jawab soalan berikut.';
     }
 
     if (pictureStage) {
       if (question.pic) {
-        pictureStage.style.display = 'block';
-        pictureStage.textContent = question.pic;
+        pictureStage.style.display = '';
+
+        if (/^https?:\/\//i.test(question.pic) || question.pic.startsWith('data:')) {
+          pictureStage.innerHTML = `
+            <img
+              src="${escapeHTML(question.pic)}"
+              alt="Gambar soalan"
+              style="max-width:100%;max-height:220px;object-fit:contain;"
+            >
+          `;
+        } else {
+          pictureStage.textContent = question.pic;
+        }
       } else {
+        pictureStage.innerHTML = '';
         pictureStage.style.display = 'none';
-        pictureStage.textContent = '';
+      }
+    }
+
+    if (hintBox) {
+      if (question.hint) {
+        hintBox.textContent = 'Petunjuk: ' + question.hint;
+        hintBox.style.display = '';
+      } else {
+        hintBox.textContent = '';
+        hintBox.style.display = 'none';
       }
     }
 
     if (feedback) {
-      feedback.style.display = 'none';
-      feedback.innerHTML = '';
+      feedback.textContent = '';
+      feedback.className = '';
     }
 
     if (nextButton) {
       nextButton.style.display = 'none';
+      nextButton.disabled = false;
     }
 
-    const isWord = Boolean(question.word);
+    if (question.gameId === 'perkataan' || question.word) {
+      if (mcqContainer) {
+        mcqContainer.innerHTML = '';
+        mcqContainer.style.display = 'none';
+      }
 
-    if (wordContainer) {
-      wordContainer.style.display = isWord ? 'block' : 'none';
-    }
+      if (wordContainer) {
+        wordContainer.style.display = '';
+      }
 
-    if (mcq) {
-      mcq.style.display = isWord ? 'none' : 'flex';
-      mcq.innerHTML = '';
-    }
-
-    if (isWord) {
       renderWordQuestion(question);
     } else {
+      if (wordContainer) {
+        wordContainer.style.display = 'none';
+      }
+
+      if (mcqContainer) {
+        mcqContainer.style.display = '';
+      }
+
       renderMCQ(question);
     }
 
-    updatePlayProgress();
-    updatePlayScore();
+    updateScoreDisplay();
   }
 
-  /* =========================================================
-     PILIHAN JAWAPAN RAWAK
-     ========================================================= */
+  /* =========================
+     11. SOALAN OBJEKTIF
+  ========================= */
 
   function renderMCQ(question) {
     const container = $('mcqContainer');
+
     if (!container) return;
 
-    const options = question.opts || [];
+    const options = Array.isArray(question.opts)
+      ? question.opts.slice()
+      : [];
 
-    // Simpan jawapan sebenar sebelum pilihan diacak.
-    const correctAnswer = Number(question.ans);
+    if (!options.length) {
+      container.innerHTML = '<p>Soalan ini belum mempunyai pilihan jawapan.</p>';
+      return;
+    }
 
-    const shuffledOptions = shuffle(
-      options.map((text, originalIndex) => ({
-        text,
-        correct: originalIndex === correctAnswer
-      }))
-    );
+    const correctAnswer = question.ans;
 
-    container.innerHTML = shuffledOptions.map((option, index) => `
-      <button
-        type="button"
-        class="option-btn"
-        data-correct="${option.correct}"
-      >
-        <span class="option-letter">${String.fromCharCode(65 + index)}</span>
-        <span>${escapeHTML(option.text)}</span>
-      </button>
-    `).join('');
+    let correctText = null;
 
-    container.querySelectorAll('.option-btn').forEach(button => {
-      button.addEventListener('click', () => {
-        if (session.answered) return;
+    if (typeof correctAnswer === 'number') {
+      correctText = options[correctAnswer];
+    } else if (typeof correctAnswer === 'string') {
+      correctText = correctAnswer;
+    }
 
-        const isCorrect = button.dataset.correct === 'true';
+    const shuffled = shuffle(options);
 
-        answerQuestion(isCorrect, question, button);
+    question._correctText = correctText;
+
+    container.innerHTML = shuffled.map((option, index) => {
+      return `
+        <button
+          type="button"
+          class="answer-option"
+          data-answer-index="${index}"
+        >
+          ${escapeHTML(option)}
+        </button>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.answer-option').forEach(button => {
+      button.addEventListener('click', function () {
+        const chosen = shuffled[Number(this.dataset.answerIndex)];
+
+        checkMCQAnswer(chosen, correctText);
       });
     });
   }
 
-  /* =========================================================
-     SISTEM TEKA PERKATAAN
-     ========================================================= */
+  function checkMCQAnswer(chosen, correctText) {
+    if (answered) return;
+
+    answered = true;
+
+    const isCorrect = String(chosen).trim().toLowerCase() ===
+      String(correctText).trim().toLowerCase();
+
+    const buttons = document.querySelectorAll(
+      '#mcqContainer .answer-option'
+    );
+
+    buttons.forEach(button => {
+      button.disabled = true;
+
+      const value = button.textContent.trim();
+
+      if (
+        value.toLowerCase() ===
+        String(correctText).trim().toLowerCase()
+      ) {
+        button.classList.add('correct');
+      }
+
+      if (
+        value.toLowerCase() ===
+        String(chosen).trim().toLowerCase() &&
+        !isCorrect
+      ) {
+        button.classList.add('wrong');
+      }
+    });
+
+    processAnswer(isCorrect);
+  }
+
+  /* =========================
+     12. SOALAN PERKATAAN
+  ========================= */
 
   function renderWordQuestion(question) {
     const slots = $('wordSlots');
@@ -456,99 +846,80 @@
 
     if (!slots || !bank) return;
 
-    wordAnswer = [];
-    const answer = question.word.toUpperCase().split('');
+    const answer = String(question.word || '').toUpperCase();
 
-    const distractors = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-      .split('')
-      .filter(letter => !answer.includes(letter));
+    wordSlots = new Array(answer.length).fill(null);
 
-    const extraLetters = shuffle(distractors).slice(
-      0,
-      Math.min(3, Math.max(0, 10 - answer.length))
-    );
-
-    wordLetters = shuffle([...answer, ...extraLetters]).map(
-      (letter, index) => ({
+    letterBank = shuffle(
+      answer.split('').map((letter, index) => ({
         id: index,
-        letter,
-        used: false
-      })
+        letter: letter
+      }))
     );
 
-    slots.innerHTML = answer.map((letter, index) => `
-      <button
-        type="button"
-        class="word-slot"
-        data-slot="${index}"
-        aria-label="Ruang huruf ${index + 1}"
-      ></button>
-    `).join('');
+    slots.innerHTML = wordSlots.map((value, index) => {
+      return `
+        <button
+          type="button"
+          class="word-slot"
+          data-slot="${index}"
+        ></button>
+      `;
+    }).join('');
 
-    bank.innerHTML = wordLetters.map(item => `
-      <button
-        type="button"
-        class="letter-btn"
-        data-letter-id="${item.id}"
-      >${item.letter}</button>
-    `).join('');
+    bank.innerHTML = letterBank.map(item => {
+      return `
+        <button
+          type="button"
+          class="letter-button"
+          data-letter-id="${item.id}"
+        >
+          ${escapeHTML(item.letter)}
+        </button>
+      `;
+    }).join('');
 
-    bank.querySelectorAll('.letter-btn').forEach(button => {
-      button.addEventListener('click', () => {
-        selectWordLetter(Number(button.dataset.letterId));
+    bank.querySelectorAll('.letter-button').forEach(button => {
+      button.addEventListener('click', function () {
+        selectLetter(Number(this.dataset.letterId));
       });
     });
 
     slots.querySelectorAll('.word-slot').forEach(button => {
-      button.addEventListener('click', () => {
-        removeWordLetter(Number(button.dataset.slot));
+      button.addEventListener('click', function () {
+        removeLetter(Number(this.dataset.slot));
       });
     });
-
-    // Tambah butang semak kerana index.html asal
-    // hanya menyediakan butang padam dan kosongkan.
-    let checkButton = $('checkWordBtn');
-
-    if (!checkButton) {
-      checkButton = document.createElement('button');
-      checkButton.id = 'checkWordBtn';
-      checkButton.className = 'primary-btn';
-      checkButton.type = 'button';
-      checkButton.textContent = '✓ Semak Jawapan';
-
-      const controls = document.querySelector('.word-controls');
-
-      if (controls) {
-        controls.appendChild(checkButton);
-      }
-    }
-
-    checkButton.onclick = checkWordAnswer;
-    checkButton.disabled = false;
   }
 
-  function selectWordLetter(id) {
-    if (session.answered) return;
+  function selectLetter(letterId) {
+    if (answered) return;
 
-    const item = wordLetters.find(letter => letter.id === id);
-    if (!item || item.used) return;
+    const letter = letterBank.find(item => item.id === letterId);
 
-    const question = session.questions[session.index];
+    if (!letter) return;
 
-    if (wordAnswer.length >= question.word.length) return;
+    const emptySlot = wordSlots.findIndex(item => item === null);
 
-    item.used = true;
+    if (emptySlot === -1) return;
 
-    wordAnswer.push({
-      id: item.id,
-      letter: item.letter
-    });
+    wordSlots[emptySlot] = letter;
 
     updateWordDisplay();
 
-    if (wordAnswer.length === question.word.length) {
+    if (wordSlots.every(item => item !== null)) {
       checkWordAnswer();
     }
+  }
+
+  function removeLetter(slotIndex) {
+    if (answered) return;
+
+    if (wordSlots[slotIndex] === null) return;
+
+    wordSlots[slotIndex] = null;
+
+    updateWordDisplay();
   }
 
   function updateWordDisplay() {
@@ -557,794 +928,727 @@
 
     if (!slots || !bank) return;
 
-    slots.querySelectorAll('.word-slot').forEach((slot, index) => {
-      slot.textContent = wordAnswer[index]?.letter || '';
+    slots.querySelectorAll('.word-slot').forEach((button, index) => {
+      const item = wordSlots[index];
+
+      button.textContent = item ? item.letter : '';
     });
 
-    bank.querySelectorAll('.letter-btn').forEach(button => {
-      const item = wordLetters.find(
-        letter => letter.id === Number(button.dataset.letterId)
-      );
+    bank.querySelectorAll('.letter-button').forEach(button => {
+      const id = Number(button.dataset.letterId);
 
-      button.disabled = !item || item.used;
+      const used = wordSlots.some(item => item && item.id === id);
+
+      button.disabled = used;
+      button.classList.toggle('used', used);
     });
   }
 
-  function removeWordLetter(index) {
-    if (session.answered) return;
+  function checkWordAnswer() {
+    if (answered) return;
 
-    const item = wordAnswer[index];
-    if (!item) return;
+    const guess = wordSlots.map(item => item.letter).join('');
+    const answer = String(currentQuestion.word || '').toUpperCase();
 
-    const original = wordLetters.find(letter => letter.id === item.id);
-
-    if (original) original.used = false;
-
-    wordAnswer.splice(index, 1);
-    updateWordDisplay();
+    processAnswer(guess === answer);
   }
 
   function backspaceLetter() {
-    if (session.answered || !wordAnswer.length) return;
+    if (answered) return;
 
-    const item = wordAnswer.pop();
-
-    const original = wordLetters.find(letter => letter.id === item.id);
-    if (original) original.used = false;
+    for (let i = wordSlots.length - 1; i >= 0; i--) {
+      if (wordSlots[i] !== null) {
+        wordSlots[i] = null;
+        break;
+      }
+    }
 
     updateWordDisplay();
   }
-
-  window.backspaceLetter = backspaceLetter;
 
   function clearWordGuess() {
-    if (session.answered) return;
+    if (answered) return;
 
-    wordAnswer = [];
-    wordLetters.forEach(item => item.used = false);
-
+    wordSlots.fill(null);
     updateWordDisplay();
   }
 
-  window.clearWordGuess = clearWordGuess;
+  /* =========================
+     13. SEMAK JAWAPAN
+  ========================= */
 
-  function checkWordAnswer() {
-    if (session.answered) return;
-
-    const question = session.questions[session.index];
-
-    if (wordAnswer.length !== question.word.length) {
-      showFeedback(false, 'Lengkapkan semua huruf dahulu.');
+  function processAnswer(isCorrect) {
+    if (answered && currentQuestion && currentQuestion._processed) {
       return;
     }
 
-    const answer = wordAnswer.map(item => item.letter).join('');
-    const correct = answer === question.word.toUpperCase();
+    answered = true;
 
-    answerQuestion(correct, question);
-  }
-
-  /* =========================================================
-     PROSES JAWAPAN
-     ========================================================= */
-
-  function answerQuestion(isCorrect, question, selectedButton) {
-    if (session.answered) return;
-
-    session.answered = true;
+    if (currentQuestion) {
+      currentQuestion._processed = true;
+    }
 
     const feedback = $('feedbackBox');
 
     if (isCorrect) {
-      session.correct++;
-      session.score += 10;
-    }
+      score += 10;
+      correctAnswers++;
 
-    if (selectedButton) {
-      document.querySelectorAll('.option-btn').forEach(button => {
-        button.disabled = true;
-
-        if (button.dataset.correct === 'true') {
-          button.classList.add('correct');
-        } else if (button === selectedButton && !isCorrect) {
-          button.classList.add('wrong');
-        }
-      });
-    }
-
-    if (question.word) {
-      const slots = $('wordSlots');
-
-      if (slots) {
-        slots.querySelectorAll('.word-slot').forEach(slot => {
-          slot.disabled = true;
-          slot.classList.add(isCorrect ? 'correct' : 'wrong');
-        });
+      if (feedback) {
+        feedback.textContent = 'Betul! Syabas!';
+        feedback.className = 'feedback correct';
       }
-
-      const checkButton = $('checkWordBtn');
-      if (checkButton) checkButton.disabled = true;
+    } else {
+      if (feedback) {
+        feedback.textContent = 'Belum tepat. ' +
+          (currentQuestion.exp || 'Teruskan mencuba!');
+        feedback.className = 'feedback wrong';
+      }
     }
 
-    let message = isCorrect
-      ? '🎉 Betul! Tahniah!'
-      : '😊 Belum tepat. Cuba lagi pada soalan seterusnya.';
-
-    if (question.exp) {
-      message += '<br><br>📚 ' + escapeHTML(question.exp);
+    if (isCorrect && currentQuestion.exp && feedback) {
+      feedback.textContent += ' ' + currentQuestion.exp;
     }
 
-    if (feedback) {
-      feedback.innerHTML = message;
-      feedback.style.display = 'block';
-      feedback.classList.toggle('correct', isCorrect);
-      feedback.classList.toggle('wrong', !isCorrect);
-    }
-
-    updatePlayScore();
-    updatePlayProgress();
+    updateScoreDisplay();
 
     const nextButton = $('nextQuestionBtn');
 
     if (nextButton) {
-      nextButton.style.display =
-        session.gameId === 'kepantasan' ? 'none' : 'block';
+      nextButton.style.display = '';
+      nextButton.textContent =
+        currentQuestionIndex >= currentQuestions.length - 1
+          ? 'Lihat Keputusan'
+          : 'Soalan Seterusnya';
     }
 
-    if (session.gameId === 'kepantasan') {
+    if (speedMode) {
       setTimeout(() => {
-        if (currentView !== 'viewPlay') return;
-        if (session.answered) nextQuestion();
-      }, 550);
+        if (currentGame === 'kepantasan' && answered) {
+          nextQuestion();
+        }
+      }, 900);
     }
   }
 
-  function showFeedback(isCorrect, message) {
-    const feedback = $('feedbackBox');
-    if (!feedback) return;
-
-    feedback.textContent = message;
-    feedback.style.display = 'block';
-    feedback.classList.toggle('correct', isCorrect);
-    feedback.classList.toggle('wrong', !isCorrect);
-  }
-
-  /* =========================================================
-     SOALAN SETERUSNYA
-     ========================================================= */
+  /* =========================
+     14. SOALAN SETERUSNYA
+  ========================= */
 
   function nextQuestion() {
-    if (!session.gameId) return;
+    if (!currentGame) return;
 
-    if (session.gameId === 'kepantasan') {
-      // Elakkan soalan berulang sehingga bank habis.
-      session.index++;
+    currentQuestionIndex++;
 
-      if (session.index >= session.questions.length) {
-        session.questions = shuffle(session.questions);
-        session.index = 0;
+    if (currentQuestionIndex >= currentQuestions.length) {
+      if (speedMode) {
+        /*
+           Tambah satu pusingan baharu hanya selepas
+           semua soalan dalam pusingan semasa digunakan.
+        */
+
+        currentQuestions = buildQuestionsForGame(
+          'kepantasan',
+          selectedAge,
+          20
+        );
+
+        currentQuestionIndex = 0;
+
+        if (!currentQuestions.length) {
+          finishGame();
+          return;
+        }
+      } else {
+        finishGame();
+        return;
       }
-
-      renderQuestion();
-      return;
-    }
-
-    session.index++;
-
-    if (session.index >= session.questions.length) {
-      finishGame();
-      return;
     }
 
     renderQuestion();
   }
 
-  window.nextQuestion = nextQuestion;
+  /* =========================
+     15. PAPARAN MARKAH
+  ========================= */
 
-  /* =========================================================
-     KEMAS KINI MARKAH DAN PROGRESS
-     ========================================================= */
+  function updateScoreDisplay() {
+    const scoreBadge = $('playScoreBadge');
 
-  function updatePlayScore() {
-    const badge = $('playScoreBadge');
+    if (scoreBadge) {
+      scoreBadge.textContent = '⭐ ' + score;
+    }
 
-    if (badge) {
-      badge.textContent = '⭐ ' + session.score;
+    const timerBadge = $('playTimerBadge');
+
+    if (timerBadge && speedMode) {
+      timerBadge.textContent = '⏱ ' + speedTimeLeft + 's';
     }
   }
 
-  function updatePlayProgress() {
-    const progress = $('playProgress');
-    if (!progress) return;
-
-    const total = session.questions.length || 1;
-
-    const percentage = Math.min(
-      100,
-      ((session.index + (session.answered ? 1 : 0)) / total) * 100
-    );
-
-    progress.style.width = percentage + '%';
-  }
-
-  /* =========================================================
-     MOD KEPANTASAN
-     ========================================================= */
+  /* =========================
+     16. MOD KEPANTASAN
+  ========================= */
 
   function startSpeedTimer() {
-    stopSpeedTimer();
+    stopTimer();
 
-    speedTimer = setInterval(() => {
-      speedRemaining--;
+    timerInterval = setInterval(() => {
+      speedTimeLeft--;
 
-      const badge = $('playTimerBadge');
+      updateScoreDisplay();
 
-      if (badge) {
-        badge.textContent = '⏱️ ' + speedRemaining + 's';
-      }
-
-      if (speedRemaining <= 0) {
-        stopSpeedTimer();
+      if (speedTimeLeft <= 0) {
+        stopTimer();
         finishGame();
       }
     }, 1000);
   }
 
-  function stopSpeedTimer() {
-    if (speedTimer) {
-      clearInterval(speedTimer);
-      speedTimer = null;
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
     }
   }
 
-  /* =========================================================
-     TAMAT PERMAINAN
-     ========================================================= */
+  /* =========================
+     17. TAMAT PERMAINAN
+  ========================= */
 
   function finishGame() {
-    stopSpeedTimer();
+    stopTimer();
 
-    if (!session.gameId) return;
+    if (!currentGame) return;
 
-    const completedGame = session.gameId;
-    const total = session.questions.length;
-    const score = session.score;
+    sessionElapsed = Math.max(
+      0,
+      Math.floor((Date.now() - sessionStartTime) / 1000)
+    );
 
-    let bonus = 0;
+    updateDailyUsage(sessionElapsed);
 
-    if (dailyBonus && session.index >= total - 1) {
-      bonus = 50;
-    }
-
+    const bonus = dailyMode ? 50 : 0;
     const finalScore = score + bonus;
 
-    const totalScore = Number(
-      localStorage.getItem(STORAGE.score) || 0
-    ) + finalScore;
+    stats.totalScore += finalScore;
+    stats.totalCorrect += correctAnswers;
+    stats.totalGames++;
+    stats.bestScore = Math.max(stats.bestScore, finalScore);
 
-    const totalStars = Number(
-      localStorage.getItem(STORAGE.stars) || 0
-    ) + session.correct;
+    stats.stars += Math.floor(finalScore / 10);
 
-    localStorage.setItem(STORAGE.score, totalScore);
-    localStorage.setItem(STORAGE.stars, totalStars);
-
-    const records = readStorage(STORAGE.records, {});
-    records[completedGame] = Math.max(
-      records[completedGame] || 0,
-      finalScore
+    stats.level = Math.max(
+      1,
+      Math.floor(stats.totalScore / 100) + 1
     );
-    saveStorage(STORAGE.records, records);
 
-    const history = readStorage(STORAGE.history, []);
+    save(STORAGE.stats, stats);
 
-    history.unshift({
-      game: completedGame,
+    const record = {
+      game: currentGame,
+      gameName: GAME_NAMES[currentGame] || currentGame,
+      age: selectedAge,
       score: finalScore,
-      correct: session.correct,
-      total,
-      date: new Date().toISOString()
-    });
+      correct: correctAnswers,
+      total: currentQuestions.length,
+      date: new Date().toLocaleString('ms-MY')
+    };
 
-    saveStorage(STORAGE.history, history.slice(0, 50));
+    history.unshift(record);
+    history = history.slice(0, 50);
 
-    const played = readStorage(STORAGE.played, []);
-    if (!played.includes(completedGame)) {
-      played.push(completedGame);
-    }
-    saveStorage(STORAGE.played, played);
+    save(STORAGE.history, history);
 
-    updateStats();
-    checkBadges();
+    updateBadges(finalScore);
 
-    const resultScore = $('resScore');
-    const resultCorrect = $('resCorrect');
-    const resultLevel = $('resLevel');
+    const resultStars = $('resultStars');
     const resultTitle = $('resultTitle');
     const resultSubtitle = $('resultSubtitle');
+    const resScore = $('resScore');
+    const resCorrect = $('resCorrect');
+    const resLevel = $('resLevel');
 
-    if (resultScore) resultScore.textContent = finalScore;
-    if (resultCorrect) {
-      resultCorrect.textContent = session.correct + '/' + total;
-    }
+    if (resultStars) {
+      const starCount = Math.max(
+        1,
+        Math.min(3, Math.ceil(correctAnswers / Math.max(1, currentQuestions.length) * 3))
+      );
 
-    if (resultLevel) {
-      resultLevel.textContent = getLevel(totalScore);
+      resultStars.textContent = '⭐'.repeat(starCount);
     }
 
     if (resultTitle) {
       resultTitle.textContent =
-        session.correct >= Math.ceil(total / 2)
-          ? 'Tahniah!'
-          : 'Teruskan Berusaha!';
+        correctAnswers === currentQuestions.length
+          ? 'Hebat! Semua Betul!'
+          : 'Tahniah! Permainan Selesai';
     }
 
     if (resultSubtitle) {
       resultSubtitle.textContent =
-        'Anda memperoleh ' + finalScore + ' mata.' +
-        (bonus ? ' Termasuk bonus harian 50 mata!' : '');
+        getAgeLabel(selectedAge) +
+        ' • ' +
+        (GAME_NAMES[currentGame] || currentGame);
     }
 
-    const stars = $('resultStars');
-
-    if (stars) {
-      stars.textContent =
-        session.correct >= total ? '⭐⭐⭐' :
-        session.correct >= Math.ceil(total / 2) ? '⭐⭐' : '⭐';
+    if (resScore) resScore.textContent = finalScore;
+    if (resCorrect) {
+      resCorrect.textContent =
+        correctAnswers + ' / ' + currentQuestions.length;
     }
 
-    const replay = $('replayBtn');
+    if (resLevel) resLevel.textContent = stats.level;
 
-    if (replay) {
-      replay.onclick = () => startGame(completedGame);
+    updateParentDashboard();
+
+    switchView('result');
+  }
+
+  /* =========================
+     18. PENCAPAIAN
+  ========================= */
+
+  function updateBadges(finalScore) {
+    const earned = [];
+
+    if (stats.totalGames >= 1) earned.push('first_win');
+    if (stats.stars >= 10) earned.push('star_10');
+    if (stats.stars >= 30) earned.push('star_30');
+    if (stats.totalScore >= 500) earned.push('score_500');
+    if (stats.totalScore >= 1500) earned.push('score_1500');
+    if (stats.level >= 5) earned.push('level_5');
+
+    if (dailyMode) earned.push('daily_hero');
+
+    const playedGames = new Set(history.map(item => item.game));
+
+    if (CATEGORY_IDS.every(id => playedGames.has(id))) {
+      earned.push('all_rounder');
     }
 
-    recordUsage();
-    dailyBonus = false;
-
-    session.gameId = null;
-
-    switchView('viewResult');
-  }
-
-  /* =========================================================
-     STATISTIK
-     ========================================================= */
-
-  function getLevel(score) {
-    return 'Tahap ' + (Math.floor(score / 500) + 1);
-  }
-
-  function updateStats() {
-    const score = Number(localStorage.getItem(STORAGE.score) || 0);
-    const stars = Number(localStorage.getItem(STORAGE.stars) || 0);
-
-    if ($('statScore')) $('statScore').textContent = score;
-    if ($('statStars')) $('statStars').textContent = stars;
-    if ($('statLevel')) $('statLevel').textContent = getLevel(score);
-  }
-
-  /* =========================================================
-     LENCANA
-     ========================================================= */
-
-  function checkBadges() {
-    if (typeof BADGES_DATA === 'undefined') return;
-
-    const score = Number(localStorage.getItem(STORAGE.score) || 0);
-    const stars = Number(localStorage.getItem(STORAGE.stars) || 0);
-    const played = readStorage(STORAGE.played, []);
-    const records = readStorage(STORAGE.records, {});
-
-    const unlocked = readStorage(STORAGE.badges, []);
-
-    const conditions = {
-      first_win: played.length >= 1,
-      star_10: stars >= 10,
-      star_30: stars >= 30,
-      score_500: score >= 500,
-      score_1500: score >= 1500,
-      level_5: Math.floor(score / 500) + 1 >= 5,
-      daily_hero: Boolean(records.harian),
-      all_rounder: played.length >= 5
-    };
-
-    BADGES_DATA.forEach(badge => {
-      if (conditions[badge.id] && !unlocked.includes(badge.id)) {
-        unlocked.push(badge.id);
-      }
+    earned.forEach(id => {
+      if (!badges.includes(id)) badges.push(id);
     });
 
-    saveStorage(STORAGE.badges, unlocked);
+    save(STORAGE.badges, badges);
   }
 
-  function renderBadges() {
+  function renderAchievements() {
     const container = $('badgesGrid');
-    if (!container || typeof BADGES_DATA === 'undefined') return;
 
-    const unlocked = readStorage(STORAGE.badges, []);
+    if (!container) return;
+
+    if (!BADGES_DATA.length) {
+      container.innerHTML = badges.length
+        ? badges.map(id => `<div class="badge-card">🏅 ${escapeHTML(id)}</div>`).join('')
+        : '<p>Belum ada pencapaian. Jom bermain!</p>';
+
+      return;
+    }
 
     container.innerHTML = BADGES_DATA.map(badge => {
-      const earned = unlocked.includes(badge.id);
+      const earned = badges.includes(badge.id);
 
       return `
-        <div class="badge-item ${earned ? 'unlocked' : 'locked'}">
-          <div class="badge-icon">${earned ? badge.icon : '🔒'}</div>
-          <strong>${escapeHTML(badge.name)}</strong>
-          <small>${escapeHTML(badge.req)}</small>
-          <span>${earned ? 'Dibuka' : 'Belum dibuka'}</span>
+        <div class="badge-card ${earned ? 'earned' : 'locked'}">
+          <div>${earned ? '🏅' : '🔒'}</div>
+          <strong>${escapeHTML(badge.name || badge.title || badge.id)}</strong>
+          <small>${escapeHTML(badge.description || '')}</small>
         </div>
       `;
     }).join('');
   }
 
-  /* =========================================================
-     REKOD
-     ========================================================= */
+  /* =========================
+     19. REKOD PERMAINAN
+  ========================= */
 
   function renderRecords() {
-    const recordsContainer = $('highScoresList');
-    const historyContainer = $('historyList');
+    const highScores = $('highScoresList');
+    const historyList = $('historyList');
 
-    const records = readStorage(STORAGE.records, {});
-    const history = readStorage(STORAGE.history, []);
-
-    if (recordsContainer) {
-      recordsContainer.innerHTML = GAMES_CATALOG.map(game => `
-        <div class="record-row">
-          <span>${game.icon} ${escapeHTML(game.title)}</span>
-          <strong>${records[game.id] || 0} mata</strong>
-        </div>
-      `).join('');
-    }
-
-    if (historyContainer) {
-      historyContainer.innerHTML = history.length
-        ? history.slice(0, 20).map(item => {
-            const game = GAMES_CATALOG.find(g => g.id === item.game);
-
-            return `
-              <div class="record-row">
-                <span>${game ? game.icon : '🎮'}
-                  ${game ? escapeHTML(game.title) : 'Permainan'}
-                  <small>${new Date(item.date).toLocaleDateString('ms-MY')}</small>
-                </span>
-                <strong>${item.score} mata</strong>
-              </div>
-            `;
-          }).join('')
+    if (highScores) {
+      highScores.innerHTML = history.length
+        ? history.slice(0, 10).map(item => `
+            <div class="record-item">
+              <strong>${escapeHTML(item.gameName)}</strong>
+              <span>${escapeHTML(item.score)} mata</span>
+            </div>
+          `).join('')
         : '<p>Belum ada rekod permainan.</p>';
     }
+
+    if (historyList) {
+      historyList.innerHTML = history.length
+        ? history.map(item => `
+            <div class="record-item">
+              <strong>${escapeHTML(item.gameName)}</strong>
+              <span>${escapeHTML(getAgeLabel(item.age))}</span>
+              <span>${escapeHTML(item.correct)} / ${escapeHTML(item.total)}</span>
+              <span>${escapeHTML(item.score)} mata</span>
+              <small>${escapeHTML(item.date)}</small>
+            </div>
+          `).join('')
+        : '<p>Belum ada sejarah permainan.</p>';
+    }
   }
 
-  function updateSchoolProgress() {
-    const played = readStorage(STORAGE.played, []);
-    const element = $('schoolProgressText');
+  /* =========================
+     20. PANEL IBU BAPA
+  ========================= */
 
-    if (!element) return;
-
-    element.textContent = played.length
-      ? played.length + ' jenis permainan telah dicuba!'
-      : 'Mulakan kelas pertama!';
-  }
-
-  /* =========================================================
-     KAWALAN IBU BAPA
-     ========================================================= */
-
-  function openParentPanel() {
+  function showParentLock() {
     const lock = $('parentLockPanel');
     const dashboard = $('parentDashboardPanel');
 
-    if (lock) lock.style.display = 'block';
+    if (lock) lock.style.display = '';
     if (dashboard) dashboard.style.display = 'none';
+  }
 
-    pinInput = '';
-    pinChangeMode = false;
-    updatePinDots();
+  function showParentDashboard() {
+    const lock = $('parentLockPanel');
+    const dashboard = $('parentDashboardPanel');
+
+    if (lock) lock.style.display = 'none';
+    if (dashboard) dashboard.style.display = '';
+
+    updateParentDashboard();
   }
 
   function pressPinKey(number) {
     if (pinInput.length >= 4) return;
 
     pinInput += String(number);
+
     updatePinDots();
 
     if (pinInput.length === 4) {
-      setTimeout(checkPin, 150);
+      checkParentPin();
     }
   }
-
-  window.pressPinKey = pressPinKey;
 
   function updatePinDots() {
-    for (let i = 0; i < 4; i++) {
-      const dot = $('pinDot_' + i);
+    const dots = document.querySelectorAll('.pin-dot');
 
-      if (dot) {
-        dot.classList.toggle('filled', i < pinInput.length);
-      }
-    }
-  }
-
-  function checkPin() {
-    const savedPin = localStorage.getItem(STORAGE.pin) || DEFAULT_PIN;
-
-    if (pinChangeMode) {
-      localStorage.setItem(STORAGE.pin, pinInput);
-      pinChangeMode = false;
-      pinInput = '';
-
-      const error = $('pinErrorMsg');
-      if (error) error.textContent = 'PIN baharu berjaya disimpan.';
-
-      updatePinDots();
-      return;
-    }
-
-    if (pinInput === savedPin) {
-      const lock = $('parentLockPanel');
-      const dashboard = $('parentDashboardPanel');
-
-      if (lock) lock.style.display = 'none';
-      if (dashboard) dashboard.style.display = 'block';
-
-      loadParentSettings();
-    } else {
-      const error = $('pinErrorMsg');
-      if (error) error.textContent = 'PIN tidak tepat. Cuba sekali lagi.';
-
-      pinInput = '';
-      updatePinDots();
-    }
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('filled', index < pinInput.length);
+    });
   }
 
   function clearPinInput() {
     pinInput = '';
     updatePinDots();
 
-    if ($('pinErrorMsg')) {
-      $('pinErrorMsg').textContent = '';
-    }
+    const error = $('pinErrorMsg');
+
+    if (error) error.textContent = '';
   }
 
-  window.clearPinInput = clearPinInput;
+  function checkParentPin() {
+    const savedPin = String(load(STORAGE.pin, '1234'));
+
+    if (changingPin) {
+      if (!newPinFirstEntry) {
+        newPinFirstEntry = pinInput;
+        clearPinInput();
+
+        const error = $('pinErrorMsg');
+
+        if (error) {
+          error.textContent = 'Masukkan PIN baharu sekali lagi.';
+        }
+
+        return;
+      }
+
+      if (pinInput === newPinFirstEntry) {
+        save(STORAGE.pin, pinInput);
+
+        changingPin = false;
+        newPinFirstEntry = '';
+
+        clearPinInput();
+
+        const error = $('pinErrorMsg');
+
+        if (error) {
+          error.textContent = 'PIN baharu berjaya disimpan.';
+        }
+
+        return;
+      }
+
+      newPinFirstEntry = '';
+      clearPinInput();
+
+      const error = $('pinErrorMsg');
+
+      if (error) {
+        error.textContent = 'PIN tidak sama. Cuba semula.';
+      }
+
+      return;
+    }
+
+    if (pinInput === savedPin) {
+      clearPinInput();
+      showParentDashboard();
+    } else {
+      clearPinInput();
+
+      const error = $('pinErrorMsg');
+
+      if (error) {
+        error.textContent = 'PIN tidak betul.';
+      }
+    }
+  }
 
   function startChangePin() {
-    pinInput = '';
-    pinChangeMode = true;
+    changingPin = true;
+    newPinFirstEntry = '';
 
-    const title = $('pinPromptTitle');
-    const subtitle = $('pinPromptSub');
-    const lock = $('parentLockPanel');
-    const dashboard = $('parentDashboardPanel');
+    clearPinInput();
 
-    if (title) title.textContent = 'Masukkan PIN Baharu';
-    if (subtitle) subtitle.textContent = 'Masukkan 4 digit PIN baharu.';
+    const error = $('pinErrorMsg');
 
-    if (lock) lock.style.display = 'block';
-    if (dashboard) dashboard.style.display = 'none';
-
-    updatePinDots();
+    if (error) {
+      error.textContent = 'Masukkan PIN baharu 4 angka.';
+    }
   }
-
-  window.startChangePin = startChangePin;
 
   function lockParentPanel() {
-    openParentPanel();
+    changingPin = false;
+    newPinFirstEntry = '';
 
-    if ($('pinPromptTitle')) {
-      $('pinPromptTitle').textContent = 'Masukkan PIN Ibu Bapa';
-    }
-
-    if ($('pinPromptSub')) {
-      $('pinPromptSub').textContent =
-        'Lindungi tetapan masa dan data permainan.';
-    }
+    clearPinInput();
+    showParentLock();
   }
 
-  window.lockParentPanel = lockParentPanel;
+  function updateParentDashboard() {
+    const usageText = $('todayUsageText');
 
-  /* =========================================================
-     TETAPAN IBU BAPA
-     ========================================================= */
+    if (usageText) {
+      const seconds = getDailyUsage().seconds;
+      const minutes = Math.floor(seconds / 60);
 
-  function loadParentSettings() {
-    const limit = localStorage.getItem(STORAGE.limit) || '30';
-    const ad = localStorage.getItem(STORAGE.ad) || 'on';
+      usageText.textContent = minutes + ' minit';
+    }
 
-    if ($('timeLimitSelect')) $('timeLimitSelect').value = limit;
-    if ($('adToggleSelect')) $('adToggleSelect').value = ad;
+    const timeSelect = $('timeLimitSelect');
 
-    updateUsageText();
+    if (timeSelect) {
+      timeSelect.value = String(getTimeLimit());
+    }
+
+    const adSelect = $('adToggleSelect');
+
+    if (adSelect) {
+      adSelect.value = String(load(STORAGE.adSetting, true));
+    }
   }
 
   function updateTimeLimit(value) {
-    localStorage.setItem(STORAGE.limit, value);
-  }
+    const limit = Number(value);
 
-  window.updateTimeLimit = updateTimeLimit;
+    if (!Number.isFinite(limit) || limit < 0) return;
+
+    save(STORAGE.timeLimit, limit);
+    updateParentDashboard();
+  }
 
   function updateAdSetting(value) {
-    localStorage.setItem(STORAGE.ad, value);
+    save(STORAGE.adSetting, value === 'true' || value === true);
 
-    const box = $('adPlaceholderBox');
+    const adArea = document.querySelector('.ad-placeholder');
 
-    if (box) {
-      box.style.display = value === 'on' ? 'block' : 'none';
+    if (adArea) {
+      adArea.style.display =
+        (value === 'true' || value === true) ? '' : 'none';
     }
   }
 
-  window.updateAdSetting = updateAdSetting;
+  function resetAllGameData() {
+    const confirmed = confirm(
+      'Padam semua markah, rekod dan pencapaian permainan?'
+    );
 
-  /* =========================================================
-     HAD MASA BERMAIN
-     ========================================================= */
+    if (!confirmed) return;
 
-  function todayKey() {
-    return new Date().toISOString().slice(0, 10);
+    stats = {
+      totalScore: 0,
+      totalCorrect: 0,
+      totalGames: 0,
+      level: 1,
+      stars: 0,
+      bestScore: 0
+    };
+
+    badges = [];
+    history = [];
+
+    save(STORAGE.stats, stats);
+    save(STORAGE.badges, badges);
+    save(STORAGE.history, history);
+
+    renderAchievements();
+    renderRecords();
+    updateParentDashboard();
+
+    alert('Data permainan telah ditetapkan semula.');
   }
 
-  function getUsage() {
-    const data = readStorage(STORAGE.usage, {
-      date: todayKey(),
-      minutes: 0
-    });
+  /* =========================
+     21. MODAL
+  ========================= */
 
-    if (data.date !== todayKey()) {
-      return {
-        date: todayKey(),
-        minutes: 0
-      };
-    }
+  function openInstallModal() {
+    const modal = $('installModal');
 
-    return data;
+    if (modal) modal.style.display = 'flex';
   }
 
-  function updateUsageText() {
-    const element = $('todayUsageText');
-    if (!element) return;
+  function closeInstallModal() {
+    const modal = $('installModal');
 
-    const usage = getUsage();
-    element.textContent =
-      usage.minutes + ' minit digunakan hari ini';
-  }
-
-  function canPlayToday() {
-    const limit = Number(localStorage.getItem(STORAGE.limit) || 30);
-
-    if (limit === 0) return true;
-
-    const usage = getUsage();
-
-    if (usage.minutes >= limit) {
-      const modal = $('timeLimitModal');
-      if (modal) modal.classList.add('active');
-      return false;
-    }
-
-    return true;
-  }
-
-  function recordUsage() {
-    const usage = getUsage();
-    usage.minutes += 1;
-
-    saveStorage(STORAGE.usage, usage);
-    updateUsageText();
+    if (modal) modal.style.display = 'none';
   }
 
   function closeTimeLimitModal() {
     const modal = $('timeLimitModal');
 
-    if (modal) modal.classList.remove('active');
-
-    switchView('viewHome');
+    if (modal) modal.style.display = 'none';
   }
 
-  window.closeTimeLimitModal = closeTimeLimitModal;
+  /* =========================
+     22. BUTANG ULANG MAIN
+  ========================= */
 
-  /* =========================================================
-     MODAL PEMASANGAN
-     ========================================================= */
-
-  function openInstallModal() {
-    const modal = $('installModal');
-    if (modal) modal.classList.add('active');
+  function replayGame() {
+    if (lastGameId) {
+      startGame(lastGameId);
+    }
   }
 
-  window.openInstallModal = openInstallModal;
+  /* =========================
+     23. EVENT LISTENERS
+  ========================= */
 
-  function closeInstallModal() {
-    const modal = $('installModal');
-    if (modal) modal.classList.remove('active');
+  function bindEvents() {
+    const replayButton = $('replayBtn');
+
+    if (replayButton) {
+      replayButton.addEventListener('click', replayGame);
+    }
+
+    const nextButton = $('nextQuestionBtn');
+
+    if (nextButton) {
+      nextButton.addEventListener('click', nextQuestion);
+    }
+
+    document.querySelectorAll('[data-view]').forEach(button => {
+      button.addEventListener('click', function () {
+        switchView(this.dataset.view);
+      });
+    });
+
+    const timeSelect = $('timeLimitSelect');
+
+    if (timeSelect) {
+      timeSelect.addEventListener('change', function () {
+        updateTimeLimit(this.value);
+      });
+    }
+
+    const adSelect = $('adToggleSelect');
+
+    if (adSelect) {
+      adSelect.addEventListener('change', function () {
+        updateAdSetting(this.value);
+      });
+    }
   }
 
-  window.closeInstallModal = closeInstallModal;
+  /* =========================
+     24. FUNGSI GLOBAL HTML
+  ========================= */
 
-  /* =========================================================
-     RESET DATA
-     ========================================================= */
+  window.startGame = startGame;
+  window.nextQuestion = nextQuestion;
+  window.switchView = switchView;
 
-  function resetAllGameData() {
-    const confirmed = confirm(
-      'Adakah anda pasti mahu memadam semua markah, bintang, rekod dan pencapaian?'
-    );
+  window.backspaceLetter = backspaceLetter;
+  window.clearWordGuess = clearWordGuess;
 
-    if (!confirmed) return;
+  window.pressPinKey = pressPinKey;
+  window.clearPinInput = clearPinInput;
 
-    [
-      STORAGE.score,
-      STORAGE.stars,
-      STORAGE.records,
-      STORAGE.history,
-      STORAGE.badges,
-      STORAGE.played,
-      STORAGE.usage
-    ].forEach(key => localStorage.removeItem(key));
+  window.updateTimeLimit = updateTimeLimit;
+  window.updateAdSetting = updateAdSetting;
 
-    updateStats();
-    renderRecords();
-    renderBadges();
-    updateSchoolProgress();
-    updateUsageText();
-
-    alert('Semua data permainan telah ditetapkan semula.');
-    switchView('viewHome');
-  }
-
+  window.startChangePin = startChangePin;
+  window.lockParentPanel = lockParentPanel;
   window.resetAllGameData = resetAllGameData;
 
-  /* =========================================================
-     PEMBERSIHAN APABILA KELUAR
-     ========================================================= */
+  window.openInstallModal = openInstallModal;
+  window.closeInstallModal = closeInstallModal;
+  window.closeTimeLimitModal = closeTimeLimitModal;
 
-  window.addEventListener('beforeunload', () => {
-    stopSpeedTimer();
-    if (usageTimer) clearInterval(usageTimer);
-  });
+  /* =========================
+     25. INIT
+  ========================= */
 
-  /* =========================================================
-     MULAKAN APLIKASI
-     ========================================================= */
+  function init() {
+    /*
+       Pastikan umur tersimpan ialah salah satu
+       daripada lima kumpulan umur yang sah.
+    */
 
-  function initializePindas() {
+    const validAge = AGE_GROUPS.some(group => {
+      return group.id === selectedAge;
+    });
+
+    if (!validAge) {
+      selectedAge = DEFAULT_AGE;
+      save(STORAGE.age, selectedAge);
+    }
+
     renderAgeSelector();
     renderGames();
 
-    updateStats();
-    renderBadges();
+    bindEvents();
+
+    updateParentDashboard();
+    renderAchievements();
     renderRecords();
-    updateSchoolProgress();
 
-    const ad = localStorage.getItem(STORAGE.ad) || 'on';
+    /*
+       Pastikan paparan awal ialah halaman utama.
+    */
 
-    if ($('adPlaceholderBox')) {
-      $('adPlaceholderBox').style.display =
-        ad === 'on' ? 'block' : 'none';
+    const home = $('viewHome');
+
+    if (home) {
+      switchView('home');
     }
 
-    // Butang permainan semula dan paparan utama.
-    if ($('viewHome')) {
-      $('viewHome').classList.add('active');
-    }
+    /*
+       Pulihkan tetapan iklan.
+    */
 
-    // Tetapkan had masa lalai.
-    if (!localStorage.getItem(STORAGE.limit)) {
-      localStorage.setItem(STORAGE.limit, '30');
-    }
+    updateAdSetting(load(STORAGE.adSetting, true));
 
-    // Paparkan keadaan harian.
-    if ($('dailyDesc')) {
-      $('dailyDesc').textContent =
-        '5 soalan campuran khas hari ini.';
-    }
-
-    console.log('[PINDAS] Sistem berjaya dimulakan.');
-    console.log('[PINDAS] Kategori umur:', AGE_GROUPS.length);
-    console.log('[PINDAS] Mod permainan:', GAMES_CATALOG.length);
+    console.log('PINDAS berjaya dimulakan.');
+    console.log('Umur aktif:', selectedAge);
+    console.log('Bank umur aktif:', getAgeBank(selectedAge));
   }
 
-  initializePindas();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
 })();
