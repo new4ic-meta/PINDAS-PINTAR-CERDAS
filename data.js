@@ -1,256 +1,193 @@
-/* PINDAS – PINTAR CERDAS | Bank Soalan & Data Permainan (Umur 4–17 Tahun) */
-
-const AGE_GROUPS = [
-  { id: '4-6', label: '4–6 Tahun' },
-  { id: '7-9', label: '7–9 Tahun' },
-  { id: '10-12', label: '10–12 Tahun' },
-  { id: '13-15', label: '13–15 Tahun' },
-  { id: '16-17', label: '16–17 Tahun' }
-];
-
-const GAMES_CATALOG = [
-  { id: 'pengetahuan', title: 'Kuiz Pengetahuan Am', desc: 'Terokai fakta dunia, sains dan alam sekitar.', icon: '🌍', bg: '#DBEAFE', type: 'mcq' },
-  { id: 'matematik', title: 'Cabaran Matematik', desc: 'Asah kemahiran mengira dan nombor pantas.', icon: '🧮', bg: '#DCFCE7', type: 'mcq' },
-  { id: 'perkataan', title: 'Teka Perkataan', desc: 'Susun huruf menjadi perkataan yang tepat.', icon: '🔤', bg: '#FEF3C7', type: 'word' },
-  { id: 'logik', title: 'Permainan Logik', desc: 'Selesaikan corak, urutan dan penaakulan.', icon: '🧩', bg: '#F3E8FF', type: 'mcq' },
-  { id: 'kepantasan', title: 'Cabaran Kepantasan', desc: 'Jawab seberapa banyak soalan dalam 45 saat!', icon: '⚡', bg: '#FFEDD5', type: 'speed' },
-  { id: 'harian', title: 'Cabaran Harian', desc: 'Misi istimewa hari ini dengan ganjaran bonus.', icon: '📅', bg: '#FCE7F3', type: 'daily' },
-  { id: 'gambar', title: 'Teka Gambar', desc: 'Kenal pasti objek dan simbol melalui petunjuk.', icon: '🖼️', bg: '#E0F2FE', type: 'picture' },
-  { id: 'tekateki', title: 'Teka-Teki', desc: 'Uji kreativiti minda dengan teka-teki santai.', icon: '💡', bg: '#FEF9C3', type: 'mcq' }
-];
-
-const BADGES_DATA = [
-  { id: 'first_win', name: 'Langkah Pertama', req: 'Selesaikan 1 permainan', icon: '🌱' },
-  { id: 'star_10', name: 'Pengumpul Bintang', req: 'Kumpul 10 bintang', icon: '⭐' },
-  { id: 'star_30', name: 'Bintang Cemerlang', req: 'Kumpul 30 bintang', icon: '🌟' },
-  { id: 'score_500', name: 'Minda Aktif', req: 'Capai 500 jumlah mata', icon: '🧠' },
-  { id: 'score_1500', name: 'Juara Pintar', req: 'Capai 1,500 jumlah mata', icon: '🏆' },
-  { id: 'level_5', name: 'Peneroka Tahap 5', req: 'Capai Tahap 5', icon: '🚀' },
-  { id: 'daily_hero', name: 'Wira Harian', req: 'Lengkapkan Cabaran Harian', icon: '🔥' },
-  { id: 'all_rounder', name: 'Serba Boleh', req: 'Main 5 jenis permainan berbeza', icon: '👑' }
-];
-
-const QUESTION_BANK = {
-  pengetahuan: {
-    '4-6': [
-      { q: 'Apakah warna langit pada waktu siang yang cerah?', opts: ['Biru', 'Hijau', 'Ungu', 'Hitam'], ans: 0, exp: 'Langit kelihatan biru pada waktu siang apabila matahari bersinar.' },
-      { q: 'Haiwan manakah yang mengeluarkan bunyi "Meow"?', opts: ['Anjing', 'Kucing', 'Lembu', 'Itik'], ans: 1, exp: 'Kucing mengeluarkan bunyi meow.' },
-      { q: 'Berapakah bilangan tayar pada sebuah basikal biasa?', opts: ['Satu', 'Dua', 'Empat', 'Enam'], ans: 1, exp: 'Basikal mempunyai dua tayar, di hadapan dan di belakang.' },
-      { q: 'Apakah warna buah pisang yang sudah masak?', opts: ['Biru', 'Kuning', 'Merah jambu', 'Kelabu'], ans: 1, exp: 'Pisang yang masak berwarna kuning dan manis rasanya.' },
-      { q: 'Di manakah ikan hidup?', opts: ['Di atas pokok', 'Di dalam air', 'Di dalam pasir', 'Di awan'], ans: 1, exp: 'Ikan bernafas menggunakan insang dan hidup di dalam air.' }
+/* PINDAS question bank. Questions are grouped by age and subject. */
+window.PINDAS_DATA = {
+  "4-6": {
+    "Asas Nombor": [
+      {q:"Berapakah 2 + 1?",a:["2","3","4","5"],c:1},
+      {q:"Nombor selepas 4 ialah…",a:["3","5","6","7"],c:1},
+      {q:"Antara ini, yang manakah paling kecil?",a:["8","2","6","9"],c:1},
+      {q:"Berapakah 5 − 2?",a:["1","2","3","4"],c:2},
+      {q:"Ada 3 biji epal. Tambah 2 biji. Jumlahnya?",a:["4","5","6","7"],c:1},
+      {q:"Bentuk yang mempunyai tiga sisi ialah…",a:["Bulatan","Segi empat","Segi tiga","Bujur"],c:2},
+      {q:"Berapakah 1 + 1?",a:["1","2","3","4"],c:1},
+      {q:"Nombor manakah lebih besar?",a:["3","7","2","1"],c:1},
+      {q:"Berapakah 4 − 1?",a:["2","3","4","5"],c:1},
+      {q:"Berapa sisi pada sebuah segi empat?",a:["2","3","4","5"],c:2}
     ],
-    '7-9': [
-      { q: 'Apakah ibu negara Malaysia?', opts: ['Johor Bahru', 'Kuala Lumpur', 'Kuching', 'Ipoh'], ans: 1, exp: 'Kuala Lumpur ialah ibu negara Malaysia.' },
-      { q: 'Planet manakah yang paling dekat dengan Matahari?', opts: ['Bumi', 'Utarid', 'Marikh', 'Zuhal'], ans: 1, exp: 'Utarid ialah planet pertama dan paling hampir dengan Matahari.' },
-      { q: 'Apakah nama bunga kebangsaan Malaysia?', opts: ['Bunga Mawar', 'Bunga Raya', 'Bunga Melur', 'Bunga Orkid'], ans: 1, exp: 'Bunga Raya (Hibiscus rosa-sinensis) ialah bunga kebangsaan Malaysia.' },
-      { q: 'Berapakah hari dalam seminggu?', opts: ['5 hari', '6 hari', '7 hari', '8 hari'], ans: 2, exp: 'Terdapat 7 hari dalam satu minggu.' },
-      { q: 'Organ manakah yang mengepam darah ke seluruh badan?', opts: ['Paru-paru', 'Jantung', 'Perut', 'Hati'], ans: 1, exp: 'Jantung mengepam darah yang membawa oksigen ke seluruh tubuh.' }
+    "Bahasa Melayu": [
+      {q:"Pilih huruf vokal.",a:["B","M","A","T"],c:2},
+      {q:"Lawan bagi perkataan 'besar' ialah…",a:["Tinggi","Kecil","Panjang","Luas"],c:1},
+      {q:"Haiwan yang berbunyi 'meow' ialah…",a:["Kucing","Ayam","Itik","Lembu"],c:0},
+      {q:"Pilih perkataan yang betul.",a:["Sekolah","Skolah","Sekoah","Sekolh"],c:0},
+      {q:"Apakah huruf pertama bagi perkataan 'BOLA'?",a:["A","B","O","L"],c:1},
+      {q:"Ibu memasak di…",a:["Bilik air","Dapur","Garaj","Taman"],c:1},
+      {q:"Buah yang berwarna kuning dan panjang ialah…",a:["Pisang","Anggur","Tembikai","Strawberi"],c:0},
+      {q:"Pilih tanda noktah.",a:["?","! ",",","."],c:3},
+      {q:"Lawan bagi 'panas' ialah…",a:["Hangat","Sejuk","Terang","Kering"],c:1},
+      {q:"Kita membaca menggunakan…",a:["Telinga","Mata","Kaki","Hidung"],c:1}
     ],
-    '10-12': [
-      { q: 'Apakah gas yang diperlukan oleh tumbuhan untuk proses fotosintesis?', opts: ['Oksigen', 'Karbon dioksida', 'Nitrogen', 'Helium'], ans: 1, exp: 'Tumbuhan menyerap karbon dioksida dan cahaya matahari untuk menghasilkan makanan.' },
-      { q: 'Banjaran gunung terpanjang di Semenanjung Malaysia ialah...', opts: ['Banjaran Crocker', 'Banjaran Titiwangsa', 'Banjaran Bintang', 'Banjaran Kapuas'], ans: 1, exp: 'Banjaran Titiwangsa menjadi tulang belakang Semenanjung Malaysia.' },
-      { q: 'Apakah unit ukuran bagi arus elektrik?', opts: ['Volt', 'Ampere', 'Watt', 'Ohm'], ans: 1, exp: 'Ampere (A) ialah unit piawai untuk mengukur arus elektrik.' },
-      { q: 'Berapakah bilangan negeri di Malaysia?', opts: ['11', '12', '13', '14'], ans: 2, exp: 'Malaysia mempunyai 13 buah negeri dan 3 Wilayah Persekutuan.' },
-      { q: 'Haiwan mamalia manakah yang boleh terbang?', opts: ['Burung helang', 'Kelawar', 'Tupai terbang', 'Rama-rama'], ans: 1, exp: 'Kelawar ialah satu-satunya mamalia yang mampu terbang secara aktif.' }
-    ],
-    '13-15': [
-      { q: 'Apakah simbol kimia bagi unsur Emas dalam Jadual Berkala?', opts: ['Ag', 'Au', 'Fe', 'Gd'], ans: 1, exp: 'Au berasal daripada perkataan Latin "Aurum" yang bermaksud emas.' },
-      { q: 'Siapakah yang merumuskan Hukum Graviti Semesta?', opts: ['Albert Einstein', 'Isaac Newton', 'Galileo Galilei', 'Nikola Tesla'], ans: 1, exp: 'Sir Isaac Newton mengemukakan hukum graviti semesta pada abad ke-17.' },
-      { q: 'Selat manakah yang memisahkan Semenanjung Malaysia dan Pulau Sumatera?', opts: ['Selat Tebrau', 'Selat Melaka', 'Selat Sunda', 'Selat Lombok'], ans: 1, exp: 'Selat Melaka merupakan laluan perkapalan antarabangsa yang penting.' },
-      { q: 'Apakah lapisan atmosfera bumi yang melindungi kita daripada sinaran UV?', opts: ['Troposfera', 'Lapisan Ozon', 'Termosfera', 'Eksosfera'], ans: 1, exp: 'Lapisan ozon di stratosfera menyerap sebahagian besar sinaran ultraungu matahari.' },
-      { q: 'Dalam tubuh manusia, di manakah terletaknya tulang paling kecil?', opts: ['Jari kelingking', 'Telinga tengah', 'Hidung', 'Pergelangan kaki'], ans: 1, exp: 'Tulang stapes di dalam telinga tengah ialah tulang terkecil manusia.' }
-    ],
-    '16-17': [
-      { q: 'Apakah fenomena pembengkokan cahaya apabila bergerak dari satu medium ke medium lain?', opts: ['Pantulan', 'Pembiasan', 'Belauan', 'Serakan'], ans: 1, exp: 'Pembiasan berlaku kerana perubahan halaju cahaya merentasi medium berbeza ketumpatan.' },
-      { q: 'Organel sel manakah yang berfungsi menjana tenaga ATP melalui respirasi sel?', opts: ['Ribosom', 'Mitokondria', 'Lisosom', 'Jasad Golgi'], ans: 1, exp: 'Mitokondria dikenali sebagai pusat janakuasa sel eukariot.' },
-      { q: 'Apakah perjanjian yang membawa kepada pembentukan Malaysia pada tahun 1963?', opts: ['Perjanjian Pangkor', 'Perjanjian Malaysia 1963 (MA63)', 'Perjanjian London 1956', 'Perjanjian Bangkok'], ans: 1, exp: 'MA63 ditandatangani pada 9 Julai 1963 di London.' },
-      { q: 'Dalam ekonomi, apakah maksud inflasi?', opts: ['Penurunan harga umum', 'Kenaikan tingkat harga umum secara berterusan', 'Lebihan eksport negara', 'Kadar faedah sifar'], ans: 1, exp: 'Inflasi mengurangkan kuasa beli mata wang apabila harga barang meningkat secara menyeluruh.' },
-      { q: 'Apakah nama galaksi yang menempatkan Sistem Suria kita?', opts: ['Andromeda', 'Bima Sakti', 'Triangulum', 'Sombrero'], ans: 1, exp: 'Sistem Suria terletak di lengan Orion dalam galaksi Bima Sakti.' }
+    "Sains Awal": [
+      {q:"Kita bernafas menggunakan…",a:["Paru-paru","Perut","Tulang","Rambut"],c:0},
+      {q:"Matahari terbit pada waktu…",a:["Malam","Pagi","Tengah malam","Petang"],c:1},
+      {q:"Air yang membeku menjadi…",a:["Wap","Ais","Pasir","Asap"],c:1},
+      {q:"Tumbuhan memerlukan air dan…",a:["Cahaya matahari","Plastik","Minyak","Kertas"],c:0},
+      {q:"Haiwan yang hidup di dalam air ialah…",a:["Ikan","Kucing","Ayam","Arnab"],c:0},
+      {q:"Kita mendengar menggunakan…",a:["Mata","Telinga","Lidah","Kulit"],c:1},
+      {q:"Benda yang memberi cahaya pada waktu siang ialah…",a:["Bulan","Matahari","Batu","Awan"],c:1},
+      {q:"Antara ini, yang manakah sayur?",a:["Bayam","Biskut","Susu","Roti"],c:0},
+      {q:"Bahan yang boleh ditarik magnet ialah…",a:["Besi","Kain","Kertas","Kayu"],c:0},
+      {q:"Kita perlu membasuh tangan dengan…",a:["Sabun dan air","Pasir","Cat","Minyak"],c:0}
     ]
   },
-  matematik: {
-    '4-6': [
-      { q: '2 + 3 = ?', opts: ['4', '5', '6', '7'], ans: 1, exp: '2 ditambah dengan 3 bersamaan 5.' },
-      { q: '5 - 2 = ?', opts: ['2', '3', '4', '1'], ans: 1, exp: 'Jika ada 5 epal dan dimakan 2, tinggal 3 epal.' },
-      { q: 'Nombor manakah yang paling besar?', opts: ['3', '8', '5', '1'], ans: 1, exp: '8 lebih besar daripada 1, 3, dan 5.' },
-      { q: '4 + 4 = ?', opts: ['6', '7', '8', '9'], ans: 2, exp: '4 + 4 = 8.' },
-      { q: '10 - 5 = ?', opts: ['4', '5', '6', '3'], ans: 1, exp: 'Separuh daripada 10 ialah 5.' }
+  "7-9": {
+    "Matematik": [
+      {q:"Berapakah 8 × 4?",a:["24","28","32","36"],c:2},
+      {q:"Berapakah 45 + 27?",a:["62","72","82","70"],c:1},
+      {q:"Berapakah 90 − 36?",a:["54","56","64","46"],c:0},
+      {q:"Separuh daripada 18 ialah…",a:["6","8","9","12"],c:2},
+      {q:"1 meter bersamaan…",a:["10 cm","100 cm","1,000 cm","50 cm"],c:1},
+      {q:"Berapakah 7 × 6?",a:["36","40","42","48"],c:2},
+      {q:"Pukul 3:30 disebut…",a:["Tiga suku","Tiga setengah","Empat setengah","Dua setengah"],c:1},
+      {q:"Berapakah 100 ÷ 10?",a:["1","5","10","20"],c:2},
+      {q:"Nombor genap ialah…",a:["13","17","21","28"],c:3},
+      {q:"Perimeter segi empat sama sisi 5 cm ialah…",a:["10 cm","15 cm","20 cm","25 cm"],c:2}
     ],
-    '7-9': [
-      { q: '14 + 19 = ?', opts: ['31', '33', '35', '23'], ans: 1, exp: '14 + 19 = 33.' },
-      { q: '6 × 4 = ?', opts: ['20', '24', '28', '18'], ans: 1, exp: '6 darab 4 bersamaan 24.' },
-      { q: '45 - 18 = ?', opts: ['27', '37', '23', '29'], ans: 0, exp: '45 tolak 18 bersamaan 27.' },
-      { q: '36 ÷ 6 = ?', opts: ['5', '6', '7', '8'], ans: 1, exp: '36 bahagi 6 ialah 6.' },
-      { q: 'Berapakah minit dalam 1 jam setengah?', opts: ['60 minit', '75 minit', '90 minit', '100 minit'], ans: 2, exp: '60 minit + 30 minit = 90 minit.' }
+    "Bahasa Melayu": [
+      {q:"Pilih kata nama.",a:["Berlari","Cantik","Meja","Dengan"],c:2},
+      {q:"Ayat tanya biasanya diakhiri dengan…",a:["Noktah","Koma","Tanda soal","Tanda sempang"],c:2},
+      {q:"Sinonim bagi 'gembira' ialah…",a:["Sedih","Riangkan","Marah","Letih"],c:1},
+      {q:"Pilih ejaan yang betul.",a:["Aktiviti","Aktivty","Aktivitti","Aktiviti'i"],c:0},
+      {q:"Kata kerja dalam ayat 'Ali membaca buku' ialah…",a:["Ali","Membaca","Buku","Ayat"],c:1},
+      {q:"Lawan bagi 'rajin' ialah…",a:["Tekun","Malas","Cekap","Bijak"],c:1},
+      {q:"Penanda wacana yang menunjukkan sebab ialah…",a:["Kerana","Kemudian","Akhirnya","Seterusnya"],c:0},
+      {q:"Kata adjektif menerangkan…",a:["Perbuatan","Sifat","Tempat sahaja","Bilangan sahaja"],c:1},
+      {q:"Pilih ayat penyata.",a:["Siapa nama kamu?","Tolong tutup pintu.","Hari ini cuaca cerah.","Wah, cantiknya!"],c:2},
+      {q:"Penjodoh bilangan yang sesuai: se___ pisang.",a:["biji","sikat","utas","keping"],c:1}
     ],
-    '10-12': [
-      { q: 'Apakah nilai 25% daripada 200?', opts: ['25', '40', '50', '75'], ans: 2, exp: '25% ialah suku (1/4). 200 ÷ 4 = 50.' },
-      { q: '12 × 12 = ?', opts: ['124', '144', '132', '148'], ans: 1, exp: '12 kuasa dua ialah 144.' },
-      { q: 'Sebuah segi empat tepat mempunyai panjang 8 cm dan lebar 5 cm. Berapakah luasnya?', opts: ['13 cm²', '26 cm²', '40 cm²', '45 cm²'], ans: 2, exp: 'Luas = panjang × lebar = 8 × 5 = 40 cm².' },
-      { q: 'Tukarkan 3/4 kepada nombor perpuluhan.', opts: ['0.25', '0.50', '0.75', '0.80'], ans: 2, exp: '3 bahagi 4 bersamaan 0.75.' },
-      { q: 'Jika 3x = 27, apakah nilai x?', opts: ['7', '8', '9', '6'], ans: 2, exp: 'x = 27 ÷ 3 = 9.' }
-    ],
-    '13-15': [
-      { q: 'Selesaikan: -8 + 15 - 4 = ?', opts: ['-3', '3', '11', '-11'], ans: 1, exp: '-8 + 15 = 7; kemudian 7 - 4 = 3.' },
-      { q: 'Apakah nilai √169 + √25?', opts: ['16', '18', '20', '14'], ans: 1, exp: '√169 = 13 dan √25 = 5. 13 + 5 = 18.' },
-      { q: 'Sebuah segi tiga bersudut tegak mempunyai sisi 6 cm dan 8 cm. Berapakah panjang hipotenusnya?', opts: ['9 cm', '10 cm', '12 cm', '14 cm'], ans: 1, exp: 'Teorem Pythagoras: √(6² + 8²) = √(36 + 64) = √100 = 10 cm.' },
-      { q: 'Kembangkan: 3(2x - 4)', opts: ['6x - 4', '6x - 12', '5x - 12', '6x + 12'], ans: 1, exp: '3 × 2x = 6x dan 3 × (-4) = -12.' },
-      { q: 'Apakah kebarangkalian mendapat nombor genap apabila sebiji dadu adil dilambung?', opts: ['1/6', '1/3', '1/2', '2/3'], ans: 2, exp: 'Nombor genap pada dadu ialah 2, 4, 6 (3 daripada 6 = 1/2).' }
-    ],
-    '16-17': [
-      { q: 'Jika f(x) = 2x² - 3x + 1, apakah nilai f(3)?', opts: ['8', '10', '12', '16'], ans: 1, exp: 'f(3) = 2(9) - 3(3) + 1 = 18 - 9 + 1 = 10.' },
-      { q: 'Apakah nilai log₁₀(1000)?', opts: ['2', '3', '4', '10'], ans: 1, exp: '10³ = 1000, maka log₁₀(1000) = 3.' },
-      { q: 'Cari kecerunan garis lurus yang melalui titik (2, 4) dan (6, 12).', opts: ['1', '2', '3', '4'], ans: 1, exp: 'm = (12 - 4) / (6 - 2) = 8 / 4 = 2.' },
-      { q: 'Terbitan pertama bagi y = 4x³ ialah...', opts: ['4x²', '12x²', '12x³', '7x²'], ans: 1, exp: 'dy/dx = 3 × 4x^(3-1) = 12x².' },
-      { q: 'Apakah nilai sin 30° + cos 60°?', opts: ['0.5', '1.0', '1.5', '0.866'], ans: 1, exp: 'sin 30° = 0.5 dan cos 60° = 0.5; jumlahnya ialah 1.0.' }
+    "Sains": [
+      {q:"Organ utama untuk mengepam darah ialah…",a:["Paru-paru","Jantung","Perut","Otak"],c:1},
+      {q:"Haiwan yang bertelur ialah…",a:["Kucing","Lembu","Ayam","Kambing"],c:2},
+      {q:"Air berubah menjadi wap melalui proses…",a:["Pembekuan","Penyejatan","Peleburan","Kondensasi"],c:1},
+      {q:"Sumber tenaga utama bumi ialah…",a:["Bulan","Matahari","Angin sahaja","Batu"],c:1},
+      {q:"Akar tumbuhan berfungsi menyerap…",a:["Cahaya","Air dan mineral","Oksigen sahaja","Bunga"],c:1},
+      {q:"Bahan yang telus cahaya ialah…",a:["Kaca jernih","Kayu","Batu","Kadbod"],c:0},
+      {q:"Haiwan herbivor makan…",a:["Daging","Tumbuhan","Batu","Serangga sahaja"],c:1},
+      {q:"Deria untuk menghidu ialah…",a:["Mata","Hidung","Telinga","Kulit"],c:1},
+      {q:"Bumi mengelilingi…",a:["Bulan","Marikh","Matahari","Jupiter"],c:2},
+      {q:"Bayang-bayang terbentuk apabila cahaya…",a:["Dihalang objek","Menjadi bunyi","Hilang sepenuhnya","Bertukar warna"],c:0}
     ]
   },
-  perkataan: {
-    '4-6': [
-      { word: 'BUKU', hint: 'Kita membacanya untuk menimba ilmu.', exp: 'BUKU mengandungi halaman cerita dan ilmu.' },
-      { word: 'BOLA', hint: 'Berbentuk bulat dan boleh disepak.', exp: 'BOLA digunakan dalam permainan sukan.' },
-      { word: 'IKAN', hint: 'Haiwan yang berenang di dalam air.', exp: 'IKAN hidup di sungai dan laut.' },
-      { word: 'MATA', hint: 'Deria yang digunakan untuk melihat.', exp: 'Kita melihat keindahan alam dengan MATA.' },
-      { word: 'EPAL', hint: 'Buah rangup berwarna merah atau hijau.', exp: 'EPAL ialah buah yang berkhasiat.' }
+  "10-12": {
+    "Matematik": [
+      {q:"Berapakah 15% daripada 200?",a:["15","20","30","40"],c:2},
+      {q:"3/4 dalam bentuk perpuluhan ialah…",a:["0.25","0.5","0.75","1.25"],c:2},
+      {q:"Luas segi empat tepat 8 cm × 5 cm ialah…",a:["13 cm²","26 cm²","40 cm²","80 cm²"],c:2},
+      {q:"Nisbah 6:9 dalam bentuk termudah ialah…",a:["2:3","3:2","1:3","6:3"],c:0},
+      {q:"Berapakah 2.5 + 1.75?",a:["3.25","4.00","4.25","4.75"],c:2},
+      {q:"Purata bagi 4, 6 dan 8 ialah…",a:["5","6","7","8"],c:1},
+      {q:"Sudut tegak bersamaan…",a:["45°","90°","180°","360°"],c:1},
+      {q:"Berapakah 12²?",a:["24","124","144","164"],c:2},
+      {q:"Jika x + 7 = 15, nilai x ialah…",a:["6","7","8","9"],c:2},
+      {q:"1.2 km bersamaan…",a:["12 m","120 m","1,200 m","12,000 m"],c:2}
     ],
-    '7-9': [
-      { word: 'SEKOLAH', hint: 'Tempat murid belajar bersama guru.', exp: 'SEKOLAH ialah tempat menuntut ilmu dan berkawan.' },
-      { word: 'PELANGI', hint: 'Muncul di langit dengan 7 warna selepas hujan.', exp: 'PELANGI mempunyai tujuh warna yang indah.' },
-      { word: 'HARIMAU', hint: 'Haiwan belang yang menjadi lambang keberanian negara.', exp: 'HARIMAU Malaya ialah khazanah rimba negara.' },
-      { word: 'KOMPUTER', hint: 'Peranti elektronik untuk menaip dan belajar.', exp: 'KOMPUTER membantu kerja dan pembelajaran.' },
-      { word: 'ANGKASA', hint: 'Ruang luas di luar atmosfera Bumi.', exp: 'Angkasawan meneroka ruang ANGKASA.' }
+    "Sains": [
+      {q:"Proses tumbuhan membuat makanan dikenali sebagai…",a:["Respirasi","Fotosintesis","Penyahtinjaan","Pencernaan"],c:1},
+      {q:"Unit asas bagi semua benda hidup ialah…",a:["Tisu","Organ","Sel","Sistem"],c:2},
+      {q:"Planet yang paling hampir dengan Matahari ialah…",a:["Zuhal","Utarid","Bumi","Neptun"],c:1},
+      {q:"Daya yang menarik objek ke arah bumi ialah…",a:["Geseran","Magnet","Graviti","Apungan"],c:2},
+      {q:"Campuran pasir dan air boleh diasingkan melalui…",a:["Penurasan","Penyejatan sahaja","Pembekuan","Peleburan"],c:0},
+      {q:"Gas yang diperlukan untuk pembakaran ialah…",a:["Nitrogen","Oksigen","Helium","Karbon dioksida"],c:1},
+      {q:"Rantai makanan biasanya bermula dengan…",a:["Pengguna","Pengurai","Pengeluar","Pemangsa"],c:2},
+      {q:"Perubahan cecair kepada gas disebut…",a:["Kondensasi","Penyejatan","Pembekuan","Pemejalwapan"],c:1},
+      {q:"Antara berikut, yang manakah konduktor elektrik?",a:["Getah","Plastik","Kuprum","Kayu kering"],c:2},
+      {q:"Jantung manusia mempunyai…",a:["2 ruang","3 ruang","4 ruang","5 ruang"],c:2}
     ],
-    '10-12': [
-      { word: 'GRAVITI', hint: 'Daya yang menarik objek ke arah pusat Bumi.', exp: 'GRAVITI memastikan kita kekal berpijak di Bumi.' },
-      { word: 'SEJARAH', hint: 'Kajian tentang peristiwa masa lampau.', exp: 'Mempelajari SEJARAH mengajar kita menghargai masa kini.' },
-      { word: 'KREATIF', hint: 'Kebolehan mencipta idea baharu dan asli.', exp: 'Pemikiran KREATIF membantu menyelesaikan masalah secara unik.' },
-      { word: 'TENAGA', hint: 'Keupayaan untuk melakukan kerja.', exp: 'TENAGA wujud dalam pelbagai bentuk seperti suria dan kinetik.' },
-      { word: 'SAHABAT', hint: 'Rakan karib yang sentiasa menyokong.', exp: 'SAHABAT yang baik membawa pengaruh positif.' }
-    ],
-    '13-15': [
-      { word: 'ALGORITMA', hint: 'Langkah tersusun untuk menyelesaikan sesuatu masalah.', exp: 'ALGORITMA ialah asas kepada pengaturcaraan komputer.' },
-      { word: 'EKOSISTEM', hint: 'Interaksi antara hidupan dengan alam sekitarnya.', exp: 'Keseimbangan EKOSISTEM penting untuk kelestarian bumi.' },
-      { word: 'HIPOTESIS', hint: 'Andaian awal yang perlu diuji melalui eksperimen.', exp: 'HIPOTESIS dibina sebelum menjalankan penyiasatan sains.' },
-      { word: 'INOVASI', hint: 'Pembaharuan yang membawa nilai tambah.', exp: 'INOVASI memacu kemajuan teknologi dan masyarakat.' },
-      { word: 'DEMOKRASI', hint: 'Sistem pemerintahan yang dipilih oleh rakyat.', exp: 'Malaysia mengamalkan sistem DEMOKRASI berparlimen.' }
-    ],
-    '16-17': [
-      { word: 'KATALIS', hint: 'Bahan yang mempercepatkan kadar tindak balas kimia.', exp: 'KATALIS menurunkan tenaga pengaktifan sesuatu tindak balas.' },
-      { word: 'PARADIGMA', hint: 'Kerangka pemikiran atau sudut pandang utama.', exp: 'Anjakan PARADIGMA mengubah cara kita melihat sesuatu isu.' },
-      { word: 'SINTESIS', hint: 'Penggabungan pelbagai unsur membentuk satu kesatuan.', exp: 'SINTESIS maklumat memerlukan pemikiran kritis tahap tinggi.' },
-      { word: 'MOMENTUM', hint: 'Hasil darab jisim dengan halaju sesuatu objek.', exp: 'MOMENTUM diabadikan dalam perlanggaran tertutup.' },
-      { word: 'INTEGRITI', hint: 'Kejujuran dan ketelusan prinsip moral yang utuh.', exp: 'INTEGRITI adalah teras kepimpinan yang dipercayai.' }
+    "Sejarah": [
+      {q:"Malaysia mencapai kemerdekaan pada tahun…",a:["1945","1957","1963","1969"],c:1},
+      {q:"Tarikh kemerdekaan Persekutuan Tanah Melayu ialah…",a:["31 Ogos 1957","16 September 1963","1 Januari 1957","31 Ogos 1963"],c:0},
+      {q:"Pengisytiharan Malaysia berlaku pada…",a:["31 Ogos 1957","16 September 1963","10 Mei 1969","1 Januari 1960"],c:1},
+      {q:"Bendera Malaysia dikenali sebagai…",a:["Sang Saka","Jalur Gemilang","Bintang Negara","Panji Merdeka"],c:1},
+      {q:"Ibu negara Malaysia ialah…",a:["Johor Bahru","Kuching","Kuala Lumpur","Ipoh"],c:2},
+      {q:"Rukun Negara mempunyai berapa prinsip?",a:["3","4","5","6"],c:2},
+      {q:"Yang di-Pertuan Agong ialah…",a:["Ketua kerajaan negeri","Ketua Utama Negara","Ketua bandar","Ketua tentera sahaja"],c:1},
+      {q:"Parlimen Malaysia terdiri daripada Dewan Rakyat dan…",a:["Dewan Negara","Dewan Bandar","Dewan Undangan","Dewan Raja"],c:0},
+      {q:"Lagu kebangsaan Malaysia ialah…",a:["Sejahtera Malaysia","Negaraku","Tanggal 31","Warisan"],c:1},
+      {q:"Hari Malaysia disambut pada…",a:["1 Mei","31 Ogos","16 September","25 Disember"],c:2}
     ]
   },
-  logik: {
-    '4-6': [
-      { q: 'Lengkapkan corak ini: 🔴, 🔵, 🔴, 🔵, ___', opts: ['🔴', '🟢', '🟡', '🟣'], ans: 0, exp: 'Corak berselang-seli antara merah dan biru, jadi seterusnya ialah merah.' },
-      { q: 'Manakah yang TIDAK boleh terbang?', opts: ['Burung', 'Kupu-kupu', 'Gajah', 'Lebah'], ans: 2, exp: 'Gajah tidak mempunyai sayap dan berjalan di atas tanah.' },
-      { q: 'Apakah nombor selepas 7, 8, 9, ___?', opts: ['6', '10', '11', '8'], ans: 1, exp: 'Urutan nombor menaik satu demi satu: 7, 8, 9, 10.' },
-      { q: 'Jika hari ini hari Isnin, esok hari apa?', opts: ['Ahad', 'Selasa', 'Rabu', 'Jumaat'], ans: 1, exp: 'Selepas hari Isnin ialah hari Selasa.' },
-      { q: 'Objek manakah yang paling sejuk?', opts: ['Ais krim', 'Sup panas', 'Matahari', 'Unggun api'], ans: 0, exp: 'Ais krim disimpan sejuk dan beku.' }
+  "13-15": {
+    "Matematik": [
+      {q:"Selesaikan 3x − 5 = 16.",a:["5","6","7","8"],c:2},
+      {q:"Kecerunan garis melalui (0,2) dan (2,6) ialah…",a:["1","2","3","4"],c:1},
+      {q:"Faktorkan x² − 9.",a:["(x−9)(x+1)","(x−3)(x+3)","(x−1)(x+9)","(x−3)²"],c:1},
+      {q:"Kebarangkalian mendapat nombor genap pada dadu adil ialah…",a:["1/6","1/3","1/2","2/3"],c:2},
+      {q:"Luas bulatan berjari-jari r ialah…",a:["2πr","πr²","πd","r²/2"],c:1},
+      {q:"Jika 2:5 = x:20, nilai x ialah…",a:["4","6","8","10"],c:2},
+      {q:"Bentuk kembangan bagi (a+b)² ialah…",a:["a²+b²","a²+2ab+b²","a²−2ab+b²","2a+2b"],c:1},
+      {q:"Jumlah sudut pedalaman segi tiga ialah…",a:["90°","180°","270°","360°"],c:1},
+      {q:"Jika y = 2x + 1 dan x = 4, y ialah…",a:["7","8","9","10"],c:2},
+      {q:"Min bagi 3, 5, 7, 9 dan 11 ialah…",a:["5","6","7","8"],c:2}
     ],
-    '7-9': [
-      { q: 'Lengkapkan urutan nombor: 2, 4, 6, 8, ___', opts: ['9', '10', '11', '12'], ans: 1, exp: 'Setiap nombor bertambah 2 (sifir 2).' },
-      { q: 'Ali lebih tinggi daripada Abu. Abu lebih tinggi daripada Chong. Siapakah paling rendah?', opts: ['Ali', 'Abu', 'Chong', 'Sama tinggi'], ans: 2, exp: 'Susunan tinggi: Ali > Abu > Chong, jadi Chong paling rendah.' },
-      { q: 'Manakah objek yang ganjil dalam kumpulan ini?', opts: ['Epal', 'Oren', 'Kerusi', 'Mangga'], ans: 2, exp: 'Kerusi ialah perabot manakala yang lain ialah buah-buahan.' },
-      { q: 'Lengkapkan urutan huruf: A, C, E, G, ___', opts: ['H', 'I', 'J', 'K'], ans: 1, exp: 'Melangkau satu huruf setiap langkah: A (B) C (D) E (F) G (H) I.' },
-      { q: 'Berapakah penjuru pada sebuah segi tiga?', opts: ['2', '3', '4', '5'], ans: 1, exp: 'Segi tiga mempunyai 3 sisi dan 3 penjuru.' }
+    "Sains": [
+      {q:"Unit SI bagi daya ialah…",a:["Joule","Watt","Newton","Pascal"],c:2},
+      {q:"Zarah bercas negatif ialah…",a:["Proton","Neutron","Elektron","Nukleus"],c:2},
+      {q:"Persamaan fotosintesis memerlukan karbon dioksida, air dan…",a:["Cahaya","Nitrogen","Helium","Metana"],c:0},
+      {q:"pH kurang daripada 7 menunjukkan bahan…",a:["Alkali","Neutral","Asid","Garam sahaja"],c:2},
+      {q:"Tenaga kinetik ialah tenaga…",a:["Kedudukan","Pergerakan","Kimia","Nuklear sahaja"],c:1},
+      {q:"Bahagian sel yang mengawal aktiviti sel ialah…",a:["Membran","Sitoplasma","Nukleus","Vakuol"],c:2},
+      {q:"Arus elektrik diukur dalam unit…",a:["Volt","Ampere","Ohm","Watt"],c:1},
+      {q:"Gas rumah hijau yang banyak dihasilkan daripada pembakaran bahan api fosil ialah…",a:["Oksigen","Karbon dioksida","Argon","Neon"],c:1},
+      {q:"Pemisahan campuran berdasarkan takat didih menggunakan…",a:["Penurasan","Penyulingan","Ayakan","Magnet"],c:1},
+      {q:"Dalam litar bersiri, arus pada setiap komponen adalah…",a:["Sama","Sentiasa sifar","Berbeza semua","Berganda"],c:0}
     ],
-    '10-12': [
-      { q: 'Lengkapkan siri: 3, 6, 12, 24, ___', opts: ['30', '36', '48', '42'], ans: 2, exp: 'Setiap nombor didarab dengan 2: 24 × 2 = 48.' },
-      { q: 'Jika semua burung mempunyai bulu pelepah, dan merpati ialah burung, maka...', opts: ['Merpati boleh berenang', 'Merpati mempunyai bulu pelepah', 'Merpati tidak bertelur', 'Semua haiwan berbulu ialah merpati'], ans: 1, exp: 'Kesimpulan deduktif yang sah: merpati pasti mempunyai bulu pelepah.' },
-      { q: 'Cari nombor seterusnya: 1, 4, 9, 16, ___', opts: ['20', '24', '25', '36'], ans: 2, exp: 'Ini ialah nombor kuasa dua: 1², 2², 3², 4², 5² = 25.' },
-      { q: 'Dalam satu perlumbaan, anda memotong pelari di tempat kedua. Di kedudukan manakah anda sekarang?', opts: ['Pertama', 'Kedua', 'Ketiga', 'Keempat'], ans: 1, exp: 'Apabila memotong orang di tempat kedua, anda mengambil alih tempat kedua.' },
-      { q: 'Perkataan manakah yang berlawanan maksud dengan "OPTIMIS"?', opts: ['Yakin', 'Pesimis', 'Ceria', 'Berani'], ans: 1, exp: 'Pesimis bermaksud bersikap negatif atau mudah berputus asa.' }
-    ],
-    '13-15': [
-      { q: 'Lengkapkan jujukan Fibonacci: 1, 1, 2, 3, 5, 8, ___', opts: ['11', '12', '13', '15'], ans: 2, exp: 'Setiap nombor ialah hasil tambah dua nombor sebelumnya: 5 + 8 = 13.' },
-      { q: 'Jika KOD ditulis sebagai LPE, bagaimanakah BUKU ditulis?', opts: ['CVLV', 'ATJT', 'CVLU', 'DWMW'], ans: 0, exp: 'Setiap huruf dianjakkan +1 dalam abjad: B→C, U→V, K→L, U→V.' },
-      { q: '5 buah mesin mengambil masa 5 minit untuk membuat 5 alat. Berapa minit 100 mesin membuat 100 alat?', opts: ['100 minit', '50 minit', '5 minit', '1 minit'], ans: 2, exp: 'Setiap mesin membuat 1 alat dalam masa 5 minit secara serentak.' },
-      { q: 'Manakah pernyataan yang logik? "Jika hujan, jalan basah." Jalan tidak basah. Maka...', opts: ['Hari sedang hujan', 'Hari tidak hujan', 'Jalan sedang dibaiki', 'Tiada kesimpulan'], ans: 1, exp: 'Mengikut hukum kontrapositif, jika akibat tidak berlaku, sebab juga tidak berlaku.' },
-      { q: 'Cari nilai yang hilang: 2, 6, 12, 20, 30, ___', opts: ['36', '40', '42', '44'], ans: 2, exp: 'Perbezaan bertambah +4, +6, +8, +10, +12 → 30 + 12 = 42.' }
-    ],
-    '16-17': [
-      { q: 'Dalam logik Boolean, apakah nilai bagi (BENAR DAN PALSU) ATAU BENAR?', opts: ['PALSU', 'BENAR', 'TIDAK TERTAKRIF', 'SIFAR'], ans: 1, exp: '(BENAR && PALSU) = PALSU; kemudian (PALSU || BENAR) = BENAR.' },
-      { q: 'Lengkapkan siri: 2, 3, 5, 7, 11, 13, ___', opts: ['15', '16', '17', '19'], ans: 2, exp: 'Ini ialah urutan nombor perdana; nombor perdana selepas 13 ialah 17.' },
-      { q: 'Sebuah jam menunjukkan pukul 3:15. Berapakah sudut kecil antara jarum jam dan jarum minit?', opts: ['0°', '7.5°', '15°', '30°'], ans: 1, exp: 'Jarum jam bergerak 0.5° setiap minit: 15 × 0.5° = 7.5° melepasi angka 3.' },
-      { q: 'Jika P → Q adalah benar dan Q → R adalah benar, apakah yang pasti benar?', opts: ['R → P', 'P → R', '¬P → ¬R', 'Q → P'], ans: 1, exp: 'Hukum silogisme: jika P membawa kepada Q dan Q membawa kepada R, maka P → R.' },
-      { q: 'Berapakah bilangan jabat tangan jika 6 orang berjabat tangan sesama sendiri sekali?', opts: ['12', '15', '18', '30'], ans: 1, exp: 'Gabungan ⁶C₂ = (6 × 5) / 2 = 15 jabat tangan.' }
+    "Bahasa Inggeris": [
+      {q:"Choose the correct past tense: 'She ___ to school yesterday.'",a:["go","goes","went","going"],c:2},
+      {q:"The synonym of 'rapid' is…",a:["slow","quick","weak","late"],c:1},
+      {q:"Choose the correct article: '___ honest person'.",a:["A","An","Thee","No article"],c:1},
+      {q:"Which is a conjunction?",a:["Beautiful","Although","Quickly","Table"],c:1},
+      {q:"The opposite of 'ancient' is…",a:["Old","Historic","Modern","Early"],c:2},
+      {q:"Choose the correct sentence.",a:["They is ready.","They are ready.","They am ready.","They be ready."],c:1},
+      {q:"A person who writes books is an…",a:["Author","Actor","Architect","Athlete"],c:0},
+      {q:"'Carefully' is an…",a:["Noun","Adjective","Adverb","Pronoun"],c:2},
+      {q:"Choose the plural of 'child'.",a:["Childs","Childes","Children","Childrens"],c:2},
+      {q:"Complete: 'If it rains, we ___ indoors.'",a:["stay","stays","stayed yesterday","staying"],c:0}
     ]
   },
-  gambar: {
-    '4-6': [
-      { pic: '🐘', q: 'Apakah nama haiwan besar yang mempunyai belalai panjang ini?', opts: ['Zirafah', 'Gajah', 'Singa', 'Arnab'], ans: 1, exp: 'Gajah menggunakan belalainya untuk mengambil makanan dan minum air.' },
-      { pic: '☀️', q: 'Apakah objek bercahaya yang memanaskan Bumi pada waktu siang?', opts: ['Bulan', 'Matahari', 'Bintang', 'Awan'], ans: 1, exp: 'Matahari membekalkan cahaya dan haba kepada Bumi.' },
-      { pic: '🚗', q: 'Kenderaan ini bergerak di atas jalan raya. Apakah ia?', opts: ['Kapal terbang', 'Kereta', 'Kapal layar', 'Roket'], ans: 1, exp: 'Kereta mempunyai empat roda untuk bergerak di jalan raya.' },
-      { pic: '🍉', q: 'Buah ini berkulit hijau dan berair merah di dalamnya. Apakah namanya?', opts: ['Tembikai', 'Nanas', 'Durian', 'Betik'], ans: 0, exp: 'Tembikai sangat menyegarkan dimakan pada hari panas.' },
-      { pic: '🐝', q: 'Serangga kecil ini menghasilkan madu yang manis. Siapakah ia?', opts: ['Semut', 'Lebah', 'Nyamuk', 'Lalat'], ans: 1, exp: 'Lebah mengumpul nektar bunga untuk menghasilkan madu.' }
+  "16-17": {
+    "Matematik": [
+      {q:"Terbitan bagi f(x)=3x²−4x+7 ialah…",a:["6x−4","3x−4","6x+7","x²−4"],c:0},
+      {q:"Penyelesaian bagi x²−5x+6=0 ialah…",a:["1 dan 6","2 dan 3","−2 dan −3","−1 dan 6"],c:1},
+      {q:"Jika sin θ = 1/2 dan θ sudut tirus, θ ialah…",a:["30°","45°","60°","90°"],c:0},
+      {q:"Kecerunan garis y=−3x+8 ialah…",a:["8","3","−3","−8"],c:2},
+      {q:"Kamiran bagi 4x³ dx ialah…",a:["12x²+C","x⁴+C","4x⁴+C","x³+C"],c:1},
+      {q:"Log₁₀ 1000 bersamaan…",a:["1","2","3","10"],c:2},
+      {q:"Jika P(A)=0.3, P(bukan A) ialah…",a:["0.3","0.5","0.7","1.3"],c:2},
+      {q:"Jumlah sudut pedalaman poligon 6 sisi ialah…",a:["540°","600°","720°","900°"],c:0},
+      {q:"Nilai diskriminan b²−4ac menentukan…",a:["Jenis punca kuadratik","Kecerunan","Luas bulatan","Min data"],c:0},
+      {q:"Jika v= u+at, unit pecutan ialah…",a:["m/s","m/s²","kg m/s","N"],c:1}
     ],
-    '7-9': [
-      { pic: '🌋', q: 'Bentuk muka bumi ini boleh memuntahkan lava panas. Apakah ia?', opts: ['Gunung berapi', 'Air terjun', 'Gua batu', 'Lembah'], ans: 0, exp: 'Gunung berapi meletus apabila tekanan magma dari dalam bumi meningkat.' },
-      { pic: '🧭', q: 'Alat ini digunakan oleh pengembara untuk menentukan arah utara dan selatan.', opts: ['Termometer', 'Kompas', 'Mikroskop', 'Jam randik'], ans: 1, exp: 'Jarum magnet kompas sentiasa menunjuk ke arah utara-selatan.' },
-      { pic: '🐢', q: 'Haiwan reptilia ini membawa cengkerang keras di belakangnya dan bertelur di pantai.', opts: ['Buaya', 'Penyu', 'Ular', 'Cicak'], ans: 1, exp: 'Penyu laut berenang jauh dan kembali ke pantai untuk bertelur.' },
-      { pic: '🎻', q: 'Alat muzik bertali ini dimainkan menggunakan penggesek. Apakah namanya?', opts: ['Dram', 'Biola', 'Seruling', 'Piano'], ans: 1, exp: 'Biola menghasilkan bunyi merdu apabila talinya digesek.' },
-      { pic: '🌵', q: 'Tumbuhan berduri ini mampu menyimpan air dan hidup subur di kawasan gurun.', opts: ['Teratai', 'Kaktus', 'Paku-pakis', 'Kelapa'], ans: 1, exp: 'Kaktus mempunyai batang tebal untuk menyimpan air di kawasan kering.' }
+    "Fizik": [
+      {q:"Hukum Newton Kedua mengaitkan daya, jisim dan…",a:["Halaju","Pecutan","Tenaga","Tekanan"],c:1},
+      {q:"Unit SI bagi kuasa ialah…",a:["Joule","Newton","Watt","Ampere"],c:2},
+      {q:"Tenaga keupayaan graviti berhampiran bumi ialah…",a:["mgh","½mv²","F/A","VIt"],c:0},
+      {q:"Frekuensi diukur dalam…",a:["Meter","Hertz","Newton","Joule"],c:1},
+      {q:"Hukum Ohm ditulis sebagai…",a:["V=IR","P=IV²","F=ma²","W=mg"],c:0},
+      {q:"Gelombang bunyi tidak boleh merambat dalam…",a:["Air","Udara","Vakum","Pepejal"],c:2},
+      {q:"Momentum ialah hasil darab jisim dengan…",a:["Pecutan","Halaju","Daya","Masa"],c:1},
+      {q:"Lensa cembung biasanya bersifat…",a:["Mencapah","Menumpukan","Menyerap","Memantulkan sahaja"],c:1},
+      {q:"Haba pendam tentu berkaitan perubahan…",a:["Suhu tanpa perubahan keadaan","Keadaan tanpa perubahan suhu","Jisim","Tekanan sahaja"],c:1},
+      {q:"Arus konvensional mengalir dari terminal…",a:["Negatif ke positif","Positif ke negatif","Bumi ke neutral sahaja","Tiada arah"],c:1}
     ],
-    '10-12': [
-      { pic: '🔬', q: 'Alat makmal ini digunakan untuk memerhati organisma seni seperti bakteria.', opts: ['Teleskop', 'Mikroskop', 'Periskop', 'Stetoskop'], ans: 1, exp: 'Mikroskop membesarkan imej objek yang terlalu kecil untuk dilihat mata kasar.' },
-      { pic: '⚡🌧️', q: 'Fenomena cuaca ini melibatkan kilat, guruh dan hujan lebat.', opts: ['Kemarau', 'Ribut petir', 'Salji', 'Jerebu'], ans: 1, exp: 'Ribut petir berlaku apabila awan kumulonimbus terbentuk dengan pesat.' },
-      { pic: '🛰️', q: 'Objek buatan manusia yang mengorbit Bumi untuk komunikasi dan ramalan cuaca.', opts: ['Asteroid', 'Satelit', 'Komet', 'Meteor'], ans: 1, exp: 'Satelit menghantar isyarat telekomunikasi dan imej cuaca ke Bumi.' },
-      { pic: '🧬', q: 'Struktur heliks ganda dua ini membawa maklumat genetik semua hidupan.', opts: ['Protein', 'DNA', 'Karbohidrat', 'Vitamin'], ans: 1, exp: 'DNA (Asid Deoksiribonukleik) menyimpan kod genetik warisan.' },
-      { pic: '♻️', q: 'Simbol tiga anak panah ini melambangkan amalan kelestarian alam iaitu...', opts: ['Pembakaran terbuka', 'Kitar semula', 'Penebangan hutan', 'Pencemaran air'], ans: 1, exp: 'Kitar semula membantu mengurangkan sisa pepejal dan menjimatkan sumber.' }
-    ],
-    '13-15': [
-      { pic: '🔭🌌', q: 'Peralatan astronomi ini digunakan untuk mencerap objek jauh di angkasa lepas.', opts: ['Barometer', 'Teleskop', 'Higrometer', 'Galvanometer'], ans: 1, exp: 'Teleskop mengumpul cahaya atau sinaran elektromagnet dari angkasa.' },
-      { pic: '🧲⚡', q: 'Gabungan magnet dan gegelung dawai berarus ini menghasilkan prinsip...', opts: ['Elektromagnet', 'Penapaian', 'Penyulingan', 'Pemejalwapan'], ans: 0, exp: 'Elektromagnet digunakan dalam motor elektrik, pembesar suara dan kereta api maglev.' },
-      { pic: '🌡️📈', q: 'Peningkatan purata suhu atmosfera dan lautan Bumi secara jangka panjang merujuk kepada...', opts: ['Pemanasan global', 'Hujan asid', 'Hakisan tanah', 'Pasang surut'], ans: 0, exp: 'Pemanasan global berpunca daripada peningkatan gas rumah hijau.' },
-      { pic: '⚖️🏛️', q: 'Simbol neraca keadilan ini berkait rapat dengan cabang...', opts: ['Kehakiman', 'Pertanian', 'Perindustrian', 'Pelancongan'], ans: 0, exp: 'Neraca melambangkan kesaksamaan dan keadilan dalam sistem perundangan.' },
-      { pic: '🔋🔌', q: 'Komponen ini menukarkan tenaga kimia kepada tenaga elektrik dalam litar.', opts: ['Perintang', 'Sel kering / Bateri', 'Suis', 'Fius'], ans: 1, exp: 'Bateri membekalkan daya gerak elektrik untuk menggerakkan cas dalam litar.' }
-    ],
-    '16-17': [
-      { pic: '⚛️💥', q: 'Proses pemecahan nukleus atom berat kepada nukleus lebih ringan sambil membebaskan tenaga.', opts: ['Pembelahan nuklear', 'Pelakuran nuklear', 'Elektrolisis', 'Penghabluran'], ans: 0, exp: 'Pembelahan nuklear digunakan dalam reaktor janakuasa nuklear.' },
-      { pic: '📈💹', q: 'Graf pertumbuhan yang meningkat semakin curam mengikut gandaan dipanggil fungsi...', opts: ['Linear', 'Eksponen', 'Salar', 'Songsang'], ans: 1, exp: 'Fungsi eksponen menggambarkan pertumbuhan berganda seperti faedah kompaun.' },
-      { pic: '🧠⚡', q: 'Sel khusus dalam sistem saraf yang menghantar impuls elektrik dikenali sebagai...', opts: ['Nefron', 'Neuron', 'Alveolus', 'Vilus'], ans: 1, exp: 'Neuron menghantar isyarat saraf antara otak dan seluruh badan.' },
-      { pic: '🌐🔒', q: 'Protokol keselamatan yang menyulitkan komunikasi data antara pelayar dan pelayan web.', opts: ['HTTP', 'HTTPS / TLS', 'FTP', 'SMTP'], ans: 1, exp: 'HTTPS melindungi integriti dan kerahsiaan data pengguna di internet.' },
-      { pic: '🧪🌈', q: 'Kertas litmus biru bertukar menjadi merah apabila diuji dengan larutan bersifat...', opts: ['Alkali', 'Asid', 'Neutral', 'Garam'], ans: 1, exp: 'Larutan berasid mempunyai nilai pH kurang daripada 7.' }
-    ]
-  },
-  tekateki: {
-    '4-6': [
-      { q: 'Saya ada jarum tetapi tidak boleh menjahit, saya ada nombor tetapi tidak boleh mengira. Siapakah saya?', opts: ['Jam dinding', 'Baju', 'Kasut', 'Pensel'], ans: 0, exp: 'Jam mempunyai jarum jam dan nombor untuk menunjukkan masa!' },
-      { q: 'Semakin banyak saya keringkan badan kamu, semakin basah diri saya. Apakah saya?', opts: ['Tuala', 'Payung', 'Bantal', 'Cermin'], ans: 0, exp: 'Tuala menyerap air dari badan dan menjadi basah.' },
-      { q: 'Saya mempunyai empat kaki tetapi tidak boleh berjalan. Apakah saya?', opts: ['Meja', 'Kucing', 'Ayam', 'Kuda'], ans: 0, exp: 'Meja berdiri di atas empat kaki tetapi tidak bergerak.' },
-      { q: 'Bila dibuka saya terang, bila ditutup saya gelap. Apakah saya?', opts: ['Lampu', 'Buku', 'Peti sejuk', 'Beg'], ans: 0, exp: 'Suis lampu menerangi bilik apabila dibuka.' },
-      { q: 'Saya berwarna putih, jatuh dari langit bila hujan dan rasa sejuk. Apakah saya?', opts: ['Ais / Hujan batu', 'Kapas', 'Gula', 'Tepung'], ans: 0, exp: 'Ketulan ais kecil kadang-kadang turun bersama hujan lebat.' }
-    ],
-    '7-9': [
-      { q: 'Apakah benda yang naik tetapi tidak pernah turun semula?', opts: ['Umur', 'Bola', 'Layang-layang', 'Belon'], ans: 0, exp: 'Umur kita sentiasa meningkat setiap tahun dan tidak pernah berkurang.' },
-      { q: 'Saya ada leher tetapi tiada kepala, ada badan tetapi tiada kaki. Apakah saya?', opts: ['Botol', 'Ular', 'Zirafah', 'Gitar'], ans: 0, exp: 'Botol mempunyai bahagian leher dan badan.' },
-      { q: 'Dalam banyak-banyak bas, bas apa yang pandai?', opts: ['Bas sekolah', 'Bas ekspres', 'Bas mini', 'Basikal'], ans: 0, exp: 'Bas sekolah membawa murid-murid pergi belajar!' },
-      { q: 'Apakah yang mempunyai gigi yang banyak tetapi tidak boleh menggigit?', opts: ['Sikat rambut', 'Buaya', 'Jerung', 'Harimau'], ans: 0, exp: 'Gigi sikat digunakan untuk merapikan rambut.' },
-      { q: 'Jika kamu pecahkan saya, barulah saya boleh digunakan. Apakah saya?', opts: ['Telur', 'Cawan', 'Cermin', 'Telefon'], ans: 0, exp: 'Telur perlu dipecahkan kulitnya sebelum dimasak.' }
-    ],
-    '10-12': [
-      { q: 'Saya milik kamu sepenuhnya, tetapi orang lain lebih kerap menyebutnya berbanding diri kamu sendiri. Apakah saya?', opts: ['Nama kamu', 'Suara kamu', 'Bayang-bayang', 'Kasut kamu'], ans: 0, exp: 'Orang lain memanggil nama kita jauh lebih kerap daripada kita menyebutnya sendiri.' },
-      { q: 'Apakah yang boleh mengelilingi seluruh dunia walaupun sentiasa duduk di penjuru?', opts: ['Setem pos', 'Kapal terbang', 'Angin', 'Awan'], ans: 0, exp: 'Setem ditampal di penjuru sampul surat yang dihantar ke seluruh dunia.' },
-      { q: 'Saya ringan seperti bulu pelepah, tetapi orang paling kuat pun tidak mampu menahan saya selama 5 minit. Apakah saya?', opts: ['Nafas', 'Kapas', 'Kertas', 'Buih sabun'], ans: 0, exp: 'Manusia tidak mampu menahan nafas terlalu lama.' },
-      { q: 'Lagi banyak kamu ambil dari saya, lagi besar saya menjadi. Apakah saya?', opts: ['Lubang', 'Kek', 'Beg duit', 'Baldi air'], ans: 0, exp: 'Semakin banyak tanah digali keluar, semakin besar lubang itu.' },
-      { q: 'Saya mempunyai bandar tanpa rumah, gunung tanpa pokok, dan air tanpa ikan. Apakah saya?', opts: ['Peta', 'Mimpi', 'Lukisan', 'Kamera'], ans: 0, exp: 'Peta memaparkan simbol bandar, gunung dan sungai di atas kertas.' }
-    ],
-    '13-15': [
-      { q: 'Saya bercakap tanpa mulut dan mendengar tanpa telinga. Saya tiada jasad tetapi hidup bersama angin. Apakah saya?', opts: ['Gema', 'Radio', 'Telefon', 'Bayang'], ans: 0, exp: 'Gema memantulkan bunyi suara apabila melantun pada permukaan keras.' },
-      { q: 'Apa yang sentiasa di hadapan kamu tetapi tidak pernah dapat dilihat?', opts: ['Masa hadapan', 'Hidung', 'Cermin mata', 'Udara'], ans: 0, exp: 'Masa hadapan sentiasa menanti kita tetapi belum kelihatan.' },
-      { q: 'Saya ada kunci tetapi tiada mangga, ada ruang tetapi tiada bilik, kamu boleh masuk tetapi tidak boleh keluar melalui saya. Apakah saya?', opts: ['Papan kekunci (Keyboard)', 'Pintu rumah', 'Kereta', 'Peti besi'], ans: 0, exp: 'Papan kekunci mempunyai kekunci (keys), kekunci ruang (space) dan Enter.' },
-      { q: 'Jika dua orang ialah teman dan tiga orang ialah kumpulan, apakah empat dan lima?', opts: ['Sembilan', 'Pasukan', 'Keluarga', 'Ramai'], ans: 0, exp: 'Empat tambah lima bersamaan sembilan!' },
-      { q: 'Benda apakah yang apabila disebut namanya, ia terus hilang?', opts: ['Kesunyian', 'Rahsia', 'Angin', 'Kegelapan'], ans: 0, exp: 'Kesunyian hilang sebaik sahaja sesuatu bunyi atau perkataan dilafazkan.' }
-    ],
-    '16-17': [
-      { q: 'Saya mengukur masa; ada yang pantas dan ada yang perlahan. Bila saya habis, kamu akan merindui saya. Apakah saya?', opts: ['Masa', 'Pasir', 'Bateri', 'Lilin'], ans: 0, exp: 'Masa berlalu tanpa henti dan sangat berharga untuk dihargai.' },
-      { q: 'Semakin banyak pengetahuan yang kamu berikan kepada orang lain, semakin banyak yang tinggal pada kamu. Apakah ia?', opts: ['Ilmu', 'Harta', 'Makanan', 'Tenaga'], ans: 0, exp: 'Ilmu tidak berkurang apabila dikongsi, malah semakin bertambah mantap.' },
-      { q: 'Saya boleh mengisi sebuah bilik tanpa mengambil sebarang ruang fizikal. Apakah saya?', opts: ['Cahaya', 'Perabot', 'Air', 'Kotak'], ans: 0, exp: 'Cahaya menerangi seluruh ruang bilik tanpa memerlukan isi padu ruang.' },
-      { q: 'Apakah yang berlari tanpa kaki, tidak pernah berjalan, ada mulut tetapi tidak pernah bercakap?', opts: ['Sungai', 'Kereta api', 'Jam', 'Angin'], ans: 0, exp: 'Sungai mengalir menuju ke muara (mulut sungai).' },
-      { q: 'Saya sentiasa mengikuti kamu pada waktu siang, tetapi menghilang apabila gelap gelita. Apakah saya?', opts: ['Bayang-bayang', 'Kawan', 'Cermin', 'Tapak kaki'], ans: 0, exp: 'Bayang-bayang terbentuk apabila objek menghalang sumber cahaya.' }
+    "Kimia": [
+      {q:"Nombor proton menunjukkan bilangan…",a:["Neutron","Elektron valens","Proton dalam nukleus","Nukleon"],c:2},
+      {q:"Ikatan ion terbentuk melalui…",a:["Perkongsian elektron","Pemindahan elektron","Perkongsian proton","Percantuman nukleus"],c:1},
+      {q:"Formula kimia bagi asid sulfurik ialah…",a:["HCl","HNO₃","H₂SO₄","NaOH"],c:2},
+      {q:"Mangkin berfungsi untuk…",a:["Menaikkan tenaga pengaktifan","Menurunkan tenaga pengaktifan","Menghentikan tindak balas","Menambah jisim produk"],c:1},
+      {q:"Pengoksidaan boleh ditakrifkan sebagai…",a:["Penerimaan elektron","Kehilangan elektron","Kehilangan proton","Penerimaan neutron"],c:1},
+      {q:"Gas mulia berada dalam kumpulan…",a:["1","2","17","18"],c:3},
+      {q:"Mol ialah unit bagi…",a:["Suhu","Kuantiti bahan","Tekanan","Arus"],c:1},
+      {q:"Larutan dengan pH 2 bersifat…",a:["Asid","Alkali","Neutral","Garam neutral semestinya"],c:0},
+      {q:"Ikatan kovalen melibatkan…",a:["Perkongsian pasangan elektron","Pemindahan proton","Daya graviti","Pemindahan neutron"],c:0},
+      {q:"Polimer terbentuk daripada unit kecil yang dipanggil…",a:["Isotop","Monomer","Ion","Katalis"],c:1}
     ]
   }
 };

@@ -1,16 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4F46E5"/>
-      <stop offset="100%" stop-color="#0EA5E9"/>
-    </linearGradient>
-    <linearGradient id="star" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FDE047"/>
-      <stop offset="100%" stop-color="#F59E0B"/>
-    </linearGradient>
-  </defs>
-  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
-  <circle cx="256" cy="256" r="185" fill="rgba(255,255,255,0.12)"/>
-  <path d="M256 112 L292 204 L390 212 L315 276 L338 372 L256 320 L174 372 L197 276 L122 212 L220 204 Z" fill="url(#star)" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="round"/>
-  <text x="256" y="445" font-family="Arial, sans-serif" font-weight="900" font-size="52" fill="#FFFFFF" text-anchor="middle" letter-spacing="4">PINDAS</text>
+<rect width="512" height="512" rx="112" fill="#081225"/>
+<circle cx="256" cy="256" r="190" fill="#102746" stroke="#55e6ff" stroke-width="8"/>
+<g fill="#55e6ff" stroke="#b9f7ff" stroke-width="5">
+<path d="M256 112C190 185 194 242 256 284C318 242 322 185 256 112Z"/>
+<path d="M125 205C145 294 191 326 256 284C244 207 195 176 125 205Z"/>
+<path d="M387 205C317 176 268 207 256 284C321 326 367 294 387 205Z"/>
+<path d="M166 342C215 389 297 389 346 342C321 285 191 285 166 342Z"/>
+</g><circle cx="256" cy="278" r="23" fill="#ffd45b"/>
 </svg>

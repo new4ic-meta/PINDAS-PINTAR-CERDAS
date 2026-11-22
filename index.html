@@ -1,803 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ms">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101a35">
-<title>PINDAS – PINTAR CERDAS</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#091225">
+<meta name="description" content="PINDAS, PIYDEN dan AFIDAN dalam satu platform digital.">
+<title>PINDAS • PIYDEN • AFIDAN</title>
 <link rel="manifest" href="./manifest.json">
-<link rel="icon" href="./icon.svg">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./styles.css">
-
-<style>
-.age-list {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-  margin:15px 0;
-}
-.age-button {
-  padding:14px 8px;
-  border:2px solid #dce5f5;
-  border-radius:13px;
-  background:#fff;
-  color:#172544;
-  font-weight:700;
-  cursor:pointer;
-}
-.age-button.active {
-  background:#173f91;
-  color:#fff;
-  border-color:#173f91;
-}
-#questionArea { margin-top:20px; }
-.answer-option {
-  display:block;
-  width:100%;
-  padding:14px;
-  margin:9px 0;
-  border:1px solid #dce5f5;
-  border-radius:12px;
-  background:white;
-  text-align:left;
-  cursor:pointer;
-}
-.answer-option.correct { background:#d9f8e5; }
-.answer-option.wrong { background:#ffe0e0; }
-.main-button {
-  border:0;
-  padding:13px 20px;
-  border-radius:12px;
-  background:#1749a0;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-}
-.hidden { display:none !important; }
-#feedbackBox { margin:15px 0; font-weight:bold; }
-#pictureStage img { max-width:100%; max-height:220px; }
-.word-slot,.letter-button {
-  padding:12px;
-  margin:4px;
-  border-radius:8px;
-  border:1px solid #aaa;
-  min-width:35px;
-}
-</style>
 </head>
-
 <body>
-
-<header>
-  <h1>PINDAS – PINTAR CERDAS</h1>
-  <p>Ilmu Membina Masa Depan.</p>
+<header class="top">
+  <div class="brand"><span class="brand-mark">🪷</span><div><h1>PINDAS</h1><p>PINTAR CERDAS · Ilmu Membina Masa Depan</p></div></div>
+  <div class="offline" id="networkStatus">● Menyediakan aplikasi…</div>
 </header>
 
-<main>
-
-<section id="viewHome" class="view-section active">
-
-  <div class="card">
-    <h2>Pilih Kategori Umur</h2>
-
-    <div class="age-list" id="ageSelector">
-      <button class="age-button active" data-age="4-6">4–6 Tahun</button>
-      <button class="age-button" data-age="7-9">7–9 Tahun</button>
-      <button class="age-button" data-age="10-12">10–12 Tahun</button>
-      <button class="age-button" data-age="13-15">13–15 Tahun</button>
-      <button class="age-button" data-age="16-17">16–17 Tahun</button>
-    </div>
-
-    <p id="selectedAgeText">Umur dipilih: 4–6 Tahun</p>
-  </div>
-
-  <div class="card">
-    <h2>🏫 SEKOLAH KEDUA DIGITAL</h2>
-    <h3>Selamat datang ke KAMPUS PINDAS</h3>
-    <p>Belajar, berlatih dan kumpul pencapaian — ikut rentak sendiri.</p>
-    <p>🎓 Misi pembelajaran</p>
-    <p>Mulakan kelas pertama!</p>
-  </div>
-
-  <div class="card">
-    <h2>Permainan Pembelajaran</h2>
-    <div id="gamesGrid">
-      <button class="main-button" onclick="startGame('pengetahuan')">🌍 Sains & Dunia</button>
-      <button class="main-button" onclick="startGame('matematik')">🧮 Matematik</button>
-      <button class="main-button" onclick="startGame('perkataan')">🔤 Bahasa</button>
-      <button class="main-button" onclick="startGame('logik')">🧩 Logik & Minda</button>
-      <button class="main-button" onclick="startGame('gambar')">🖼️ Teka Gambar</button>
-      <button class="main-button" onclick="startGame('tekateki')">💡 Teka-teki</button>
-      <button class="main-button" onclick="startGame('kepantasan')">⚡ Kepantasan</button>
-      <button class="main-button" onclick="startGame('harian')">📅 Cabaran Harian</button>
-    </div>
-  </div>
-
-  <p>✨ Tiada peperiksaan yang menekan. Cuba, belajar daripada jawapan dan tingkatkan kemahiran sedikit demi sedikit.</p>
-
-</section>
-
-
-<section id="viewPlay" class="view-section hidden">
-
-  <div class="card">
-    <button onclick="switchView('home')">← Kembali</button>
-
-    <h2 id="playGameTitle">Permainan</h2>
-
-    <p id="questionCounter">Soalan 1</p>
-    <p id="playScoreBadge">⭐ 0</p>
-    <p id="playTimerBadge"></p>
-
-    <div id="playProgress"></div>
-
-    <div id="pictureStage"></div>
-
-    <h3 id="questionText"></h3>
-
-    <p id="hintBox"></p>
-
-    <div id="mcqContainer"></div>
-
-    <div id="wordContainer" class="hidden">
-      <div id="wordSlots"></div>
-      <div id="letterBank"></div>
-      <button onclick="backspaceLetter()">Padam huruf</button>
-      <button onclick="clearWordGuess()">Kosongkan</button>
-    </div>
-
-    <div id="feedbackBox"></div>
-
-    <button id="nextQuestionBtn" class="main-button hidden" onclick="nextQuestion()">
-      Soalan Seterusnya
-    </button>
-  </div>
-
-</section>
-
-
-<section id="viewResult" class="view-section hidden">
-  <div class="card">
-    <h2 id="resultTitle">Tahniah!</h2>
-    <p id="resultStars">⭐</p>
-    <p id="resultSubtitle"></p>
-
-    <h3>Markah: <span id="resScore">0</span></h3>
-    <p>Jawapan betul: <span id="resCorrect">0</span></p>
-    <p>Tahap: <span id="resLevel">1</span></p>
-
-    <button class="main-button" id="replayBtn">Main Lagi</button>
-    <button onclick="switchView('home')">Halaman Utama</button>
-  </div>
-</section>
-
-
-<section id="viewAchievements" class="view-section hidden">
-  <div class="card">
-    <h2>Pencapaian</h2>
-    <div id="badgesGrid"></div>
-    <button onclick="switchView('home')">Kembali</button>
-  </div>
-</section>
-
-
-<section id="viewRecords" class="view-section hidden">
-  <div class="card">
-    <h2>Rekod Permainan</h2>
-    <div id="highScoresList"></div>
-    <div id="historyList"></div>
-    <button onclick="switchView('home')">Kembali</button>
-  </div>
-</section>
-
-
-<section id="viewParent" class="view-section hidden">
-  <div class="card" id="parentLockPanel">
-    <h2>Kawalan Ibu Bapa</h2>
-    <p>Masukkan PIN 4 angka.</p>
-
-    <div id="pinErrorMsg"></div>
-
-    <div>
-      <button onclick="pressPinKey(1)">1</button>
-      <button onclick="pressPinKey(2)">2</button>
-      <button onclick="pressPinKey(3)">3</button>
-      <button onclick="pressPinKey(4)">4</button>
-      <button onclick="pressPinKey(5)">5</button>
-      <button onclick="pressPinKey(6)">6</button>
-      <button onclick="pressPinKey(7)">7</button>
-      <button onclick="pressPinKey(8)">8</button>
-      <button onclick="pressPinKey(9)">9</button>
-      <button onclick="clearPinInput()">Padam</button>
-      <button onclick="pressPinKey(0)">0</button>
-    </div>
-  </div>
-
-  <div class="card hidden" id="parentDashboardPanel">
-    <h2>Dashboard Ibu Bapa</h2>
-
-    <p>Penggunaan hari ini: <span id="todayUsageText">0 minit</span></p>
-
-    <label>Had masa:
-      <select id="timeLimitSelect">
-        <option value="15">15 minit</option>
-        <option value="30">30 minit</option>
-        <option value="45">45 minit</option>
-        <option value="60">60 minit</option>
-        <option value="0">Tanpa had</option>
-      </select>
-    </label>
-
-    <br><br>
-
-    <label>Paparan iklan:
-      <select id="adToggleSelect">
-        <option value="true">Aktif</option>
-        <option value="false">Tidak aktif</option>
-      </select>
-    </label>
-
-    <br><br>
-
-    <button onclick="startChangePin()">Tukar PIN</button>
-    <button onclick="resetAllGameData()">Reset Rekod</button>
-    <button onclick="lockParentPanel()">Kunci Panel</button>
-  </div>
-</section>
-
-
-<section id="viewPiyden" class="view-section hidden">
-  <div class="card">
-    <h2>PIYDEN</h2>
-    <p>Permainan tambahan PINDAS.</p>
-    <a href="./piyden.html">Buka PIYDEN</a>
-  </div>
-</section>
-
-</main>
-
-
-<nav>
-  <button onclick="switchView('home')">Utama</button>
-  <button onclick="switchView('achievements')">Pencapaian</button>
-  <button onclick="switchView('records')">Rekod</button>
-  <button onclick="switchView('parent')">Ibu Bapa</button>
+<nav class="main-nav" aria-label="Modul utama">
+  <button class="nav active" data-page="learn">🪷 PINDAS</button>
+  <button class="nav" data-page="play">⚡ PIYDEN</button>
+  <button class="nav" data-page="afidan">🤖 AFIDAN</button>
 </nav>
 
+<main>
+<section id="page-learn" class="page active">
+  <div class="hero">
+    <span class="eyebrow">PUSAT PEMBELAJARAN DIGITAL</span>
+    <h2>Belajar ikut umur.<br><em>Ulang kaji ikut rentak sendiri.</em></h2>
+    <p>Pilih kumpulan umur, pilih subjek dan jawab soalan. Kemajuan asas disimpan pada peranti ini.</p>
+  </div>
+  <div class="panel">
+    <div class="section-head"><div><span class="eyebrow">LANGKAH 01</span><h3>Pilih kumpulan umur</h3></div></div>
+    <div class="age-grid" id="ageChoices">
+      <button class="age selected" data-age="4-6">4–6 Tahun</button>
+      <button class="age" data-age="7-9">7–9 Tahun</button>
+      <button class="age" data-age="10-12">10–12 Tahun</button>
+      <button class="age" data-age="13-15">13–15 Tahun</button>
+      <button class="age" data-age="16-17">16–17 Tahun</button>
+    </div>
+    <div class="section-head subject-head"><div><span class="eyebrow">LANGKAH 02</span><h3>Pilih bidang</h3></div></div>
+    <div id="subjectChoices" class="subject-grid"></div>
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-meta"><span id="quizSubject">Matematik</span><span id="questionCount">Soalan 1</span></div>
+      <h3 id="questionText">Pilih umur dan bidang untuk bermula.</h3>
+      <div id="answerChoices" class="answers"></div>
+      <div id="quizFeedback" class="feedback" aria-live="polite"></div>
+      <div class="quiz-actions">
+        <button id="nextQuestion" class="primary" disabled>Soalan seterusnya →</button>
+        <button id="restartQuiz" class="ghost">Ulang bidang</button>
+      </div>
+    </div>
+    <div class="progress-line"><span id="progressFill"></span></div>
+    <p class="small" id="progressText">Kemajuan sesi: 0 dijawab</p>
+  </div>
+  <div class="panel note-panel">
+    <h3>📶 Mod luar talian</h3>
+    <p>Selepas laman dibuka ketika ada internet dan fail berjaya dicache, bahan pembelajaran yang disertakan boleh digunakan tanpa internet. Fungsi yang memerlukan data luar atau perkhidmatan pihak ketiga tidak tersedia ketika offline.</p>
+  </div>
+</section>
 
-<!-- DATA SOALAN -->
+<section id="page-play" class="page">
+  <div class="hero compact"><span class="eyebrow">PIYDEN ARCADE · V2.0</span><h2>NEON RUSH</h2><p>Uji fokus dan kelajuan. Sentuh orb untuk mengumpul mata.</p></div>
+  <div class="panel game-panel">
+    <div class="stats">
+      <div><small>SKOR</small><strong id="gameScore">0</strong></div>
+      <div><small>MASA</small><strong id="gameTime">45</strong></div>
+      <div><small>REKOD</small><strong id="gameBest">0</strong></div>
+    </div>
+    <div class="combo">COMBO <b id="gameCombo">x3</b></div>
+    <div class="game-controls"><button id="soundToggle" class="ghost">🔊 Bunyi: ON</button><button id="gameRestart" class="ghost">↻ Mula semula</button></div>
+    <div id="gameArea" class="game-area">
+      <div id="gameOverlay" class="game-overlay"><div><h3 id="gameOverlayTitle">NEON RUSH</h3><p id="gameOverlayText">Biru +10 · Merah −15 · Emas +50</p><button id="gameStart" class="primary">MULA MAIN</button></div></div>
+    </div>
+    <p class="game-hint">🔵 BIRU +10 &nbsp; 🔴 MERAH −15 &nbsp; 🟡 EMAS +50</p>
+  </div>
+</section>
+
+<section id="page-afidan" class="page">
+  <div class="hero compact"><span class="eyebrow">AFIDAN · PEMBANTU DIGITAL</span><h2>Idea, cipta dan urus.</h2><p>Alat bantuan ringkas yang boleh digunakan secara asas tanpa akaun atau API key.</p></div>
+  <div class="afidan-grid" id="afidanTools">
+    <button class="tool-card" data-tool="assistant"><span>💬</span><b>AI Assistant</b><small>Pembantu teks asas</small></button>
+    <button class="tool-card" data-tool="writer"><span>✍️</span><b>Penulis Kandungan</b><small>Draf dan idea penulisan</small></button>
+    <button class="tool-card" data-tool="video"><span>🎬</span><b>AI Video Planner</b><small>Rangka video pendek</small></button>
+    <button class="tool-card" data-tool="robotics"><span>🦾</span><b>Robotics</b><small>Nota dan idea robotik</small></button>
+    <button class="tool-card" data-tool="home"><span>🏠</span><b>Smart Home</b><small>Senarai idea rumah pintar</small></button>
+    <button class="tool-card" data-tool="cyber"><span>🛡️</span><b>Cybersecurity</b><small>Tip keselamatan digital</small></button>
+    <button class="tool-card" data-tool="shopping"><span>🛍️</span><b>Smart Shopping</b><small>Banding keperluan dan bajet</small></button>
+  </div>
+  <div class="panel assistant-panel">
+    <div class="section-head"><div><span class="eyebrow">RUANG KERJA AFIDAN</span><h3 id="afidanTitle">AI Assistant</h3></div><span class="local-badge">ASAS · OFFLINE</span></div>
+    <label for="afidanInput">Apa yang anda mahu sediakan?</label>
+    <textarea id="afidanInput" rows="4" placeholder="Taip idea atau arahan ringkas di sini…"></textarea>
+    <button id="afidanRun" class="primary">Jana bantuan</button>
+    <div id="afidanOutput" class="afidan-output" aria-live="polite">Pilih salah satu daripada tujuh fungsi di atas untuk bermula.</div>
+    <p class="small">Nota: Modul ini menyediakan templat dan bantuan asas secara setempat. Ia bukan model AI awan dan tidak menghantar data ke pelayan. Fungsi AI sebenar memerlukan sambungan backend yang selamat dan konfigurasi berasingan.</p>
+  </div>
+</section>
+</main>
+<footer>🪷 PINDAS + ⚡ PIYDEN + 🤖 AFIDAN · Edisi gabungan</footer>
 <script src="./data.js"></script>
-
-
-<!-- APP.JS DIGABUNGKAN DI SINI -->
-<script>
-(function () {
-'use strict';
-
-const AGE_GROUPS = window.AGE_GROUPS || [
-  {id:'4-6',label:'4–6 Tahun'},
-  {id:'7-9',label:'7–9 Tahun'},
-  {id:'10-12',label:'10–12 Tahun'},
-  {id:'13-15',label:'13–15 Tahun'},
-  {id:'16-17',label:'16–17 Tahun'}
-];
-
-const QUESTION_BANK = window.QUESTION_BANK || {};
-const CATEGORY_IDS = [
-  'pengetahuan','matematik','perkataan',
-  'logik','gambar','tekateki'
-];
-
-const NAMES = {
-  pengetahuan:'Sains & Dunia',
-  matematik:'Matematik',
-  perkataan:'Bahasa',
-  logik:'Logik & Minda',
-  gambar:'Teka Gambar',
-  tekateki:'Teka-teki',
-  harian:'Cabaran Harian',
-  kepantasan:'Kepantasan'
-};
-
-const KEY = 'pindas_selected_age';
-
-let age = localStorage.getItem(KEY) || '4-6';
-let game = '';
-let questions = [];
-let index = 0;
-let score = 0;
-let correct = 0;
-let answered = false;
-let timer = null;
-let timeLeft = 45;
-let pin = '';
-let changingPin = false;
-let firstNewPin = '';
-
-function $(id) {
-  return document.getElementById(id);
-}
-
-function shuffle(list) {
-  const result = list.slice();
-
-  for (let i=result.length-1;i>0;i--) {
-    const j=Math.floor(Math.random()*(i+1));
-    [result[i],result[j]]=[result[j],result[i]];
-  }
-
-  return result;
-}
-
-function getAgeBank(ageId) {
-  if (QUESTION_BANK[ageId]) {
-    return QUESTION_BANK[ageId];
-  }
-
-  const result = {};
-
-  CATEGORY_IDS.forEach(category => {
-    if (QUESTION_BANK[category] &&
-        QUESTION_BANK[category][ageId]) {
-      result[category] = QUESTION_BANK[category][ageId];
-    }
-  });
-
-  return result;
-}
-
-function getQuestions(category,ageId) {
-  const bank=getAgeBank(ageId);
-  return Array.isArray(bank[category]) ? bank[category] : [];
-}
-
-function buildQuestionsForGame(gameId,ageId,count) {
-  let pool=[];
-
-  if (gameId==='harian' || gameId==='kepantasan') {
-    CATEGORY_IDS.forEach(category => {
-      getQuestions(category,ageId).forEach(q => {
-        pool.push({...q,gameId:category});
-      });
-    });
-  } else {
-    pool=getQuestions(gameId,ageId).map(q => ({
-      ...q,gameId:gameId
-    }));
-  }
-
-  return shuffle(pool).slice(0,count);
-}
-
-window.buildQuestionsForGame=buildQuestionsForGame;
-
-
-function updateAgeButtons() {
-  document.querySelectorAll('[data-age]').forEach(button => {
-    const selected=button.dataset.age===age;
-
-    button.classList.toggle('active',selected);
-    button.setAttribute('aria-pressed',String(selected));
-  });
-
-  const label=AGE_GROUPS.find(item=>item.id===age);
-
-  $('selectedAgeText').textContent =
-    'Umur dipilih: '+(label ? label.label : age);
-}
-
-function selectAge(newAge) {
-  if (!AGE_GROUPS.some(item=>item.id===newAge)) return;
-
-  age=newAge;
-
-  localStorage.setItem(KEY,age);
-
-  updateAgeButtons();
-}
-
-function switchView(name) {
-  document.querySelectorAll('.view-section').forEach(section=>{
-    section.classList.add('hidden');
-  });
-
-  const target=$('view'+name.charAt(0).toUpperCase()+name.slice(1));
-
-  if (target) target.classList.remove('hidden');
-
-  if (name==='records') renderRecords();
-  if (name==='achievements') renderBadges();
-}
-
-function startGame(id) {
-  clearInterval(timer);
-
-  game=id;
-  index=0;
-  score=0;
-  correct=0;
-  answered=false;
-  timeLeft=45;
-
-  const amount=id==='kepantasan' ? 20 : 5;
-
-  questions=buildQuestionsForGame(id,age,amount);
-
-  if (!questions.length) {
-    alert('Tiada soalan untuk '+age+'. Sila semak QUESTION_BANK dalam data.js.');
-    return;
-  }
-
-  $('playGameTitle').textContent =
-    NAMES[id]+' • '+AGE_GROUPS.find(x=>x.id===age).label;
-
-  switchView('play');
-  renderQuestion();
-
-  if (id==='kepantasan') {
-    timer=setInterval(()=>{
-      timeLeft--;
-      $('playTimerBadge').textContent='⏱ '+timeLeft+' saat';
-
-      if (timeLeft<=0) {
-        clearInterval(timer);
-        finishGame();
-      }
-    },1000);
-  } else {
-    $('playTimerBadge').textContent='';
-  }
-}
-
-function renderQuestion() {
-  if (index>=questions.length) {
-    finishGame();
-    return;
-  }
-
-  answered=false;
-
-  const q=questions[index];
-
-  $('questionCounter').textContent=
-    'Soalan '+(index+1)+' / '+questions.length;
-
-  $('questionText').textContent=q.q||q.question||q.word||'Soalan';
-
-  $('playScoreBadge').textContent='⭐ '+score;
-
-  $('playProgress').style.width=
-    ((index+1)/questions.length*100)+'%';
-
-  $('feedbackBox').textContent='';
-  $('nextQuestionBtn').classList.add('hidden');
-
-  $('pictureStage').innerHTML=q.pic
-    ? '<img src="'+q.pic+'" alt="Gambar soalan">'
-    : '';
-
-  $('hintBox').textContent=q.hint ? 'Petunjuk: '+q.hint : '';
-
-  if (q.gameId==='perkataan'||q.word) {
-    renderWord(q);
-  } else {
-    renderMCQ(q);
-  }
-}
-
-function renderMCQ(q) {
-  $('wordContainer').classList.add('hidden');
-  $('mcqContainer').classList.remove('hidden');
-
-  const options=shuffle((q.opts||q.options||[]).slice());
-
-  let answer=q.ans;
-
-  if (typeof answer==='number') {
-    answer=(q.opts||q.options||[])[answer];
-  }
-
-  q._answer=answer;
-
-  $('mcqContainer').innerHTML='';
-
-  options.forEach(option=>{
-    const button=document.createElement('button');
-
-    button.className='answer-option';
-    button.textContent=option;
-
-    button.onclick=()=>{
-      if (answered) return;
-
-      const right=String(option).trim().toLowerCase()===
-        String(q._answer).trim().toLowerCase();
-
-      document.querySelectorAll('.answer-option').forEach(b=>{
-        b.disabled=true;
-
-        if (String(b.textContent).trim().toLowerCase()===
-            String(q._answer).trim().toLowerCase()) {
-          b.classList.add('correct');
-        }
-      });
-
-      answerQuestion(right,q);
-    };
-
-    $('mcqContainer').appendChild(button);
-  });
-}
-
-let slots=[];
-let letters=[];
-
-function renderWord(q) {
-  $('mcqContainer').classList.add('hidden');
-  $('wordContainer').classList.remove('hidden');
-
-  const word=String(q.word||'').toUpperCase();
-
-  slots=new Array(word.length).fill('');
-  letters=shuffle(word.split(''));
-
-  $('wordSlots').innerHTML=word.split('').map((_,i)=>
-    '<button class="word-slot" onclick="removeWordLetter('+i+')"></button>'
-  ).join('');
-
-  $('letterBank').innerHTML=letters.map((letter,i)=>
-    '<button class="letter-button" onclick="chooseWordLetter('+i+')">'+letter+'</button>'
-  ).join('');
-}
-
-function updateWord() {
-  document.querySelectorAll('.word-slot').forEach((button,i)=>{
-    button.textContent=slots[i]||'';
-  });
-}
-
-window.chooseWordLetter=function(i) {
-  if (answered) return;
-
-  const empty=slots.indexOf('');
-
-  if (empty<0) return;
-
-  slots[empty]=letters[i];
-  updateWord();
-
-  if (slots.every(x=>x!=='')) {
-    const answer=String(questions[index].word).toUpperCase();
-    answerQuestion(slots.join('')===answer,questions[index]);
-  }
-};
-
-window.removeWordLetter=function(i) {
-  if (answered) return;
-
-  slots[i]='';
-  updateWord();
-};
-
-window.backspaceLetter=function() {
-  if (answered) return;
-
-  for(let i=slots.length-1;i>=0;i--) {
-    if(slots[i]!=='') {
-      slots[i]='';
-      break;
-    }
-  }
-
-  updateWord();
-};
-
-window.clearWordGuess=function() {
-  if (answered) return;
-
-  slots.fill('');
-  updateWord();
-};
-
-function answerQuestion(right,q) {
-  if (answered) return;
-
-  answered=true;
-
-  if (right) {
-    score+=10;
-    correct++;
-    $('feedbackBox').textContent='Betul! Syabas! '+(q.exp||'');
-  } else {
-    $('feedbackBox').textContent='Belum tepat. '+(q.exp||'');
-  }
-
-  $('playScoreBadge').textContent='⭐ '+score;
-
-  $('nextQuestionBtn').classList.remove('hidden');
-
-  if (game==='kepantasan') {
-    setTimeout(nextQuestion,900);
-  }
-}
-
-function nextQuestion() {
-  if (!answered) return;
-
-  index++;
-  renderQuestion();
-}
-
-function finishGame() {
-  clearInterval(timer);
-
-  const bonus=game==='harian'?50:0;
-  const total=score+bonus;
-
-  const stats=JSON.parse(localStorage.getItem('pindas_stats')||'{}');
-
-  stats.totalScore=(stats.totalScore||0)+total;
-  stats.totalGames=(stats.totalGames||0)+1;
-  stats.totalCorrect=(stats.totalCorrect||0)+correct;
-  stats.level=Math.floor(stats.totalScore/100)+1;
-
-  localStorage.setItem('pindas_stats',JSON.stringify(stats));
-
-  let history=JSON.parse(localStorage.getItem('pindas_history')||'[]');
-
-  history.unshift({
-    game:NAMES[game],
-    age:age,
-    score:total,
-    correct:correct,
-    total:questions.length,
-    date:new Date().toLocaleDateString('ms-MY')
-  });
-
-  history=history.slice(0,50);
-
-  localStorage.setItem('pindas_history',JSON.stringify(history));
-
-  $('resultTitle').textContent='Tahniah! Permainan Selesai';
-  $('resultSubtitle').textContent=NAMES[game]+' • '+age;
-  $('resultStars').textContent='⭐'.repeat(Math.max(1,Math.min(3,Math.ceil(correct/Math.max(1,questions.length)*3))));
-  $('resScore').textContent=total;
-  $('resCorrect').textContent=correct+' / '+questions.length;
-  $('resLevel').textContent=stats.level;
-
-  switchView('result');
-}
-
-function renderRecords() {
-  const history=JSON.parse(localStorage.getItem('pindas_history')||'[]');
-
-  $('historyList').innerHTML=history.length
-    ? history.map(item=>'<p>'+item.game+' | '+item.age+' | '+item.score+' mata | '+item.date+'</p>').join('')
-    : '<p>Belum ada rekod.</p>';
-
-  $('highScoresList').innerHTML=
-    '<p>Jumlah permainan: '+history.length+'</p>';
-}
-
-function renderBadges() {
-  $('badgesGrid').innerHTML='<p>Teruskan bermain untuk mengumpul pencapaian.</p>';
-}
-
-function replayGame() {
-  startGame(game);
-}
-
-function pressPinKey(number) {
-  if (pin.length>=4) return;
-
-  pin+=String(number);
-
-  if (pin.length===4) {
-    const saved=localStorage.getItem('pindas_parent_pin')||'1234';
-
-    if (changingPin) {
-      if (!firstNewPin) {
-        firstNewPin=pin;
-        pin='';
-        $('pinErrorMsg').textContent='Masukkan PIN baharu sekali lagi.';
-        return;
-      }
-
-      if (pin===firstNewPin) {
-        localStorage.setItem('pindas_parent_pin',pin);
-        $('pinErrorMsg').textContent='PIN berjaya ditukar.';
-        changingPin=false;
-        firstNewPin='';
-      } else {
-        $('pinErrorMsg').textContent='PIN tidak sama.';
-        changingPin=false;
-        firstNewPin='';
-      }
-    } else if (pin===saved) {
-      $('parentLockPanel').classList.add('hidden');
-      $('parentDashboardPanel').classList.remove('hidden');
-    } else {
-      $('pinErrorMsg').textContent='PIN salah.';
-    }
-
-    pin='';
-  }
-}
-
-function clearPinInput() {
-  pin='';
-  $('pinErrorMsg').textContent='';
-}
-
-function startChangePin() {
-  changingPin=true;
-  firstNewPin='';
-  $('pinErrorMsg').textContent='Masukkan PIN baharu 4 angka.';
-}
-
-function lockParentPanel() {
-  $('parentDashboardPanel').classList.add('hidden');
-  $('parentLockPanel').classList.remove('hidden');
-  clearPinInput();
-}
-
-function updateTimeLimit(value) {
-  localStorage.setItem('pindas_time_limit',value);
-}
-
-function updateAdSetting(value) {
-  localStorage.setItem('pindas_ad_setting',value);
-}
-
-function resetAllGameData() {
-  if (!confirm('Padam semua rekod permainan?')) return;
-
-  localStorage.removeItem('pindas_stats');
-  localStorage.removeItem('pindas_history');
-
-  renderRecords();
-  alert('Rekod telah dipadam.');
-}
-
-function openInstallModal() {}
-function closeInstallModal() {}
-function closeTimeLimitModal() {}
-
-window.startGame=startGame;
-window.switchView=switchView;
-window.nextQuestion=nextQuestion;
-window.replayGame=replayGame;
-window.pressPinKey=pressPinKey;
-window.clearPinInput=clearPinInput;
-window.startChangePin=startChangePin;
-window.lockParentPanel=lockParentPanel;
-window.updateTimeLimit=updateTimeLimit;
-window.updateAdSetting=updateAdSetting;
-window.resetAllGameData=resetAllGameData;
-window.openInstallModal=openInstallModal;
-window.closeInstallModal=closeInstallModal;
-window.closeTimeLimitModal=closeTimeLimitModal;
-
-document.querySelectorAll('[data-age]').forEach(button=>{
-  button.addEventListener('click',()=>{
-    selectAge(button.dataset.age);
-  });
-});
-
-$('replayBtn').addEventListener('click',replayGame);
-
-$('timeLimitSelect').addEventListener('change',e=>{
-  updateTimeLimit(e.target.value);
-});
-
-$('adToggleSelect').addEventListener('change',e=>{
-  updateAdSetting(e.target.value);
-});
-
-selectAge(age);
-
-})();
-</script>
-
+<script src="./app.js"></script>
 </body>
 </html>

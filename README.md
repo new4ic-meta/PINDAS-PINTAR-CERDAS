@@ -1,31 +1,28 @@
-# PINDAS – PINTAR CERDAS
-**Slogan:** *Ilmu Membina Masa Depan.*
+# PINDAS + PIYDEN + AFIDAN
 
-Aplikasi permainan minda interaktif yang ceria dan selamat untuk kanak-kanak serta remaja berumur **4–17 tahun**.
+Edisi gabungan web/PWA mesra telefon.
 
-## Struktur Fail Projek
-- `index.html` – Struktur utama antaramuka pengguna (mobile-first) dengan KAMPUS PINDAS sebagai konsep sekolah kedua digital.
-- `styles.css` – Penggayaan responsif mesra iPhone (Safari) dan Android.
-- `data.js` – Bank soalan lengkap merentasi 5 kategori umur dan lencana pencapaian.
-- `app.js` – Enjin permainan, soalan dan pilihan jawapan rawak, pengiraan markah, tahap, bintang, rekod, had masa, dan kawalan ibu bapa ber-PIN.
-- `pindas-revenue.html` / `pindas-revenue.css` – Halaman sokongan sukarela dan maklumat penajaan untuk orang dewasa.
-- `manifest.json` – Konfigurasi pemasangan Progressive Web App (PWA).
-- `sw.js` – Service Worker untuk sokongan luar talian (offline).
-- `icons/icon.svg` – Ikon vektor aplikasi PINDAS.
+## Kandungan
+- `index.html` — halaman utama dan tiga modul.
+- `styles.css` — reka bentuk responsif.
+- `data.js` — bank soalan PINDAS mengikut umur dan bidang.
+- `app.js` — navigasi, kuiz, PIYDEN NEON RUSH dan alat asas AFIDAN.
+- `manifest.json` — tetapan PWA.
+- `sw.js` — cache aset teras untuk kegunaan luar talian selepas lawatan pertama yang berjaya.
+- `icon.svg` — ikon edisi gabungan.
 
-## Cara Menjalankan Aplikasi
-1. Ekstrak fail ZIP ini ke mana-mana folder.
-2. Untuk menguji terus, buka `index.html` menggunakan pelayar web moden (Safari, Chrome, Edge, Firefox).
-3. Untuk mengaktifkan **Service Worker (PWA)** sepenuhnya pada telefon atau komputer, jalankan melalui pelayan web tempatan (contoh: `npx serve .` atau `python -m http.server 8080`) dan buka `http://localhost:8080`.
+## Pasang pada GitHub Pages
+1. Muat turun dan ekstrak ZIP.
+2. Buka repositori GitHub Pages yang hendak digunakan.
+3. Gantikan fail laman lama dengan semua fail di dalam folder ini.
+4. Pastikan `index.html` berada di root repositori, bukan di dalam subfolder tambahan.
+5. Commit perubahan dan tunggu GitHub Pages selesai diterbitkan.
+6. Buka laman sekali ketika internet tersedia. Selepas cache selesai, cuba mod kapal terbang untuk menguji aset dan kandungan yang dicache.
 
-
-## Status Pakej
-- Versi pakej: **Kampus Sekolah Kedua V1.1**.
-- Cache PWA dinaik taraf kepada `pindas-cache-v1.3.0` supaya pelayar memuatkan aset versi baharu.
-
-## Penambahbaikan Pakej Ini
-- KAMPUS PINDAS memperkenalkan pengalaman seperti sekolah kedua: pintasan Sains & Dunia, Matematik, Bahasa, serta Logik & Minda.
-- Set soalan diacak setiap kali permainan bermula; pilihan jawapan turut diacak sambil indeks jawapan betul dikekalkan.
-- Cabaran harian memilih satu soalan rawak daripada setiap bidang campuran.
-- Halaman sokongan dan penajaan dipisahkan daripada permainan. Permainan asas kekal percuma; sebarang urusan kewangan ditujukan kepada orang dewasa/penjaga dan memerlukan saluran rasmi yang disahkan.
-- PIYDEN ARCADE V2.0 dikekalkan sebagai modul berasingan.
+## Nota penting
+- Kuiz menyusun soalan secara rawak dan tidak mengulang soalan dalam satu pusingan bagi bidang yang dipilih. Selepas semua soalan habis, tekan "Ulang bidang" untuk pusingan baharu.
+- Bank soalan ini ialah kandungan asas contoh dan perlu disemak guru sebelum digunakan sebagai bahan kurikulum rasmi.
+- PIYDEN menyimpan rekod terbaik pada peranti melalui localStorage.
+- AFIDAN dalam pakej ini ialah alat templat setempat/offline, bukan sambungan kepada model AI awan. Tiada API key atau caj API digunakan.
+- Offline PWA tidak boleh dijamin sebelum lawatan pertama berjaya memuat turun dan menyimpan cache. Kandungan luaran dan fungsi dalam talian tidak akan tersedia tanpa internet.
+- Pakej ini tidak menyertakan pangkalan data pengguna, akaun, pembayaran, atau backend.

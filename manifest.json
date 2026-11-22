@@ -1,19 +1,18 @@
 {
-  "name": "PINDAS – PINTAR CERDAS",
+  "name": "PINDAS + PIYDEN + AFIDAN",
   "short_name": "PINDAS",
-  "description": "Ilmu Membina Masa Depan. Aplikasi permainan santai berasaskan ilmu dan cabaran minda untuk kanak-kanak dan remaja berumur 4–17 tahun.",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#F0F4FF",
-  "theme_color": "#4F46E5",
-  "orientation": "portrait",
-  "lang": "ms",
+  "background_color": "#081225",
+  "theme_color": "#091225",
+  "description": "Platform pembelajaran, permainan dan pembantu digital.",
   "icons": [
     {
-      "src": "./icons/icon.svg",
+      "src": "./icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
