@@ -1,0 +1,7 @@
+{
+  "name": "pindas-piyden-afidan",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Combined PINDAS, PIYDEN and AFIDAN platform"
+}

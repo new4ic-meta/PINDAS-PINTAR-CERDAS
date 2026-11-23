@@ -1,28 +1,25 @@
-# PINDAS + PIYDEN + AFIDAN
-
-Edisi gabungan web/PWA mesra telefon.
+# PINDAS + PIYDEN + AFIDAN — Edisi Fail Baharu
 
 ## Kandungan
-- `index.html` — halaman utama dan tiga modul.
-- `styles.css` — reka bentuk responsif.
-- `data.js` — bank soalan PINDAS mengikut umur dan bidang.
-- `app.js` — navigasi, kuiz, PIYDEN NEON RUSH dan alat asas AFIDAN.
-- `manifest.json` — tetapan PWA.
-- `sw.js` — cache aset teras untuk kegunaan luar talian selepas lawatan pertama yang berjaya.
-- `icon.svg` — ikon edisi gabungan.
+- `index.html`, `styles.css`: UI responsif.
+- `data.js`: bank 200 soalan (5 kumpulan umur × 4 subjek × 10 soalan, termasuk variasi kategori).
+- `app.js`: kuiz tanpa pengulangan dalam satu kitaran, permainan NEON RUSH 45 saat, AFIDAN offline fallback dan sambungan API.
+- `manifest.json`, `sw.js`, `icon.svg`: PWA dan cache asas.
+- `api/assistant.js`: endpoint server pilihan untuk AI generatif.
+- `vercel.json`, `package.json`: konfigurasi deploy pilihan.
 
-## Pasang pada GitHub Pages
-1. Muat turun dan ekstrak ZIP.
-2. Buka repositori GitHub Pages yang hendak digunakan.
-3. Gantikan fail laman lama dengan semua fail di dalam folder ini.
-4. Pastikan `index.html` berada di root repositori, bukan di dalam subfolder tambahan.
-5. Commit perubahan dan tunggu GitHub Pages selesai diterbitkan.
-6. Buka laman sekali ketika internet tersedia. Selepas cache selesai, cuba mod kapal terbang untuk menguji aset dan kandungan yang dicache.
+## Jalankan
+Boleh host sebagai laman statik melalui GitHub Pages. Untuk fungsi offline/PWA, gunakan HTTPS. Fail perlu dimuatkan sekurang-kurangnya sekali ketika online.
 
-## Nota penting
-- Kuiz menyusun soalan secara rawak dan tidak mengulang soalan dalam satu pusingan bagi bidang yang dipilih. Selepas semua soalan habis, tekan "Ulang bidang" untuk pusingan baharu.
-- Bank soalan ini ialah kandungan asas contoh dan perlu disemak guru sebelum digunakan sebagai bahan kurikulum rasmi.
-- PIYDEN menyimpan rekod terbaik pada peranti melalui localStorage.
-- AFIDAN dalam pakej ini ialah alat templat setempat/offline, bukan sambungan kepada model AI awan. Tiada API key atau caj API digunakan.
-- Offline PWA tidak boleh dijamin sebelum lawatan pertama berjaya memuat turun dan menyimpan cache. Kandungan luaran dan fungsi dalam talian tidak akan tersedia tanpa internet.
-- Pakej ini tidak menyertakan pangkalan data pengguna, akaun, pembayaran, atau backend.
+## AFIDAN ONLINE
+Deploy ke platform yang menyokong fungsi serverless. Tetapkan `AI_API_KEY` sebagai environment variable rahsia. Pilihan: `AI_API_URL` dan `AI_MODEL`. Jangan masukkan API key ke fail frontend atau repositori awam.
+Jika endpoint tidak tersedia, butang Jana Bantuan tetap memberi rangka bantuan asas OFFLINE; ia tidak mendakwa sebagai jawapan AI generatif.
+
+## Pembayaran
+Integrasi TNG Business/DuitNow belum diaktifkan. Jangan tandakan pembelian sebagai berjaya berdasarkan screenshot/QR atau teks pelanggan. Sambungkan penyedia pembayaran yang diluluskan dan sahkan transaksi di server sebelum memberikan akses premium. Jangan simpan nombor akaun, PIN, OTP, QR peribadi atau kunci rahsia dalam repositori.
+
+## Ujian penerimaan sebelum pelancaran
+1. PINDAS: pilih setiap umur/subjek, jawab semua soalan dalam kitaran dan pastikan ID soalan tidak berulang sehingga bank habis.
+2. PIYDEN: mula permainan; pastikan orb kelihatan, kawalan sentuh dan papan kekunci bergerak, timer tamat pada 45 saat.
+3. AFIDAN: cuba tanpa internet (rangka offline), kemudian deploy endpoint dan uji jawapan ONLINE.
+4. Uji Safari iPhone dan Chrome Android sebenar. ZIP ini belum diuji pada akaun hosting atau peranti pengguna.

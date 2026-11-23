@@ -1,114 +1,47 @@
 (() => {
 "use strict";
-const $ = id => document.getElementById(id);
-const DATA = window.PINDAS_DATA || {};
-let age = "4-6", subject = "Asas Nombor", deck = [], index = 0, answered = 0, locked = false;
-const usedByRound = new Set();
-const progressKey = "pindasCombinedProgressV1";
-
-function shuffle(list){const a=list.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function subjects(){return Object.keys(DATA[age] || {});}
-function renderSubjects(){
-  $("subjectChoices").innerHTML="";
-  subjects().forEach(s=>{const b=document.createElement("button");b.className="subject"+(s===subject?" selected":"");b.textContent=s;b.addEventListener("click",()=>{subject=s;renderSubjects();startQuiz();});$("subjectChoices").appendChild(b);});
-}
-function startQuiz(){
-  const bank=(DATA[age]||{})[subject]||[];
-  deck=shuffle(bank.map((q,i)=>({...q,_id:age+"|"+subject+"|"+i})));
-  index=0;answered=0;locked=false;usedByRound.clear();
-  showQuestion();
-}
-function showQuestion(){
-  const q=deck[index];
-  if(!q){$("questionText").textContent="Tiada soalan tersedia untuk pilihan ini.";return;}
-  $("quizSubject").textContent=subject;
-  $("questionCount").textContent=`Soalan ${index+1} / ${deck.length}`;
-  $("questionText").textContent=q.q;
-  $("quizFeedback").textContent="";
-  $("nextQuestion").disabled=true;
-  $("answerChoices").innerHTML="";
-  q.a.forEach((label,i)=>{const b=document.createElement("button");b.className="answer";b.textContent=label;b.addEventListener("click",()=>chooseAnswer(i));$("answerChoices").appendChild(b);});
-  $("progressText").textContent=`Kemajuan sesi: ${answered} dijawab`;
-  $("progressFill").style.width=(deck.length?answered/deck.length*100:0)+"%";
-}
-function chooseAnswer(choice){
-  if(locked)return;locked=true;answered++;
-  const q=deck[index], buttons=[...$("answerChoices").children];
-  buttons.forEach((b,i)=>{b.disabled=true;if(i===q.c)b.classList.add("correct");else if(i===choice)b.classList.add("wrong");});
-  $("quizFeedback").textContent=choice===q.c?"Betul! Bagus, teruskan.":"Belum tepat. Jawapan yang betul ditandakan.";
-  $("nextQuestion").disabled=false;
-  $("progressText").textContent=`Kemajuan sesi: ${answered} dijawab`;
-  $("progressFill").style.width=(answered/deck.length*100)+"%";
-  try{localStorage.setItem(progressKey,JSON.stringify({age,subject,answered,total:deck.length,updated:new Date().toISOString()}));}catch(_){}
-}
+const $=id=>document.getElementById(id);
+document.querySelectorAll(".nav").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".nav,.panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(b.dataset.tab).classList.add("active");}));
+/* PINDAS: no-repeat bag per age+subject, reshuffled only after exhaustion. */
+let bag=[], current=null, score=0, answered=0, locked=false;
+const key=()=>`pindas:v2:${$("age").value}:${$("subject").value}`;
+function loadBag(){try{return JSON.parse(localStorage.getItem(key())||"[]")}catch{return []}}
+function saveBag(){localStorage.setItem(key(),JSON.stringify(bag))}
+function pool(){return (window.PINDAS_QUESTIONS||[]).filter(q=>q.age===$("age").value&&($("subject").value==="campur"||q.subject===$("subject").value))}
+function updateStats(){$("score").textContent=score;$("answered").textContent=answered;$("remaining").textContent=bag.length}
 function nextQuestion(){
-  if(!locked)return;
-  if(index<deck.length-1){index++;locked=false;showQuestion();}
-  else{$("questionText").textContent=`Selesai! Anda telah menjawab ${answered} soalan ${subject}.`; $("answerChoices").innerHTML="";$("quizFeedback").textContent="Tekan “Ulang bidang” untuk susunan soalan baharu."; $("nextQuestion").disabled=true;}
+ locked=false; let all=pool(); if(!all.length){$("quiz").innerHTML='<p>Bank soalan untuk pilihan ini belum tersedia.</p>';return}
+ if(!bag.length){bag=all.map(q=>q.id);for(let i=bag.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]]}saveBag();}
+ let id=bag.pop();saveBag();current=all.find(q=>q.id===id);
+ $("quiz").innerHTML=`<p class="eyebrow">${current.subject.toUpperCase()} · ${current.age} TAHUN</p><p class="question">${current.question}</p><div class="answers">${current.options.map((o,i)=>`<button class="answer" data-answer="${i}">${String.fromCharCode(65+i)}. ${o}</button>`).join("")}</div>`;
+ document.querySelectorAll(".answer").forEach((b,i)=>b.addEventListener("click",()=>checkAnswer(current.options[i],b)));
+ updateStats();
 }
-$("ageChoices").addEventListener("click",e=>{const b=e.target.closest("[data-age]");if(!b)return;age=b.dataset.age;[...$("ageChoices").children].forEach(x=>x.classList.toggle("selected",x===b));subject=subjects()[0];renderSubjects();startQuiz();});
-$("nextQuestion").addEventListener("click",nextQuestion);
-$("restartQuiz").addEventListener("click",startQuiz);
-renderSubjects();startQuiz();
+function checkAnswer(choice,button){if(locked)return;locked=true;let ok=choice===current.answer;if(ok){score+=10;$("quizFeedback").textContent="Betul! +10 mata."}else{$("quizFeedback").textContent=`Belum tepat. Jawapan: ${current.answer}.`}if(!ok)button.style.borderColor="#fb7185";document.querySelectorAll(".answer").forEach(b=>{b.disabled=true;if(b.textContent.endsWith(current.answer))b.style.borderColor="#4ade80"});answered++;updateStats();}
+$("startQuiz").addEventListener("click",()=>{if(!current||locked)nextQuestion();else $("quizFeedback").textContent="Pilih satu jawapan dahulu."});
+$("resetQuiz").addEventListener("click",()=>{bag=[];saveBag();score=0;answered=0;current=null;$("quizFeedback").textContent="Sesi diset semula. Soalan akan dikocok semula.";updateStats();$("quiz").innerHTML='<p class="muted">Tekan Mula / Soalan seterusnya.</p>';});
+["age","subject"].forEach(id=>$(id).addEventListener("change",()=>{bag=loadBag();current=null;$("quiz").innerHTML='<p class="muted">Pilihan berubah. Tekan mula untuk soalan baharu.</p>';updateStats();}));
+bag=loadBag();updateStats();
 
-// Main navigation
-document.querySelectorAll(".nav").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+b.dataset.page));}));
+/* PIYDEN canvas game: visible objects are drawn every animation frame. */
+const canvas=$("gameCanvas"),ctx=canvas.getContext("2d");let running=false,remaining=45,gscore=0,combo=0,last=0,player={x:360,y:210,r:13},orbs=[],keys={};
+function spawn(){const types=[{c:"#38bdf8",v:10,r:10},{c:"#fb7185",v:-15,r:11},{c:"#facc15",v:50,r:13}];let t=types[Math.floor(Math.random()*types.length)];return{x:25+Math.random()*670,y:25+Math.random()*370,...t}}
+function draw(){ctx.clearRect(0,0,720,420);ctx.fillStyle="#0a1730";ctx.fillRect(0,0,720,420);ctx.strokeStyle="#142b4a";for(let x=0;x<720;x+=30){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,420);ctx.stroke()}for(let y=0;y<420;y+=30){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(720,y);ctx.stroke()}
+orbs.forEach(o=>{ctx.shadowBlur=18;ctx.shadowColor=o.c;ctx.fillStyle=o.c;ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0});ctx.fillStyle="#fff";ctx.shadowBlur=16;ctx.shadowColor="#fff";ctx.beginPath();ctx.arc(player.x,player.y,player.r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0; if(!running){ctx.fillStyle="#dceaff";ctx.font="bold 23px system-ui";ctx.textAlign="center";ctx.fillText("NEON RUSH",360,195);ctx.font="14px system-ui";ctx.fillText("Tekan Mula permainan",360,222)}}
+function update(ts){if(!running){draw();return}let dt=Math.min((ts-last)/16,2);last=ts;if(keys.left||keys.a)player.x-=4*dt;if(keys.right||keys.d)player.x+=4*dt;if(keys.up||keys.w)player.y-=4*dt;if(keys.down||keys.s)player.y+=4*dt;player.x=Math.max(14,Math.min(706,player.x));player.y=Math.max(14,Math.min(406,player.y));
+if(Math.random()<.035&&orbs.length<9)orbs.push(spawn());orbs=orbs.filter(o=>{if(Math.hypot(o.x-player.x,o.y-player.y)<o.r+player.r){gscore+=o.v;combo=o.v>0?combo+1:0;$("gameScore").textContent=gscore;$("combo").textContent=combo;return false}return true});draw();requestAnimationFrame(update)}
+function startGame(){running=true;remaining=45;gscore=0;combo=0;orbs=[spawn(),spawn(),spawn(),spawn()];player={x:360,y:210,r:13};$("time").textContent=45;$("gameScore").textContent=0;$("combo").textContent=0;$("gameMsg").textContent="Mula! Kumpul orb.";last=performance.now();requestAnimationFrame(update);clearInterval(window.piydenTimer);window.piydenTimer=setInterval(()=>{remaining--;$("time").textContent=remaining;if(remaining<=0){running=false;clearInterval(window.piydenTimer);$("gameMsg").textContent=`Tamat! Skor akhir: ${gscore}. Tekan mula untuk bermain lagi.`;draw()}},1000)}
+$("gameStart").addEventListener("click",startGame);
+window.addEventListener("keydown",e=>{let k=e.key.toLowerCase();if(["arrowup","arrowdown","arrowleft","arrowright"," "].includes(k))e.preventDefault();keys[k.replace("arrow","")]=true});
+window.addEventListener("keyup",e=>{let k=e.key.toLowerCase();keys[k.replace("arrow","")]=false});
+document.querySelectorAll("[data-dir]").forEach(b=>{let d=b.dataset.dir;const on=e=>{e.preventDefault();keys[d]=true},off=e=>{e.preventDefault();keys[d]=false};b.addEventListener("pointerdown",on);["pointerup","pointerleave","pointercancel"].forEach(ev=>b.addEventListener(ev,off));});
+draw();
 
-// PIYDEN NEON RUSH
-let score=0,best=0,combo=3,timeLeft=45,running=false,soundOn=true,spawnTimer=null,clockTimer=null,audio=null;
-const area=$("gameArea");
-try{best=Number(localStorage.getItem("piydenArcadeV2Best"))||0;}catch(_){}
-$("gameBest").textContent=best;
-function updateGame(){ $("gameScore").textContent=score;$("gameTime").textContent=timeLeft;$("gameCombo").textContent="x"+combo;$("gameBest").textContent=best;}
-function tone(freq=520){if(!soundOn)return;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audio=audio||new AC();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;g.gain.value=.035;o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.08);}catch(_){}}
-function clearOrbs(){area.querySelectorAll(".orb").forEach(x=>x.remove());}
-function stopGame(message){running=false;clearInterval(spawnTimer);clearInterval(clockTimer);clearOrbs();$("gameOverlay").hidden=false;$("gameOverlayTitle").textContent="TAMAT!";$("gameOverlayText").textContent=message||`Skor anda: ${score}`;$("gameStart").textContent="MAIN LAGI";if(score>best){best=score;try{localStorage.setItem("piydenArcadeV2Best",String(best));}catch(_){}}updateGame();}
-function spawnOrb(){
-  if(!running)return;
-  const r=Math.random(),type=r<.64?"blue":r<.88?"red":"gold",orb=document.createElement("button");
-  orb.type="button";orb.className="orb "+type;orb.setAttribute("aria-label",type==="blue"?"Orb biru tambah sepuluh":type==="red"?"Orb merah tolak lima belas":"Orb emas tambah lima puluh");
-  const size=46,rect=area.getBoundingClientRect();orb.style.left=Math.max(0,Math.random()*(rect.width-size))+"px";orb.style.top=Math.max(0,Math.random()*(rect.height-size))+"px";
-  orb.addEventListener("pointerdown",e=>{e.preventDefault();if(!running)return;const points=type==="blue"?10:type==="red"?-15:50;score=Math.max(0,score+points*combo);combo=type==="red"?1:Math.min(12,combo+1);tone(type==="gold"?880:type==="red"?180:520);orb.remove();updateGame();});
-  area.appendChild(orb);setTimeout(()=>orb.remove(),1100);
-}
-function startGame(){clearInterval(spawnTimer);clearInterval(clockTimer);clearOrbs();score=0;combo=3;timeLeft=45;running=true;$("gameOverlay").hidden=true;updateGame();spawnTimer=setInterval(spawnOrb,720);clockTimer=setInterval(()=>{timeLeft--;updateGame();if(timeLeft<=0)stopGame(`Masa tamat. Skor akhir: ${score}`);},1000);}
-$("gameStart").addEventListener("click",startGame);$("gameRestart").addEventListener("click",startGame);
-$("soundToggle").addEventListener("click",()=>{soundOn=!soundOn;$("soundToggle").textContent=soundOn?"🔊 Bunyi: ON":"🔇 Bunyi: OFF";if(soundOn)tone();});
-
-// AFIDAN local helper tools
-const toolInfo={
- assistant:["AI Assistant","Tulis soalan atau perkara yang mahu difahami. AFIDAN akan susun permintaan menjadi langkah yang lebih jelas."],
- writer:["Penulis Kandungan","Masukkan topik, tujuan dan pembaca sasaran. AFIDAN menyediakan rangka penulisan."],
- video:["AI Video Planner","Masukkan tajuk video. AFIDAN membina rangka pembukaan, isi dan penutup."],
- robotics:["Robotics","Masukkan idea robotik. AFIDAN menyusun objektif, komponen umum dan langkah pembelajaran selamat."],
- home:["Smart Home","Masukkan ruang atau keperluan rumah. AFIDAN menyediakan senarai idea automasi dan pertimbangan privasi."],
- cyber:["Cybersecurity","Masukkan situasi digital. AFIDAN memberi peringatan keselamatan asas."],
- shopping:["Smart Shopping","Masukkan barang dan bajet. AFIDAN membina senarai perbandingan keperluan, harga dan ketahanan."]
-};
-let activeTool="assistant";
-function selectTool(key){
-  activeTool=key;$("afidanTitle").textContent=toolInfo[key][0];
-  document.querySelectorAll(".tool-card").forEach(b=>b.classList.toggle("active",b.dataset.tool===key));
-  $("afidanOutput").textContent=toolInfo[key][1];
-}
-$("afidanTools").addEventListener("click",e=>{const b=e.target.closest("[data-tool]");if(b)selectTool(b.dataset.tool);});
-$("afidanRun").addEventListener("click",()=>{
-  const input=$("afidanInput").value.trim();if(!input){$("afidanOutput").textContent="Sila masukkan idea atau arahan dahulu.";return;}
-  const templates={
-    assistant:`RINGKASAN PERMINTAAN\n${input}\n\nLANGKAH SETERUSNYA\n1. Nyatakan hasil yang anda mahu.\n2. Pecahkan tugasan kepada bahagian kecil.\n3. Semak fakta penting daripada sumber yang dipercayai.\n4. Nilai hasil sebelum digunakan.`,
-    writer:`RANGKA KANDUNGAN\nTajuk: ${input}\n\n1. Pengenalan — terangkan topik dan sebab ia penting.\n2. Isi utama — huraikan 2 hingga 3 perkara penting.\n3. Contoh — berikan contoh yang tepat dan mudah difahami.\n4. Kesimpulan — rumuskan mesej utama.\n\nSemak fakta dan ubah suai mengikut pembaca sasaran.`,
-    video:`RANGKA VIDEO PENDEK\nTopik: ${input}\n\n0–3 saat: Pembukaan yang menarik.\n4–12 saat: Terangkan masalah atau persoalan.\n13–25 saat: Berikan 2 atau 3 isi utama.\nAkhir: Rumusan dan ajakan yang sesuai.\n\nPastikan visual, muzik dan bahan yang digunakan mempunyai kebenaran penggunaan.`,
-    robotics:`NOTA PEMBELAJARAN ROBOTIK\nIdea: ${input}\n\n• Objektif: Apakah tugas yang perlu dipelajari?\n• Konsep: Sensor, pengawal dan output.\n• Perancangan: Lukis aliran input → proses → output.\n• Ujian: Mulakan dengan simulasi atau kit pendidikan yang sesuai dan pengawasan orang dewasa.`,
-    home:`IDEA RUMAH PINTAR\nKeperluan: ${input}\n\n• Kenal pasti masalah yang mahu diselesaikan.\n• Utamakan peranti yang mempunyai kemas kini keselamatan.\n• Gunakan kata laluan unik dan pengesahan berbilang faktor.\n• Semak privasi, kebenaran aplikasi dan keserasian sebelum membeli.`,
-    cyber:`SENARAI SEMAK KESELAMATAN\nSituasi: ${input}\n\n• Jangan kongsi kata laluan, OTP atau kod pengesahan.\n• Semak alamat laman melalui saluran rasmi.\n• Berhati-hati dengan mesej yang mendesak atau menjanjikan ganjaran luar biasa.\n• Jika melibatkan akaun, hubungi penyedia melalui aplikasi atau nombor rasmi.`,
-    shopping:`SENARAI PERBANDINGAN\nBarang/keperluan: ${input}\n\nBandingkan setiap pilihan berdasarkan:\n1. Harga keseluruhan dan kos penghantaran.\n2. Fungsi yang benar-benar diperlukan.\n3. Waranti dan sokongan selepas jualan.\n4. Ulasan yang boleh dipercayai.\n5. Polisi pemulangan dan keselamatan pembayaran.`
-  };
-  $("afidanOutput").textContent=templates[activeTool];
-});
-selectTool("assistant");
-
-// PWA status + service worker
-function networkLabel(){ $("networkStatus").textContent=navigator.onLine?"● Dalam talian":"● Mod luar talian"; }
-window.addEventListener("online",networkLabel);window.addEventListener("offline",networkLabel);networkLabel();
-if("serviceWorker" in navigator && location.protocol!=="file:"){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{$("networkStatus").textContent="● Cache offline belum tersedia";}));}
+/* AFIDAN: offline-safe deterministic helper, optional secure online API endpoint. */
+let moduleName="assistant";document.querySelectorAll(".module").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".module").forEach(x=>x.classList.remove("active"));b.classList.add("active");moduleName=b.dataset.module;}));
+function offlineDraft(prompt,mod){const p=prompt.trim();if(!p)return "Sila masukkan permintaan dahulu.";const title={assistant:"Draf bantuan",agent:"Pelan tindakan",video:"Rangka video",robotics:"Idea robotik",home:"Cadangan rumah pintar",security:"Semakan keselamatan",shopping:"Panduan perbandingan"}[mod]||"Bantuan";return `${title} — MOD ASAS OFFLINE\n\nPermintaan: ${p}\n\nCadangan:\n1. Tetapkan hasil akhir yang anda mahu.\n2. Senaraikan maklumat atau bahan yang diperlukan.\n3. Pecahkan kerja kepada langkah kecil.\n4. Semak ketepatan, keselamatan dan kesesuaian sebelum digunakan.\n\nNota: Ini ialah rangka bantuan luar talian, bukan jawapan AI generatif atau fakta yang telah disahkan.`}
+async function generate(){const prompt=$("request").value.trim();if(!prompt){$("aiOutput").textContent="Sila masukkan permintaan dahulu.";return}const btn=$("generate");btn.disabled=true;btn.textContent="Sedang menyediakan…";$("aiOutput").textContent="Sedang memproses…";
+try{const r=await fetch("/api/assistant",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,module:moduleName})});if(r.ok){const data=await r.json();if(data.answer){$("aiOutput").textContent=data.answer;$("aiStatus").textContent="ONLINE";return}}throw new Error("online unavailable")}catch(e){$("aiOutput").textContent=offlineDraft(prompt,moduleName);$("aiStatus").textContent="ASAS · OFFLINE"}finally{btn.disabled=false;btn.textContent="Jana bantuan"}}
+$("generate").addEventListener("click",generate);$("clearAI").addEventListener("click",()=>{$("request").value="";$("aiOutput").textContent="Masukkan permintaan dan tekan “Jana bantuan”."});
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 })();

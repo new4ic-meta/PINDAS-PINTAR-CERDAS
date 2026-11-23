@@ -1,193 +1,2602 @@
-/* PINDAS question bank. Questions are grouped by age and subject. */
-window.PINDAS_DATA = {
-  "4-6": {
-    "Asas Nombor": [
-      {q:"Berapakah 2 + 1?",a:["2","3","4","5"],c:1},
-      {q:"Nombor selepas 4 ialah…",a:["3","5","6","7"],c:1},
-      {q:"Antara ini, yang manakah paling kecil?",a:["8","2","6","9"],c:1},
-      {q:"Berapakah 5 − 2?",a:["1","2","3","4"],c:2},
-      {q:"Ada 3 biji epal. Tambah 2 biji. Jumlahnya?",a:["4","5","6","7"],c:1},
-      {q:"Bentuk yang mempunyai tiga sisi ialah…",a:["Bulatan","Segi empat","Segi tiga","Bujur"],c:2},
-      {q:"Berapakah 1 + 1?",a:["1","2","3","4"],c:1},
-      {q:"Nombor manakah lebih besar?",a:["3","7","2","1"],c:1},
-      {q:"Berapakah 4 − 1?",a:["2","3","4","5"],c:1},
-      {q:"Berapa sisi pada sebuah segi empat?",a:["2","3","4","5"],c:2}
+window.PINDAS_QUESTIONS = [
+  {
+    "id": "4-6-matematik-1",
+    "age": "4-6",
+    "subject": "matematik",
+    "question": "Berapakah 1 + 2?",
+    "options": [
+      "3",
+      "4",
+      "2",
+      "5"
     ],
-    "Bahasa Melayu": [
-      {q:"Pilih huruf vokal.",a:["B","M","A","T"],c:2},
-      {q:"Lawan bagi perkataan 'besar' ialah…",a:["Tinggi","Kecil","Panjang","Luas"],c:1},
-      {q:"Haiwan yang berbunyi 'meow' ialah…",a:["Kucing","Ayam","Itik","Lembu"],c:0},
-      {q:"Pilih perkataan yang betul.",a:["Sekolah","Skolah","Sekoah","Sekolh"],c:0},
-      {q:"Apakah huruf pertama bagi perkataan 'BOLA'?",a:["A","B","O","L"],c:1},
-      {q:"Ibu memasak di…",a:["Bilik air","Dapur","Garaj","Taman"],c:1},
-      {q:"Buah yang berwarna kuning dan panjang ialah…",a:["Pisang","Anggur","Tembikai","Strawberi"],c:0},
-      {q:"Pilih tanda noktah.",a:["?","! ",",","."],c:3},
-      {q:"Lawan bagi 'panas' ialah…",a:["Hangat","Sejuk","Terang","Kering"],c:1},
-      {q:"Kita membaca menggunakan…",a:["Telinga","Mata","Kaki","Hidung"],c:1}
-    ],
-    "Sains Awal": [
-      {q:"Kita bernafas menggunakan…",a:["Paru-paru","Perut","Tulang","Rambut"],c:0},
-      {q:"Matahari terbit pada waktu…",a:["Malam","Pagi","Tengah malam","Petang"],c:1},
-      {q:"Air yang membeku menjadi…",a:["Wap","Ais","Pasir","Asap"],c:1},
-      {q:"Tumbuhan memerlukan air dan…",a:["Cahaya matahari","Plastik","Minyak","Kertas"],c:0},
-      {q:"Haiwan yang hidup di dalam air ialah…",a:["Ikan","Kucing","Ayam","Arnab"],c:0},
-      {q:"Kita mendengar menggunakan…",a:["Mata","Telinga","Lidah","Kulit"],c:1},
-      {q:"Benda yang memberi cahaya pada waktu siang ialah…",a:["Bulan","Matahari","Batu","Awan"],c:1},
-      {q:"Antara ini, yang manakah sayur?",a:["Bayam","Biskut","Susu","Roti"],c:0},
-      {q:"Bahan yang boleh ditarik magnet ialah…",a:["Besi","Kain","Kertas","Kayu"],c:0},
-      {q:"Kita perlu membasuh tangan dengan…",a:["Sabun dan air","Pasir","Cat","Minyak"],c:0}
-    ]
+    "answer": "3"
   },
-  "7-9": {
-    "Matematik": [
-      {q:"Berapakah 8 × 4?",a:["24","28","32","36"],c:2},
-      {q:"Berapakah 45 + 27?",a:["62","72","82","70"],c:1},
-      {q:"Berapakah 90 − 36?",a:["54","56","64","46"],c:0},
-      {q:"Separuh daripada 18 ialah…",a:["6","8","9","12"],c:2},
-      {q:"1 meter bersamaan…",a:["10 cm","100 cm","1,000 cm","50 cm"],c:1},
-      {q:"Berapakah 7 × 6?",a:["36","40","42","48"],c:2},
-      {q:"Pukul 3:30 disebut…",a:["Tiga suku","Tiga setengah","Empat setengah","Dua setengah"],c:1},
-      {q:"Berapakah 100 ÷ 10?",a:["1","5","10","20"],c:2},
-      {q:"Nombor genap ialah…",a:["13","17","21","28"],c:3},
-      {q:"Perimeter segi empat sama sisi 5 cm ialah…",a:["10 cm","15 cm","20 cm","25 cm"],c:2}
+  {
+    "id": "4-6-matematik-2",
+    "age": "4-6",
+    "subject": "matematik",
+    "question": "Berapakah 2 + 2?",
+    "options": [
+      "4",
+      "5",
+      "3",
+      "6"
     ],
-    "Bahasa Melayu": [
-      {q:"Pilih kata nama.",a:["Berlari","Cantik","Meja","Dengan"],c:2},
-      {q:"Ayat tanya biasanya diakhiri dengan…",a:["Noktah","Koma","Tanda soal","Tanda sempang"],c:2},
-      {q:"Sinonim bagi 'gembira' ialah…",a:["Sedih","Riangkan","Marah","Letih"],c:1},
-      {q:"Pilih ejaan yang betul.",a:["Aktiviti","Aktivty","Aktivitti","Aktiviti'i"],c:0},
-      {q:"Kata kerja dalam ayat 'Ali membaca buku' ialah…",a:["Ali","Membaca","Buku","Ayat"],c:1},
-      {q:"Lawan bagi 'rajin' ialah…",a:["Tekun","Malas","Cekap","Bijak"],c:1},
-      {q:"Penanda wacana yang menunjukkan sebab ialah…",a:["Kerana","Kemudian","Akhirnya","Seterusnya"],c:0},
-      {q:"Kata adjektif menerangkan…",a:["Perbuatan","Sifat","Tempat sahaja","Bilangan sahaja"],c:1},
-      {q:"Pilih ayat penyata.",a:["Siapa nama kamu?","Tolong tutup pintu.","Hari ini cuaca cerah.","Wah, cantiknya!"],c:2},
-      {q:"Penjodoh bilangan yang sesuai: se___ pisang.",a:["biji","sikat","utas","keping"],c:1}
-    ],
-    "Sains": [
-      {q:"Organ utama untuk mengepam darah ialah…",a:["Paru-paru","Jantung","Perut","Otak"],c:1},
-      {q:"Haiwan yang bertelur ialah…",a:["Kucing","Lembu","Ayam","Kambing"],c:2},
-      {q:"Air berubah menjadi wap melalui proses…",a:["Pembekuan","Penyejatan","Peleburan","Kondensasi"],c:1},
-      {q:"Sumber tenaga utama bumi ialah…",a:["Bulan","Matahari","Angin sahaja","Batu"],c:1},
-      {q:"Akar tumbuhan berfungsi menyerap…",a:["Cahaya","Air dan mineral","Oksigen sahaja","Bunga"],c:1},
-      {q:"Bahan yang telus cahaya ialah…",a:["Kaca jernih","Kayu","Batu","Kadbod"],c:0},
-      {q:"Haiwan herbivor makan…",a:["Daging","Tumbuhan","Batu","Serangga sahaja"],c:1},
-      {q:"Deria untuk menghidu ialah…",a:["Mata","Hidung","Telinga","Kulit"],c:1},
-      {q:"Bumi mengelilingi…",a:["Bulan","Marikh","Matahari","Jupiter"],c:2},
-      {q:"Bayang-bayang terbentuk apabila cahaya…",a:["Dihalang objek","Menjadi bunyi","Hilang sepenuhnya","Bertukar warna"],c:0}
-    ]
+    "answer": "4"
   },
-  "10-12": {
-    "Matematik": [
-      {q:"Berapakah 15% daripada 200?",a:["15","20","30","40"],c:2},
-      {q:"3/4 dalam bentuk perpuluhan ialah…",a:["0.25","0.5","0.75","1.25"],c:2},
-      {q:"Luas segi empat tepat 8 cm × 5 cm ialah…",a:["13 cm²","26 cm²","40 cm²","80 cm²"],c:2},
-      {q:"Nisbah 6:9 dalam bentuk termudah ialah…",a:["2:3","3:2","1:3","6:3"],c:0},
-      {q:"Berapakah 2.5 + 1.75?",a:["3.25","4.00","4.25","4.75"],c:2},
-      {q:"Purata bagi 4, 6 dan 8 ialah…",a:["5","6","7","8"],c:1},
-      {q:"Sudut tegak bersamaan…",a:["45°","90°","180°","360°"],c:1},
-      {q:"Berapakah 12²?",a:["24","124","144","164"],c:2},
-      {q:"Jika x + 7 = 15, nilai x ialah…",a:["6","7","8","9"],c:2},
-      {q:"1.2 km bersamaan…",a:["12 m","120 m","1,200 m","12,000 m"],c:2}
+  {
+    "id": "4-6-matematik-3",
+    "age": "4-6",
+    "subject": "matematik",
+    "question": "Berapakah 3 + 1?",
+    "options": [
+      "4",
+      "5",
+      "3",
+      "6"
     ],
-    "Sains": [
-      {q:"Proses tumbuhan membuat makanan dikenali sebagai…",a:["Respirasi","Fotosintesis","Penyahtinjaan","Pencernaan"],c:1},
-      {q:"Unit asas bagi semua benda hidup ialah…",a:["Tisu","Organ","Sel","Sistem"],c:2},
-      {q:"Planet yang paling hampir dengan Matahari ialah…",a:["Zuhal","Utarid","Bumi","Neptun"],c:1},
-      {q:"Daya yang menarik objek ke arah bumi ialah…",a:["Geseran","Magnet","Graviti","Apungan"],c:2},
-      {q:"Campuran pasir dan air boleh diasingkan melalui…",a:["Penurasan","Penyejatan sahaja","Pembekuan","Peleburan"],c:0},
-      {q:"Gas yang diperlukan untuk pembakaran ialah…",a:["Nitrogen","Oksigen","Helium","Karbon dioksida"],c:1},
-      {q:"Rantai makanan biasanya bermula dengan…",a:["Pengguna","Pengurai","Pengeluar","Pemangsa"],c:2},
-      {q:"Perubahan cecair kepada gas disebut…",a:["Kondensasi","Penyejatan","Pembekuan","Pemejalwapan"],c:1},
-      {q:"Antara berikut, yang manakah konduktor elektrik?",a:["Getah","Plastik","Kuprum","Kayu kering"],c:2},
-      {q:"Jantung manusia mempunyai…",a:["2 ruang","3 ruang","4 ruang","5 ruang"],c:2}
-    ],
-    "Sejarah": [
-      {q:"Malaysia mencapai kemerdekaan pada tahun…",a:["1945","1957","1963","1969"],c:1},
-      {q:"Tarikh kemerdekaan Persekutuan Tanah Melayu ialah…",a:["31 Ogos 1957","16 September 1963","1 Januari 1957","31 Ogos 1963"],c:0},
-      {q:"Pengisytiharan Malaysia berlaku pada…",a:["31 Ogos 1957","16 September 1963","10 Mei 1969","1 Januari 1960"],c:1},
-      {q:"Bendera Malaysia dikenali sebagai…",a:["Sang Saka","Jalur Gemilang","Bintang Negara","Panji Merdeka"],c:1},
-      {q:"Ibu negara Malaysia ialah…",a:["Johor Bahru","Kuching","Kuala Lumpur","Ipoh"],c:2},
-      {q:"Rukun Negara mempunyai berapa prinsip?",a:["3","4","5","6"],c:2},
-      {q:"Yang di-Pertuan Agong ialah…",a:["Ketua kerajaan negeri","Ketua Utama Negara","Ketua bandar","Ketua tentera sahaja"],c:1},
-      {q:"Parlimen Malaysia terdiri daripada Dewan Rakyat dan…",a:["Dewan Negara","Dewan Bandar","Dewan Undangan","Dewan Raja"],c:0},
-      {q:"Lagu kebangsaan Malaysia ialah…",a:["Sejahtera Malaysia","Negaraku","Tanggal 31","Warisan"],c:1},
-      {q:"Hari Malaysia disambut pada…",a:["1 Mei","31 Ogos","16 September","25 Disember"],c:2}
-    ]
+    "answer": "4"
   },
-  "13-15": {
-    "Matematik": [
-      {q:"Selesaikan 3x − 5 = 16.",a:["5","6","7","8"],c:2},
-      {q:"Kecerunan garis melalui (0,2) dan (2,6) ialah…",a:["1","2","3","4"],c:1},
-      {q:"Faktorkan x² − 9.",a:["(x−9)(x+1)","(x−3)(x+3)","(x−1)(x+9)","(x−3)²"],c:1},
-      {q:"Kebarangkalian mendapat nombor genap pada dadu adil ialah…",a:["1/6","1/3","1/2","2/3"],c:2},
-      {q:"Luas bulatan berjari-jari r ialah…",a:["2πr","πr²","πd","r²/2"],c:1},
-      {q:"Jika 2:5 = x:20, nilai x ialah…",a:["4","6","8","10"],c:2},
-      {q:"Bentuk kembangan bagi (a+b)² ialah…",a:["a²+b²","a²+2ab+b²","a²−2ab+b²","2a+2b"],c:1},
-      {q:"Jumlah sudut pedalaman segi tiga ialah…",a:["90°","180°","270°","360°"],c:1},
-      {q:"Jika y = 2x + 1 dan x = 4, y ialah…",a:["7","8","9","10"],c:2},
-      {q:"Min bagi 3, 5, 7, 9 dan 11 ialah…",a:["5","6","7","8"],c:2}
+  {
+    "id": "4-6-matematik-4",
+    "age": "4-6",
+    "subject": "matematik",
+    "question": "Berapakah 4 + 1?",
+    "options": [
+      "5",
+      "6",
+      "4",
+      "7"
     ],
-    "Sains": [
-      {q:"Unit SI bagi daya ialah…",a:["Joule","Watt","Newton","Pascal"],c:2},
-      {q:"Zarah bercas negatif ialah…",a:["Proton","Neutron","Elektron","Nukleus"],c:2},
-      {q:"Persamaan fotosintesis memerlukan karbon dioksida, air dan…",a:["Cahaya","Nitrogen","Helium","Metana"],c:0},
-      {q:"pH kurang daripada 7 menunjukkan bahan…",a:["Alkali","Neutral","Asid","Garam sahaja"],c:2},
-      {q:"Tenaga kinetik ialah tenaga…",a:["Kedudukan","Pergerakan","Kimia","Nuklear sahaja"],c:1},
-      {q:"Bahagian sel yang mengawal aktiviti sel ialah…",a:["Membran","Sitoplasma","Nukleus","Vakuol"],c:2},
-      {q:"Arus elektrik diukur dalam unit…",a:["Volt","Ampere","Ohm","Watt"],c:1},
-      {q:"Gas rumah hijau yang banyak dihasilkan daripada pembakaran bahan api fosil ialah…",a:["Oksigen","Karbon dioksida","Argon","Neon"],c:1},
-      {q:"Pemisahan campuran berdasarkan takat didih menggunakan…",a:["Penurasan","Penyulingan","Ayakan","Magnet"],c:1},
-      {q:"Dalam litar bersiri, arus pada setiap komponen adalah…",a:["Sama","Sentiasa sifar","Berbeza semua","Berganda"],c:0}
-    ],
-    "Bahasa Inggeris": [
-      {q:"Choose the correct past tense: 'She ___ to school yesterday.'",a:["go","goes","went","going"],c:2},
-      {q:"The synonym of 'rapid' is…",a:["slow","quick","weak","late"],c:1},
-      {q:"Choose the correct article: '___ honest person'.",a:["A","An","Thee","No article"],c:1},
-      {q:"Which is a conjunction?",a:["Beautiful","Although","Quickly","Table"],c:1},
-      {q:"The opposite of 'ancient' is…",a:["Old","Historic","Modern","Early"],c:2},
-      {q:"Choose the correct sentence.",a:["They is ready.","They are ready.","They am ready.","They be ready."],c:1},
-      {q:"A person who writes books is an…",a:["Author","Actor","Architect","Athlete"],c:0},
-      {q:"'Carefully' is an…",a:["Noun","Adjective","Adverb","Pronoun"],c:2},
-      {q:"Choose the plural of 'child'.",a:["Childs","Childes","Children","Childrens"],c:2},
-      {q:"Complete: 'If it rains, we ___ indoors.'",a:["stay","stays","stayed yesterday","staying"],c:0}
-    ]
+    "answer": "5"
   },
-  "16-17": {
-    "Matematik": [
-      {q:"Terbitan bagi f(x)=3x²−4x+7 ialah…",a:["6x−4","3x−4","6x+7","x²−4"],c:0},
-      {q:"Penyelesaian bagi x²−5x+6=0 ialah…",a:["1 dan 6","2 dan 3","−2 dan −3","−1 dan 6"],c:1},
-      {q:"Jika sin θ = 1/2 dan θ sudut tirus, θ ialah…",a:["30°","45°","60°","90°"],c:0},
-      {q:"Kecerunan garis y=−3x+8 ialah…",a:["8","3","−3","−8"],c:2},
-      {q:"Kamiran bagi 4x³ dx ialah…",a:["12x²+C","x⁴+C","4x⁴+C","x³+C"],c:1},
-      {q:"Log₁₀ 1000 bersamaan…",a:["1","2","3","10"],c:2},
-      {q:"Jika P(A)=0.3, P(bukan A) ialah…",a:["0.3","0.5","0.7","1.3"],c:2},
-      {q:"Jumlah sudut pedalaman poligon 6 sisi ialah…",a:["540°","600°","720°","900°"],c:0},
-      {q:"Nilai diskriminan b²−4ac menentukan…",a:["Jenis punca kuadratik","Kecerunan","Luas bulatan","Min data"],c:0},
-      {q:"Jika v= u+at, unit pecutan ialah…",a:["m/s","m/s²","kg m/s","N"],c:1}
+  {
+    "id": "4-6-matematik-5",
+    "age": "4-6",
+    "subject": "matematik",
+    "question": "Berapakah 2 + 3?",
+    "options": [
+      "5",
+      "6",
+      "4",
+      "7"
     ],
-    "Fizik": [
-      {q:"Hukum Newton Kedua mengaitkan daya, jisim dan…",a:["Halaju","Pecutan","Tenaga","Tekanan"],c:1},
-      {q:"Unit SI bagi kuasa ialah…",a:["Joule","Newton","Watt","Ampere"],c:2},
-      {q:"Tenaga keupayaan graviti berhampiran bumi ialah…",a:["mgh","½mv²","F/A","VIt"],c:0},
-      {q:"Frekuensi diukur dalam…",a:["Meter","Hertz","Newton","Joule"],c:1},
-      {q:"Hukum Ohm ditulis sebagai…",a:["V=IR","P=IV²","F=ma²","W=mg"],c:0},
-      {q:"Gelombang bunyi tidak boleh merambat dalam…",a:["Air","Udara","Vakum","Pepejal"],c:2},
-      {q:"Momentum ialah hasil darab jisim dengan…",a:["Pecutan","Halaju","Daya","Masa"],c:1},
-      {q:"Lensa cembung biasanya bersifat…",a:["Mencapah","Menumpukan","Menyerap","Memantulkan sahaja"],c:1},
-      {q:"Haba pendam tentu berkaitan perubahan…",a:["Suhu tanpa perubahan keadaan","Keadaan tanpa perubahan suhu","Jisim","Tekanan sahaja"],c:1},
-      {q:"Arus konvensional mengalir dari terminal…",a:["Negatif ke positif","Positif ke negatif","Bumi ke neutral sahaja","Tiada arah"],c:1}
+    "answer": "5"
+  },
+  {
+    "id": "4-6-matematik-6",
+    "age": "4-6",
+    "subject": "matematik",
+    "question": "Berapakah 5 + 2?",
+    "options": [
+      "7",
+      "8",
+      "6",
+      "9"
     ],
-    "Kimia": [
-      {q:"Nombor proton menunjukkan bilangan…",a:["Neutron","Elektron valens","Proton dalam nukleus","Nukleon"],c:2},
-      {q:"Ikatan ion terbentuk melalui…",a:["Perkongsian elektron","Pemindahan elektron","Perkongsian proton","Percantuman nukleus"],c:1},
-      {q:"Formula kimia bagi asid sulfurik ialah…",a:["HCl","HNO₃","H₂SO₄","NaOH"],c:2},
-      {q:"Mangkin berfungsi untuk…",a:["Menaikkan tenaga pengaktifan","Menurunkan tenaga pengaktifan","Menghentikan tindak balas","Menambah jisim produk"],c:1},
-      {q:"Pengoksidaan boleh ditakrifkan sebagai…",a:["Penerimaan elektron","Kehilangan elektron","Kehilangan proton","Penerimaan neutron"],c:1},
-      {q:"Gas mulia berada dalam kumpulan…",a:["1","2","17","18"],c:3},
-      {q:"Mol ialah unit bagi…",a:["Suhu","Kuantiti bahan","Tekanan","Arus"],c:1},
-      {q:"Larutan dengan pH 2 bersifat…",a:["Asid","Alkali","Neutral","Garam neutral semestinya"],c:0},
-      {q:"Ikatan kovalen melibatkan…",a:["Perkongsian pasangan elektron","Pemindahan proton","Daya graviti","Pemindahan neutron"],c:0},
-      {q:"Polimer terbentuk daripada unit kecil yang dipanggil…",a:["Isotop","Monomer","Ion","Katalis"],c:1}
-    ]
+    "answer": "7"
+  },
+  {
+    "id": "4-6-matematik-7",
+    "age": "4-6",
+    "subject": "matematik",
+    "question": "Berapakah 1 + 5?",
+    "options": [
+      "6",
+      "7",
+      "5",
+      "8"
+    ],
+    "answer": "6"
+  },
+  {
+    "id": "4-6-matematik-8",
+    "age": "4-6",
+    "subject": "matematik",
+    "question": "Berapakah 3 + 3?",
+    "options": [
+      "6",
+      "7",
+      "5",
+      "8"
+    ],
+    "answer": "6"
+  },
+  {
+    "id": "4-6-matematik-9",
+    "age": "4-6",
+    "subject": "matematik",
+    "question": "Berapakah 4 + 2?",
+    "options": [
+      "6",
+      "7",
+      "5",
+      "8"
+    ],
+    "answer": "6"
+  },
+  {
+    "id": "4-6-matematik-10",
+    "age": "4-6",
+    "subject": "matematik",
+    "question": "Berapakah 5 + 1?",
+    "options": [
+      "6",
+      "7",
+      "5",
+      "8"
+    ],
+    "answer": "6"
+  },
+  {
+    "id": "4-6-bahasa-1",
+    "age": "4-6",
+    "subject": "bahasa",
+    "question": "Antara berikut, yang manakah huruf A?",
+    "options": [
+      "C",
+      "D",
+      "A",
+      "B"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "4-6-bahasa-2",
+    "age": "4-6",
+    "subject": "bahasa",
+    "question": "Antara berikut, yang manakah huruf B?",
+    "options": [
+      "C",
+      "D",
+      "B",
+      "A"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "4-6-bahasa-3",
+    "age": "4-6",
+    "subject": "bahasa",
+    "question": "Antara berikut, yang manakah huruf C?",
+    "options": [
+      "B",
+      "D",
+      "C",
+      "A"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "4-6-bahasa-4",
+    "age": "4-6",
+    "subject": "bahasa",
+    "question": "Antara berikut, yang manakah huruf D?",
+    "options": [
+      "B",
+      "C",
+      "D",
+      "A"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "4-6-bahasa-5",
+    "age": "4-6",
+    "subject": "bahasa",
+    "question": "Antara berikut, yang manakah huruf E?",
+    "options": [
+      "B",
+      "C",
+      "E",
+      "A"
+    ],
+    "answer": "E"
+  },
+  {
+    "id": "4-6-bahasa-6",
+    "age": "4-6",
+    "subject": "bahasa",
+    "question": "Antara berikut, yang manakah huruf F?",
+    "options": [
+      "B",
+      "C",
+      "F",
+      "A"
+    ],
+    "answer": "F"
+  },
+  {
+    "id": "4-6-bahasa-7",
+    "age": "4-6",
+    "subject": "bahasa",
+    "question": "Antara berikut, yang manakah huruf G?",
+    "options": [
+      "B",
+      "C",
+      "G",
+      "A"
+    ],
+    "answer": "G"
+  },
+  {
+    "id": "4-6-bahasa-8",
+    "age": "4-6",
+    "subject": "bahasa",
+    "question": "Antara berikut, yang manakah huruf H?",
+    "options": [
+      "B",
+      "C",
+      "H",
+      "A"
+    ],
+    "answer": "H"
+  },
+  {
+    "id": "4-6-bahasa-9",
+    "age": "4-6",
+    "subject": "bahasa",
+    "question": "Antara berikut, yang manakah huruf I?",
+    "options": [
+      "B",
+      "C",
+      "I",
+      "A"
+    ],
+    "answer": "I"
+  },
+  {
+    "id": "4-6-bahasa-10",
+    "age": "4-6",
+    "subject": "bahasa",
+    "question": "Antara berikut, yang manakah huruf J?",
+    "options": [
+      "B",
+      "C",
+      "J",
+      "A"
+    ],
+    "answer": "J"
+  },
+  {
+    "id": "4-6-sains-1",
+    "age": "4-6",
+    "subject": "sains",
+    "question": "Haiwan manakah yang hidup di air?",
+    "options": [
+      "Ikan",
+      "Ayam",
+      "Matahari",
+      "Hidung"
+    ],
+    "answer": "Ikan"
+  },
+  {
+    "id": "4-6-sains-2",
+    "age": "4-6",
+    "subject": "sains",
+    "question": "Haiwan manakah yang bertelur?",
+    "options": [
+      "Ayam",
+      "Matahari",
+      "Hidung",
+      "Telinga"
+    ],
+    "answer": "Ayam"
+  },
+  {
+    "id": "4-6-sains-3",
+    "age": "4-6",
+    "subject": "sains",
+    "question": "Apakah sumber cahaya pada waktu siang?",
+    "options": [
+      "Matahari",
+      "Hidung",
+      "Telinga",
+      "Segi tiga"
+    ],
+    "answer": "Matahari"
+  },
+  {
+    "id": "4-6-sains-4",
+    "age": "4-6",
+    "subject": "sains",
+    "question": "Bahagian badan untuk menghidu?",
+    "options": [
+      "Hidung",
+      "Telinga",
+      "Segi tiga",
+      "Hijau"
+    ],
+    "answer": "Hidung"
+  },
+  {
+    "id": "4-6-sains-5",
+    "age": "4-6",
+    "subject": "sains",
+    "question": "Apakah deria untuk mendengar?",
+    "options": [
+      "Telinga",
+      "Segi tiga",
+      "Hijau",
+      "Rendah"
+    ],
+    "answer": "Telinga"
+  },
+  {
+    "id": "4-6-sains-6",
+    "age": "4-6",
+    "subject": "sains",
+    "question": "Apakah bentuk yang mempunyai tiga sisi?",
+    "options": [
+      "Segi tiga",
+      "Hijau",
+      "Rendah",
+      "Pensel"
+    ],
+    "answer": "Segi tiga"
+  },
+  {
+    "id": "4-6-sains-7",
+    "age": "4-6",
+    "subject": "sains",
+    "question": "Apakah warna campuran biru dan kuning?",
+    "options": [
+      "Hijau",
+      "Rendah",
+      "Pensel",
+      "Anak kucing"
+    ],
+    "answer": "Hijau"
+  },
+  {
+    "id": "4-6-sains-8",
+    "age": "4-6",
+    "subject": "sains",
+    "question": "Apakah lawan bagi tinggi?",
+    "options": [
+      "Rendah",
+      "Pensel",
+      "Anak kucing",
+      "Ikan"
+    ],
+    "answer": "Rendah"
+  },
+  {
+    "id": "4-6-sains-9",
+    "age": "4-6",
+    "subject": "sains",
+    "question": "Apakah yang digunakan untuk menulis?",
+    "options": [
+      "Pensel",
+      "Anak kucing",
+      "Ikan",
+      "Ayam"
+    ],
+    "answer": "Pensel"
+  },
+  {
+    "id": "4-6-sains-10",
+    "age": "4-6",
+    "subject": "sains",
+    "question": "Apakah nama anak kucing?",
+    "options": [
+      "Anak kucing",
+      "Ikan",
+      "Ayam",
+      "Matahari"
+    ],
+    "answer": "Anak kucing"
+  },
+  {
+    "id": "4-6-pengetahuan-1",
+    "age": "4-6",
+    "subject": "pengetahuan",
+    "question": "Haiwan manakah yang hidup di air?",
+    "options": [
+      "Pilihan B",
+      "Pilihan C",
+      "Ikan",
+      "Pilihan A"
+    ],
+    "answer": "Ikan"
+  },
+  {
+    "id": "4-6-pengetahuan-2",
+    "age": "4-6",
+    "subject": "pengetahuan",
+    "question": "Haiwan manakah yang bertelur?",
+    "options": [
+      "Pilihan B",
+      "Pilihan C",
+      "Ayam",
+      "Pilihan A"
+    ],
+    "answer": "Ayam"
+  },
+  {
+    "id": "4-6-pengetahuan-3",
+    "age": "4-6",
+    "subject": "pengetahuan",
+    "question": "Apakah sumber cahaya pada waktu siang?",
+    "options": [
+      "Pilihan B",
+      "Pilihan C",
+      "Matahari",
+      "Pilihan A"
+    ],
+    "answer": "Matahari"
+  },
+  {
+    "id": "4-6-pengetahuan-4",
+    "age": "4-6",
+    "subject": "pengetahuan",
+    "question": "Bahagian badan untuk menghidu?",
+    "options": [
+      "Pilihan B",
+      "Pilihan C",
+      "Hidung",
+      "Pilihan A"
+    ],
+    "answer": "Hidung"
+  },
+  {
+    "id": "4-6-pengetahuan-5",
+    "age": "4-6",
+    "subject": "pengetahuan",
+    "question": "Apakah deria untuk mendengar?",
+    "options": [
+      "Pilihan B",
+      "Pilihan C",
+      "Telinga",
+      "Pilihan A"
+    ],
+    "answer": "Telinga"
+  },
+  {
+    "id": "4-6-pengetahuan-6",
+    "age": "4-6",
+    "subject": "pengetahuan",
+    "question": "Apakah bentuk yang mempunyai tiga sisi?",
+    "options": [
+      "Pilihan B",
+      "Pilihan C",
+      "Segi tiga",
+      "Pilihan A"
+    ],
+    "answer": "Segi tiga"
+  },
+  {
+    "id": "4-6-pengetahuan-7",
+    "age": "4-6",
+    "subject": "pengetahuan",
+    "question": "Apakah warna campuran biru dan kuning?",
+    "options": [
+      "Pilihan B",
+      "Pilihan C",
+      "Hijau",
+      "Pilihan A"
+    ],
+    "answer": "Hijau"
+  },
+  {
+    "id": "4-6-pengetahuan-8",
+    "age": "4-6",
+    "subject": "pengetahuan",
+    "question": "Apakah lawan bagi tinggi?",
+    "options": [
+      "Pilihan B",
+      "Pilihan C",
+      "Rendah",
+      "Pilihan A"
+    ],
+    "answer": "Rendah"
+  },
+  {
+    "id": "4-6-pengetahuan-9",
+    "age": "4-6",
+    "subject": "pengetahuan",
+    "question": "Apakah yang digunakan untuk menulis?",
+    "options": [
+      "Pilihan B",
+      "Pilihan C",
+      "Pensel",
+      "Pilihan A"
+    ],
+    "answer": "Pensel"
+  },
+  {
+    "id": "4-6-pengetahuan-10",
+    "age": "4-6",
+    "subject": "pengetahuan",
+    "question": "Apakah nama anak kucing?",
+    "options": [
+      "Pilihan B",
+      "Pilihan C",
+      "Anak kucing",
+      "Pilihan A"
+    ],
+    "answer": "Anak kucing"
+  },
+  {
+    "id": "7-9-matematik-1",
+    "age": "7-9",
+    "subject": "matematik",
+    "question": "Berapakah 2 × 3?",
+    "options": [
+      "6",
+      "7",
+      "5",
+      "8"
+    ],
+    "answer": "6"
+  },
+  {
+    "id": "7-9-matematik-2",
+    "age": "7-9",
+    "subject": "matematik",
+    "question": "Berapakah 3 × 4?",
+    "options": [
+      "12",
+      "13",
+      "11",
+      "14"
+    ],
+    "answer": "12"
+  },
+  {
+    "id": "7-9-matematik-3",
+    "age": "7-9",
+    "subject": "matematik",
+    "question": "Berapakah 4 × 5?",
+    "options": [
+      "20",
+      "21",
+      "19",
+      "22"
+    ],
+    "answer": "20"
+  },
+  {
+    "id": "7-9-matematik-4",
+    "age": "7-9",
+    "subject": "matematik",
+    "question": "Berapakah 6 × 2?",
+    "options": [
+      "12",
+      "13",
+      "11",
+      "14"
+    ],
+    "answer": "12"
+  },
+  {
+    "id": "7-9-matematik-5",
+    "age": "7-9",
+    "subject": "matematik",
+    "question": "Berapakah 7 × 3?",
+    "options": [
+      "21",
+      "22",
+      "20",
+      "23"
+    ],
+    "answer": "21"
+  },
+  {
+    "id": "7-9-matematik-6",
+    "age": "7-9",
+    "subject": "matematik",
+    "question": "Berapakah 8 × 2?",
+    "options": [
+      "16",
+      "17",
+      "15",
+      "18"
+    ],
+    "answer": "16"
+  },
+  {
+    "id": "7-9-matematik-7",
+    "age": "7-9",
+    "subject": "matematik",
+    "question": "Berapakah 5 × 5?",
+    "options": [
+      "25",
+      "26",
+      "24",
+      "27"
+    ],
+    "answer": "25"
+  },
+  {
+    "id": "7-9-matematik-8",
+    "age": "7-9",
+    "subject": "matematik",
+    "question": "Berapakah 9 × 2?",
+    "options": [
+      "18",
+      "19",
+      "17",
+      "20"
+    ],
+    "answer": "18"
+  },
+  {
+    "id": "7-9-matematik-9",
+    "age": "7-9",
+    "subject": "matematik",
+    "question": "Berapakah 4 × 6?",
+    "options": [
+      "24",
+      "25",
+      "23",
+      "26"
+    ],
+    "answer": "24"
+  },
+  {
+    "id": "7-9-matematik-10",
+    "age": "7-9",
+    "subject": "matematik",
+    "question": "Berapakah 3 × 7?",
+    "options": [
+      "21",
+      "22",
+      "20",
+      "23"
+    ],
+    "answer": "21"
+  },
+  {
+    "id": "7-9-bahasa-1",
+    "age": "7-9",
+    "subject": "bahasa",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Lambat",
+      "Sedih",
+      "Sejuk",
+      "Gelap"
+    ],
+    "answer": "Sejuk"
+  },
+  {
+    "id": "7-9-bahasa-2",
+    "age": "7-9",
+    "subject": "bahasa",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "Sedih",
+      "Kasar",
+      "Gelap",
+      "Lambat"
+    ],
+    "answer": "Gelap"
+  },
+  {
+    "id": "7-9-bahasa-3",
+    "age": "7-9",
+    "subject": "bahasa",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "Kasar",
+      "Pendek",
+      "Lambat",
+      "Sedih"
+    ],
+    "answer": "Lambat"
+  },
+  {
+    "id": "7-9-bahasa-4",
+    "age": "7-9",
+    "subject": "bahasa",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "Pendek",
+      "Lemah",
+      "Sedih",
+      "Kasar"
+    ],
+    "answer": "Sedih"
+  },
+  {
+    "id": "7-9-bahasa-5",
+    "age": "7-9",
+    "subject": "bahasa",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "Lemah",
+      "Mahal",
+      "Kasar",
+      "Pendek"
+    ],
+    "answer": "Kasar"
+  },
+  {
+    "id": "7-9-bahasa-6",
+    "age": "7-9",
+    "subject": "bahasa",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "Mahal",
+      "Kering",
+      "Pendek",
+      "Lemah"
+    ],
+    "answer": "Pendek"
+  },
+  {
+    "id": "7-9-bahasa-7",
+    "age": "7-9",
+    "subject": "bahasa",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Kering",
+      "Bising",
+      "Lemah",
+      "Mahal"
+    ],
+    "answer": "Lemah"
+  },
+  {
+    "id": "7-9-bahasa-8",
+    "age": "7-9",
+    "subject": "bahasa",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Bising",
+      "Sejuk",
+      "Mahal",
+      "Kering"
+    ],
+    "answer": "Mahal"
+  },
+  {
+    "id": "7-9-bahasa-9",
+    "age": "7-9",
+    "subject": "bahasa",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Sejuk",
+      "Gelap",
+      "Kering",
+      "Bising"
+    ],
+    "answer": "Kering"
+  },
+  {
+    "id": "7-9-bahasa-10",
+    "age": "7-9",
+    "subject": "bahasa",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Gelap",
+      "Lambat",
+      "Bising",
+      "Sejuk"
+    ],
+    "answer": "Bising"
+  },
+  {
+    "id": "7-9-sains-1",
+    "age": "7-9",
+    "subject": "sains",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Cahaya matahari",
+      "Air",
+      "Udara",
+      "Tanah"
+    ],
+    "answer": "Cahaya matahari"
+  },
+  {
+    "id": "7-9-sains-2",
+    "age": "7-9",
+    "subject": "sains",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "Air",
+      "Udara",
+      "Tanah",
+      "Akar"
+    ],
+    "answer": "Air"
+  },
+  {
+    "id": "7-9-sains-3",
+    "age": "7-9",
+    "subject": "sains",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "Udara",
+      "Tanah",
+      "Akar",
+      "Daun"
+    ],
+    "answer": "Udara"
+  },
+  {
+    "id": "7-9-sains-4",
+    "age": "7-9",
+    "subject": "sains",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "Tanah",
+      "Akar",
+      "Daun",
+      "Oksigen"
+    ],
+    "answer": "Tanah"
+  },
+  {
+    "id": "7-9-sains-5",
+    "age": "7-9",
+    "subject": "sains",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "Akar",
+      "Daun",
+      "Oksigen",
+      "Haba"
+    ],
+    "answer": "Akar"
+  },
+  {
+    "id": "7-9-sains-6",
+    "age": "7-9",
+    "subject": "sains",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "Daun",
+      "Oksigen",
+      "Haba",
+      "Klorofil"
+    ],
+    "answer": "Daun"
+  },
+  {
+    "id": "7-9-sains-7",
+    "age": "7-9",
+    "subject": "sains",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Oksigen",
+      "Haba",
+      "Klorofil",
+      "Air dan cahaya"
+    ],
+    "answer": "Oksigen"
+  },
+  {
+    "id": "7-9-sains-8",
+    "age": "7-9",
+    "subject": "sains",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Haba",
+      "Klorofil",
+      "Air dan cahaya",
+      "Cahaya matahari"
+    ],
+    "answer": "Haba"
+  },
+  {
+    "id": "7-9-sains-9",
+    "age": "7-9",
+    "subject": "sains",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Klorofil",
+      "Air dan cahaya",
+      "Cahaya matahari",
+      "Air"
+    ],
+    "answer": "Klorofil"
+  },
+  {
+    "id": "7-9-sains-10",
+    "age": "7-9",
+    "subject": "sains",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Air dan cahaya",
+      "Cahaya matahari",
+      "Air",
+      "Udara"
+    ],
+    "answer": "Air dan cahaya"
+  },
+  {
+    "id": "7-9-pengetahuan-1",
+    "age": "7-9",
+    "subject": "pengetahuan",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "31",
+      "365",
+      "7",
+      "12"
+    ],
+    "answer": "7"
+  },
+  {
+    "id": "7-9-pengetahuan-2",
+    "age": "7-9",
+    "subject": "pengetahuan",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "365",
+      "4",
+      "12",
+      "31"
+    ],
+    "answer": "12"
+  },
+  {
+    "id": "7-9-pengetahuan-3",
+    "age": "7-9",
+    "subject": "pengetahuan",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "4",
+      "3",
+      "31",
+      "365"
+    ],
+    "answer": "31"
+  },
+  {
+    "id": "7-9-pengetahuan-4",
+    "age": "7-9",
+    "subject": "pengetahuan",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "3",
+      "2",
+      "365",
+      "4"
+    ],
+    "answer": "365"
+  },
+  {
+    "id": "7-9-pengetahuan-5",
+    "age": "7-9",
+    "subject": "pengetahuan",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "2",
+      "5",
+      "4",
+      "3"
+    ],
+    "answer": "4"
+  },
+  {
+    "id": "7-9-pengetahuan-6",
+    "age": "7-9",
+    "subject": "pengetahuan",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "5",
+      "8",
+      "3",
+      "2"
+    ],
+    "answer": "3"
+  },
+  {
+    "id": "7-9-pengetahuan-7",
+    "age": "7-9",
+    "subject": "pengetahuan",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "8",
+      "10",
+      "2",
+      "5"
+    ],
+    "answer": "2"
+  },
+  {
+    "id": "7-9-pengetahuan-8",
+    "age": "7-9",
+    "subject": "pengetahuan",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "10",
+      "7",
+      "5",
+      "8"
+    ],
+    "answer": "5"
+  },
+  {
+    "id": "7-9-pengetahuan-9",
+    "age": "7-9",
+    "subject": "pengetahuan",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "7",
+      "12",
+      "8",
+      "10"
+    ],
+    "answer": "8"
+  },
+  {
+    "id": "7-9-pengetahuan-10",
+    "age": "7-9",
+    "subject": "pengetahuan",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "12",
+      "31",
+      "10",
+      "7"
+    ],
+    "answer": "10"
+  },
+  {
+    "id": "10-12-matematik-1",
+    "age": "10-12",
+    "subject": "matematik",
+    "question": "Berapakah 10% daripada 80?",
+    "options": [
+      "8",
+      "9",
+      "7",
+      "10"
+    ],
+    "answer": "8"
+  },
+  {
+    "id": "10-12-matematik-2",
+    "age": "10-12",
+    "subject": "matematik",
+    "question": "Berapakah 20% daripada 50?",
+    "options": [
+      "10",
+      "11",
+      "9",
+      "12"
+    ],
+    "answer": "10"
+  },
+  {
+    "id": "10-12-matematik-3",
+    "age": "10-12",
+    "subject": "matematik",
+    "question": "Berapakah 25% daripada 80?",
+    "options": [
+      "20",
+      "21",
+      "19",
+      "22"
+    ],
+    "answer": "20"
+  },
+  {
+    "id": "10-12-matematik-4",
+    "age": "10-12",
+    "subject": "matematik",
+    "question": "Berapakah 50% daripada 60?",
+    "options": [
+      "30",
+      "31",
+      "29",
+      "32"
+    ],
+    "answer": "30"
+  },
+  {
+    "id": "10-12-matematik-5",
+    "age": "10-12",
+    "subject": "matematik",
+    "question": "Berapakah 10% daripada 150?",
+    "options": [
+      "15",
+      "16",
+      "14",
+      "17"
+    ],
+    "answer": "15"
+  },
+  {
+    "id": "10-12-matematik-6",
+    "age": "10-12",
+    "subject": "matematik",
+    "question": "Berapakah 20% daripada 90?",
+    "options": [
+      "18",
+      "19",
+      "17",
+      "20"
+    ],
+    "answer": "18"
+  },
+  {
+    "id": "10-12-matematik-7",
+    "age": "10-12",
+    "subject": "matematik",
+    "question": "Berapakah 25% daripada 120?",
+    "options": [
+      "30",
+      "31",
+      "29",
+      "32"
+    ],
+    "answer": "30"
+  },
+  {
+    "id": "10-12-matematik-8",
+    "age": "10-12",
+    "subject": "matematik",
+    "question": "Berapakah 50% daripada 44?",
+    "options": [
+      "22",
+      "23",
+      "21",
+      "24"
+    ],
+    "answer": "22"
+  },
+  {
+    "id": "10-12-matematik-9",
+    "age": "10-12",
+    "subject": "matematik",
+    "question": "Berapakah 10% daripada 240?",
+    "options": [
+      "24",
+      "25",
+      "23",
+      "26"
+    ],
+    "answer": "24"
+  },
+  {
+    "id": "10-12-matematik-10",
+    "age": "10-12",
+    "subject": "matematik",
+    "question": "Berapakah 20% daripada 130?",
+    "options": [
+      "26",
+      "27",
+      "25",
+      "28"
+    ],
+    "answer": "26"
+  },
+  {
+    "id": "10-12-bahasa-1",
+    "age": "10-12",
+    "subject": "bahasa",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Cuaca",
+      "Hari",
+      "Cerah",
+      "Sangat"
+    ],
+    "answer": "Cerah"
+  },
+  {
+    "id": "10-12-bahasa-2",
+    "age": "10-12",
+    "subject": "bahasa",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "Hari",
+      "Ini",
+      "Sangat",
+      "Cuaca"
+    ],
+    "answer": "Sangat"
+  },
+  {
+    "id": "10-12-bahasa-3",
+    "age": "10-12",
+    "subject": "bahasa",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "Ini",
+      "Kata adjektif",
+      "Cuaca",
+      "Hari"
+    ],
+    "answer": "Cuaca"
+  },
+  {
+    "id": "10-12-bahasa-4",
+    "age": "10-12",
+    "subject": "bahasa",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "Kata adjektif",
+      "Panas",
+      "Hari",
+      "Ini"
+    ],
+    "answer": "Hari"
+  },
+  {
+    "id": "10-12-bahasa-5",
+    "age": "10-12",
+    "subject": "bahasa",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "Panas",
+      "Biru",
+      "Ini",
+      "Kata adjektif"
+    ],
+    "answer": "Ini"
+  },
+  {
+    "id": "10-12-bahasa-6",
+    "age": "10-12",
+    "subject": "bahasa",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "Biru",
+      "Cantik",
+      "Kata adjektif",
+      "Panas"
+    ],
+    "answer": "Kata adjektif"
+  },
+  {
+    "id": "10-12-bahasa-7",
+    "age": "10-12",
+    "subject": "bahasa",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Cantik",
+      "Laju",
+      "Panas",
+      "Biru"
+    ],
+    "answer": "Panas"
+  },
+  {
+    "id": "10-12-bahasa-8",
+    "age": "10-12",
+    "subject": "bahasa",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Laju",
+      "Cerah",
+      "Biru",
+      "Cantik"
+    ],
+    "answer": "Biru"
+  },
+  {
+    "id": "10-12-bahasa-9",
+    "age": "10-12",
+    "subject": "bahasa",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Cerah",
+      "Sangat",
+      "Cantik",
+      "Laju"
+    ],
+    "answer": "Cantik"
+  },
+  {
+    "id": "10-12-bahasa-10",
+    "age": "10-12",
+    "subject": "bahasa",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Sangat",
+      "Cuaca",
+      "Laju",
+      "Cerah"
+    ],
+    "answer": "Laju"
+  },
+  {
+    "id": "10-12-sains-1",
+    "age": "10-12",
+    "subject": "sains",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Penyejatan",
+      "Kondensasi",
+      "Pemejalwapan",
+      "Pembekuan"
+    ],
+    "answer": "Penyejatan"
+  },
+  {
+    "id": "10-12-sains-2",
+    "age": "10-12",
+    "subject": "sains",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "Kondensasi",
+      "Pemejalwapan",
+      "Pembekuan",
+      "Peleburan"
+    ],
+    "answer": "Kondensasi"
+  },
+  {
+    "id": "10-12-sains-3",
+    "age": "10-12",
+    "subject": "sains",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "Pemejalwapan",
+      "Pembekuan",
+      "Peleburan",
+      "Pemendakan"
+    ],
+    "answer": "Pemejalwapan"
+  },
+  {
+    "id": "10-12-sains-4",
+    "age": "10-12",
+    "subject": "sains",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "Pembekuan",
+      "Peleburan",
+      "Pemendakan",
+      "Kitaran air"
+    ],
+    "answer": "Pembekuan"
+  },
+  {
+    "id": "10-12-sains-5",
+    "age": "10-12",
+    "subject": "sains",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "Peleburan",
+      "Pemendakan",
+      "Kitaran air",
+      "Penurasan"
+    ],
+    "answer": "Peleburan"
+  },
+  {
+    "id": "10-12-sains-6",
+    "age": "10-12",
+    "subject": "sains",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "Pemendakan",
+      "Kitaran air",
+      "Penurasan",
+      "Pendidihan"
+    ],
+    "answer": "Pemendakan"
+  },
+  {
+    "id": "10-12-sains-7",
+    "age": "10-12",
+    "subject": "sains",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Kitaran air",
+      "Penurasan",
+      "Pendidihan",
+      "Resapan"
+    ],
+    "answer": "Kitaran air"
+  },
+  {
+    "id": "10-12-sains-8",
+    "age": "10-12",
+    "subject": "sains",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Penurasan",
+      "Pendidihan",
+      "Resapan",
+      "Penyejatan"
+    ],
+    "answer": "Penurasan"
+  },
+  {
+    "id": "10-12-sains-9",
+    "age": "10-12",
+    "subject": "sains",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Pendidihan",
+      "Resapan",
+      "Penyejatan",
+      "Kondensasi"
+    ],
+    "answer": "Pendidihan"
+  },
+  {
+    "id": "10-12-sains-10",
+    "age": "10-12",
+    "subject": "sains",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Resapan",
+      "Penyejatan",
+      "Kondensasi",
+      "Pemejalwapan"
+    ],
+    "answer": "Resapan"
+  },
+  {
+    "id": "10-12-pengetahuan-1",
+    "age": "10-12",
+    "subject": "pengetahuan",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Zuhrah",
+      "Musytari",
+      "Bumi",
+      "Marikh"
+    ],
+    "answer": "Bumi"
+  },
+  {
+    "id": "10-12-pengetahuan-2",
+    "age": "10-12",
+    "subject": "pengetahuan",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "Musytari",
+      "Zuhal",
+      "Marikh",
+      "Zuhrah"
+    ],
+    "answer": "Marikh"
+  },
+  {
+    "id": "10-12-pengetahuan-3",
+    "age": "10-12",
+    "subject": "pengetahuan",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "Zuhal",
+      "Utarid",
+      "Zuhrah",
+      "Musytari"
+    ],
+    "answer": "Zuhrah"
+  },
+  {
+    "id": "10-12-pengetahuan-4",
+    "age": "10-12",
+    "subject": "pengetahuan",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "Utarid",
+      "Neptun",
+      "Musytari",
+      "Zuhal"
+    ],
+    "answer": "Musytari"
+  },
+  {
+    "id": "10-12-pengetahuan-5",
+    "age": "10-12",
+    "subject": "pengetahuan",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "Neptun",
+      "Uranus",
+      "Zuhal",
+      "Utarid"
+    ],
+    "answer": "Zuhal"
+  },
+  {
+    "id": "10-12-pengetahuan-6",
+    "age": "10-12",
+    "subject": "pengetahuan",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "Uranus",
+      "Pluto",
+      "Utarid",
+      "Neptun"
+    ],
+    "answer": "Utarid"
+  },
+  {
+    "id": "10-12-pengetahuan-7",
+    "age": "10-12",
+    "subject": "pengetahuan",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Pluto",
+      "Matahari",
+      "Neptun",
+      "Uranus"
+    ],
+    "answer": "Neptun"
+  },
+  {
+    "id": "10-12-pengetahuan-8",
+    "age": "10-12",
+    "subject": "pengetahuan",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Matahari",
+      "Bumi",
+      "Uranus",
+      "Pluto"
+    ],
+    "answer": "Uranus"
+  },
+  {
+    "id": "10-12-pengetahuan-9",
+    "age": "10-12",
+    "subject": "pengetahuan",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Bumi",
+      "Marikh",
+      "Pluto",
+      "Matahari"
+    ],
+    "answer": "Pluto"
+  },
+  {
+    "id": "10-12-pengetahuan-10",
+    "age": "10-12",
+    "subject": "pengetahuan",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Marikh",
+      "Zuhrah",
+      "Matahari",
+      "Bumi"
+    ],
+    "answer": "Matahari"
+  },
+  {
+    "id": "13-15-matematik-1",
+    "age": "13-15",
+    "subject": "matematik",
+    "question": "Selesaikan: 2x = 10. Nilai x ialah…",
+    "options": [
+      "5",
+      "6",
+      "4",
+      "7"
+    ],
+    "answer": "5"
+  },
+  {
+    "id": "13-15-matematik-2",
+    "age": "13-15",
+    "subject": "matematik",
+    "question": "Selesaikan: 3x = 18. Nilai x ialah…",
+    "options": [
+      "6",
+      "7",
+      "5",
+      "8"
+    ],
+    "answer": "6"
+  },
+  {
+    "id": "13-15-matematik-3",
+    "age": "13-15",
+    "subject": "matematik",
+    "question": "Selesaikan: 4x = 28. Nilai x ialah…",
+    "options": [
+      "7",
+      "8",
+      "6",
+      "9"
+    ],
+    "answer": "7"
+  },
+  {
+    "id": "13-15-matematik-4",
+    "age": "13-15",
+    "subject": "matematik",
+    "question": "Selesaikan: 5x = 45. Nilai x ialah…",
+    "options": [
+      "9",
+      "10",
+      "8",
+      "11"
+    ],
+    "answer": "9"
+  },
+  {
+    "id": "13-15-matematik-5",
+    "age": "13-15",
+    "subject": "matematik",
+    "question": "Selesaikan: 6x = 42. Nilai x ialah…",
+    "options": [
+      "7",
+      "8",
+      "6",
+      "9"
+    ],
+    "answer": "7"
+  },
+  {
+    "id": "13-15-matematik-6",
+    "age": "13-15",
+    "subject": "matematik",
+    "question": "Selesaikan: 7x = 56. Nilai x ialah…",
+    "options": [
+      "8",
+      "9",
+      "7",
+      "10"
+    ],
+    "answer": "8"
+  },
+  {
+    "id": "13-15-matematik-7",
+    "age": "13-15",
+    "subject": "matematik",
+    "question": "Selesaikan: 8x = 64. Nilai x ialah…",
+    "options": [
+      "8",
+      "9",
+      "7",
+      "10"
+    ],
+    "answer": "8"
+  },
+  {
+    "id": "13-15-matematik-8",
+    "age": "13-15",
+    "subject": "matematik",
+    "question": "Selesaikan: 9x = 81. Nilai x ialah…",
+    "options": [
+      "9",
+      "10",
+      "8",
+      "11"
+    ],
+    "answer": "9"
+  },
+  {
+    "id": "13-15-matematik-9",
+    "age": "13-15",
+    "subject": "matematik",
+    "question": "Selesaikan: 4x = 36. Nilai x ialah…",
+    "options": [
+      "9",
+      "10",
+      "8",
+      "11"
+    ],
+    "answer": "9"
+  },
+  {
+    "id": "13-15-matematik-10",
+    "age": "13-15",
+    "subject": "matematik",
+    "question": "Selesaikan: 5x = 65. Nilai x ialah…",
+    "options": [
+      "13",
+      "14",
+      "12",
+      "15"
+    ],
+    "answer": "13"
+  },
+  {
+    "id": "13-15-bahasa-1",
+    "age": "13-15",
+    "subject": "bahasa",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Pemarah",
+      "Pendiam",
+      "Rajin membantu",
+      "Sombong"
+    ],
+    "answer": "Rajin membantu"
+  },
+  {
+    "id": "13-15-bahasa-2",
+    "age": "13-15",
+    "subject": "bahasa",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "Pendiam",
+      "Malas",
+      "Sombong",
+      "Pemarah"
+    ],
+    "answer": "Sombong"
+  },
+  {
+    "id": "13-15-bahasa-3",
+    "age": "13-15",
+    "subject": "bahasa",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "Malas",
+      "Takut",
+      "Pemarah",
+      "Pendiam"
+    ],
+    "answer": "Pemarah"
+  },
+  {
+    "id": "13-15-bahasa-4",
+    "age": "13-15",
+    "subject": "bahasa",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "Takut",
+      "Berkira",
+      "Pendiam",
+      "Malas"
+    ],
+    "answer": "Pendiam"
+  },
+  {
+    "id": "13-15-bahasa-5",
+    "age": "13-15",
+    "subject": "bahasa",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "Berkira",
+      "Bersedih",
+      "Malas",
+      "Takut"
+    ],
+    "answer": "Malas"
+  },
+  {
+    "id": "13-15-bahasa-6",
+    "age": "13-15",
+    "subject": "bahasa",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "Bersedih",
+      "Berani",
+      "Takut",
+      "Berkira"
+    ],
+    "answer": "Takut"
+  },
+  {
+    "id": "13-15-bahasa-7",
+    "age": "13-15",
+    "subject": "bahasa",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Berani",
+      "Cermat",
+      "Berkira",
+      "Bersedih"
+    ],
+    "answer": "Berkira"
+  },
+  {
+    "id": "13-15-bahasa-8",
+    "age": "13-15",
+    "subject": "bahasa",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Cermat",
+      "Rajin membantu",
+      "Bersedih",
+      "Berani"
+    ],
+    "answer": "Bersedih"
+  },
+  {
+    "id": "13-15-bahasa-9",
+    "age": "13-15",
+    "subject": "bahasa",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Rajin membantu",
+      "Sombong",
+      "Berani",
+      "Cermat"
+    ],
+    "answer": "Berani"
+  },
+  {
+    "id": "13-15-bahasa-10",
+    "age": "13-15",
+    "subject": "bahasa",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Sombong",
+      "Pemarah",
+      "Cermat",
+      "Rajin membantu"
+    ],
+    "answer": "Cermat"
+  },
+  {
+    "id": "13-15-sains-1",
+    "age": "13-15",
+    "subject": "sains",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Newton",
+      "Joule",
+      "Watt",
+      "Pascal"
+    ],
+    "answer": "Newton"
+  },
+  {
+    "id": "13-15-sains-2",
+    "age": "13-15",
+    "subject": "sains",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "Joule",
+      "Watt",
+      "Pascal",
+      "Ampere"
+    ],
+    "answer": "Joule"
+  },
+  {
+    "id": "13-15-sains-3",
+    "age": "13-15",
+    "subject": "sains",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "Watt",
+      "Pascal",
+      "Ampere",
+      "Volt"
+    ],
+    "answer": "Watt"
+  },
+  {
+    "id": "13-15-sains-4",
+    "age": "13-15",
+    "subject": "sains",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "Pascal",
+      "Ampere",
+      "Volt",
+      "Ohm"
+    ],
+    "answer": "Pascal"
+  },
+  {
+    "id": "13-15-sains-5",
+    "age": "13-15",
+    "subject": "sains",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "Ampere",
+      "Volt",
+      "Ohm",
+      "Kelvin"
+    ],
+    "answer": "Ampere"
+  },
+  {
+    "id": "13-15-sains-6",
+    "age": "13-15",
+    "subject": "sains",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "Volt",
+      "Ohm",
+      "Kelvin",
+      "Meter"
+    ],
+    "answer": "Volt"
+  },
+  {
+    "id": "13-15-sains-7",
+    "age": "13-15",
+    "subject": "sains",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Ohm",
+      "Kelvin",
+      "Meter",
+      "Kilogram"
+    ],
+    "answer": "Ohm"
+  },
+  {
+    "id": "13-15-sains-8",
+    "age": "13-15",
+    "subject": "sains",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Kelvin",
+      "Meter",
+      "Kilogram",
+      "Newton"
+    ],
+    "answer": "Kelvin"
+  },
+  {
+    "id": "13-15-sains-9",
+    "age": "13-15",
+    "subject": "sains",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Meter",
+      "Kilogram",
+      "Newton",
+      "Joule"
+    ],
+    "answer": "Meter"
+  },
+  {
+    "id": "13-15-sains-10",
+    "age": "13-15",
+    "subject": "sains",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Kilogram",
+      "Newton",
+      "Joule",
+      "Watt"
+    ],
+    "answer": "Kilogram"
+  },
+  {
+    "id": "13-15-pengetahuan-1",
+    "age": "13-15",
+    "subject": "pengetahuan",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Mengadili kes",
+      "Mengurus hospital",
+      "Menggubal undang-undang",
+      "Mengurus sekolah"
+    ],
+    "answer": "Menggubal undang-undang"
+  },
+  {
+    "id": "13-15-pengetahuan-2",
+    "age": "13-15",
+    "subject": "pengetahuan",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "Mengurus hospital",
+      "Membina jalan",
+      "Mengurus sekolah",
+      "Mengadili kes"
+    ],
+    "answer": "Mengurus sekolah"
+  },
+  {
+    "id": "13-15-pengetahuan-3",
+    "age": "13-15",
+    "subject": "pengetahuan",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "Membina jalan",
+      "Mengutip cukai",
+      "Mengadili kes",
+      "Mengurus hospital"
+    ],
+    "answer": "Mengadili kes"
+  },
+  {
+    "id": "13-15-pengetahuan-4",
+    "age": "13-15",
+    "subject": "pengetahuan",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "Mengutip cukai",
+      "Mengawal cuaca",
+      "Mengurus hospital",
+      "Membina jalan"
+    ],
+    "answer": "Mengurus hospital"
+  },
+  {
+    "id": "13-15-pengetahuan-5",
+    "age": "13-15",
+    "subject": "pengetahuan",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "Mengawal cuaca",
+      "Mengajar murid",
+      "Membina jalan",
+      "Mengutip cukai"
+    ],
+    "answer": "Membina jalan"
+  },
+  {
+    "id": "13-15-pengetahuan-6",
+    "age": "13-15",
+    "subject": "pengetahuan",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "Mengajar murid",
+      "Menjaga hutan",
+      "Mengutip cukai",
+      "Mengawal cuaca"
+    ],
+    "answer": "Mengutip cukai"
+  },
+  {
+    "id": "13-15-pengetahuan-7",
+    "age": "13-15",
+    "subject": "pengetahuan",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Menjaga hutan",
+      "Mengurus sukan",
+      "Mengawal cuaca",
+      "Mengajar murid"
+    ],
+    "answer": "Mengawal cuaca"
+  },
+  {
+    "id": "13-15-pengetahuan-8",
+    "age": "13-15",
+    "subject": "pengetahuan",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Mengurus sukan",
+      "Menggubal undang-undang",
+      "Mengajar murid",
+      "Menjaga hutan"
+    ],
+    "answer": "Mengajar murid"
+  },
+  {
+    "id": "13-15-pengetahuan-9",
+    "age": "13-15",
+    "subject": "pengetahuan",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Menggubal undang-undang",
+      "Mengurus sekolah",
+      "Menjaga hutan",
+      "Mengurus sukan"
+    ],
+    "answer": "Menjaga hutan"
+  },
+  {
+    "id": "13-15-pengetahuan-10",
+    "age": "13-15",
+    "subject": "pengetahuan",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Mengurus sekolah",
+      "Mengadili kes",
+      "Mengurus sukan",
+      "Menggubal undang-undang"
+    ],
+    "answer": "Mengurus sukan"
+  },
+  {
+    "id": "16-17-matematik-1",
+    "age": "16-17",
+    "subject": "matematik",
+    "question": "Jika f(x) = 2x + 3, berapakah f(2)?",
+    "options": [
+      "7",
+      "8",
+      "6",
+      "9"
+    ],
+    "answer": "7"
+  },
+  {
+    "id": "16-17-matematik-2",
+    "age": "16-17",
+    "subject": "matematik",
+    "question": "Jika f(x) = 3x + 4, berapakah f(2)?",
+    "options": [
+      "10",
+      "11",
+      "9",
+      "12"
+    ],
+    "answer": "10"
+  },
+  {
+    "id": "16-17-matematik-3",
+    "age": "16-17",
+    "subject": "matematik",
+    "question": "Jika f(x) = 4x + 1, berapakah f(2)?",
+    "options": [
+      "9",
+      "10",
+      "8",
+      "11"
+    ],
+    "answer": "9"
+  },
+  {
+    "id": "16-17-matematik-4",
+    "age": "16-17",
+    "subject": "matematik",
+    "question": "Jika f(x) = 5x + 2, berapakah f(2)?",
+    "options": [
+      "12",
+      "13",
+      "11",
+      "14"
+    ],
+    "answer": "12"
+  },
+  {
+    "id": "16-17-matematik-5",
+    "age": "16-17",
+    "subject": "matematik",
+    "question": "Jika f(x) = 6x + 3, berapakah f(2)?",
+    "options": [
+      "15",
+      "16",
+      "14",
+      "17"
+    ],
+    "answer": "15"
+  },
+  {
+    "id": "16-17-matematik-6",
+    "age": "16-17",
+    "subject": "matematik",
+    "question": "Jika f(x) = 7x + 1, berapakah f(2)?",
+    "options": [
+      "15",
+      "16",
+      "14",
+      "17"
+    ],
+    "answer": "15"
+  },
+  {
+    "id": "16-17-matematik-7",
+    "age": "16-17",
+    "subject": "matematik",
+    "question": "Jika f(x) = 8x + 2, berapakah f(2)?",
+    "options": [
+      "18",
+      "19",
+      "17",
+      "20"
+    ],
+    "answer": "18"
+  },
+  {
+    "id": "16-17-matematik-8",
+    "age": "16-17",
+    "subject": "matematik",
+    "question": "Jika f(x) = 9x + 4, berapakah f(2)?",
+    "options": [
+      "22",
+      "23",
+      "21",
+      "24"
+    ],
+    "answer": "22"
+  },
+  {
+    "id": "16-17-matematik-9",
+    "age": "16-17",
+    "subject": "matematik",
+    "question": "Jika f(x) = 3x + 7, berapakah f(2)?",
+    "options": [
+      "13",
+      "14",
+      "12",
+      "15"
+    ],
+    "answer": "13"
+  },
+  {
+    "id": "16-17-matematik-10",
+    "age": "16-17",
+    "subject": "matematik",
+    "question": "Jika f(x) = 4x + 6, berapakah f(2)?",
+    "options": [
+      "14",
+      "15",
+      "13",
+      "16"
+    ],
+    "answer": "14"
+  },
+  {
+    "id": "16-17-bahasa-1",
+    "age": "16-17",
+    "subject": "bahasa",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Menyenaraikan nama",
+      "Menceritakan mimpi",
+      "Menyokong pendirian dengan alasan dan bukti",
+      "Menghiburkan pembaca sahaja"
+    ],
+    "answer": "Menyokong pendirian dengan alasan dan bukti"
+  },
+  {
+    "id": "16-17-bahasa-2",
+    "age": "16-17",
+    "subject": "bahasa",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "Menceritakan mimpi",
+      "Mengulang tajuk",
+      "Menghiburkan pembaca sahaja",
+      "Menyenaraikan nama"
+    ],
+    "answer": "Menghiburkan pembaca sahaja"
+  },
+  {
+    "id": "16-17-bahasa-3",
+    "age": "16-17",
+    "subject": "bahasa",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "Mengulang tajuk",
+      "Menulis dialog sahaja",
+      "Menyenaraikan nama",
+      "Menceritakan mimpi"
+    ],
+    "answer": "Menyenaraikan nama"
+  },
+  {
+    "id": "16-17-bahasa-4",
+    "age": "16-17",
+    "subject": "bahasa",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "Menulis dialog sahaja",
+      "Menyampaikan arahan",
+      "Menceritakan mimpi",
+      "Mengulang tajuk"
+    ],
+    "answer": "Menceritakan mimpi"
+  },
+  {
+    "id": "16-17-bahasa-5",
+    "age": "16-17",
+    "subject": "bahasa",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "Menyampaikan arahan",
+      "Membuat iklan",
+      "Mengulang tajuk",
+      "Menulis dialog sahaja"
+    ],
+    "answer": "Mengulang tajuk"
+  },
+  {
+    "id": "16-17-bahasa-6",
+    "age": "16-17",
+    "subject": "bahasa",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "Membuat iklan",
+      "Meringkaskan cerita",
+      "Menulis dialog sahaja",
+      "Menyampaikan arahan"
+    ],
+    "answer": "Menulis dialog sahaja"
+  },
+  {
+    "id": "16-17-bahasa-7",
+    "age": "16-17",
+    "subject": "bahasa",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Meringkaskan cerita",
+      "Mencipta watak",
+      "Menyampaikan arahan",
+      "Membuat iklan"
+    ],
+    "answer": "Menyampaikan arahan"
+  },
+  {
+    "id": "16-17-bahasa-8",
+    "age": "16-17",
+    "subject": "bahasa",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Mencipta watak",
+      "Menyokong pendirian dengan alasan dan bukti",
+      "Membuat iklan",
+      "Meringkaskan cerita"
+    ],
+    "answer": "Membuat iklan"
+  },
+  {
+    "id": "16-17-bahasa-9",
+    "age": "16-17",
+    "subject": "bahasa",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Menyokong pendirian dengan alasan dan bukti",
+      "Menghiburkan pembaca sahaja",
+      "Meringkaskan cerita",
+      "Mencipta watak"
+    ],
+    "answer": "Meringkaskan cerita"
+  },
+  {
+    "id": "16-17-bahasa-10",
+    "age": "16-17",
+    "subject": "bahasa",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Menghiburkan pembaca sahaja",
+      "Menyenaraikan nama",
+      "Mencipta watak",
+      "Menyokong pendirian dengan alasan dan bukti"
+    ],
+    "answer": "Mencipta watak"
+  },
+  {
+    "id": "16-17-sains-1",
+    "age": "16-17",
+    "subject": "sains",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Na",
+      "N",
+      "S",
+      "K"
+    ],
+    "answer": "Na"
+  },
+  {
+    "id": "16-17-sains-2",
+    "age": "16-17",
+    "subject": "sains",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "N",
+      "S",
+      "K",
+      "O"
+    ],
+    "answer": "N"
+  },
+  {
+    "id": "16-17-sains-3",
+    "age": "16-17",
+    "subject": "sains",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "S",
+      "K",
+      "O",
+      "H"
+    ],
+    "answer": "S"
+  },
+  {
+    "id": "16-17-sains-4",
+    "age": "16-17",
+    "subject": "sains",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "K",
+      "O",
+      "H",
+      "Fe"
+    ],
+    "answer": "K"
+  },
+  {
+    "id": "16-17-sains-5",
+    "age": "16-17",
+    "subject": "sains",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "O",
+      "H",
+      "Fe",
+      "Ca"
+    ],
+    "answer": "O"
+  },
+  {
+    "id": "16-17-sains-6",
+    "age": "16-17",
+    "subject": "sains",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "H",
+      "Fe",
+      "Ca",
+      "Cl"
+    ],
+    "answer": "H"
+  },
+  {
+    "id": "16-17-sains-7",
+    "age": "16-17",
+    "subject": "sains",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Fe",
+      "Ca",
+      "Cl",
+      "Mg"
+    ],
+    "answer": "Fe"
+  },
+  {
+    "id": "16-17-sains-8",
+    "age": "16-17",
+    "subject": "sains",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Ca",
+      "Cl",
+      "Mg",
+      "Na"
+    ],
+    "answer": "Ca"
+  },
+  {
+    "id": "16-17-sains-9",
+    "age": "16-17",
+    "subject": "sains",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Cl",
+      "Mg",
+      "Na",
+      "N"
+    ],
+    "answer": "Cl"
+  },
+  {
+    "id": "16-17-sains-10",
+    "age": "16-17",
+    "subject": "sains",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Mg",
+      "Na",
+      "N",
+      "S"
+    ],
+    "answer": "Mg"
+  },
+  {
+    "id": "16-17-pengetahuan-1",
+    "age": "16-17",
+    "subject": "pengetahuan",
+    "question": "Apakah antonim bagi perkataan “panas”?",
+    "options": [
+      "Pertambahan hujan",
+      "Pengurangan eksport",
+      "Kenaikan umum harga barang dan perkhidmatan",
+      "Penurunan jumlah penduduk"
+    ],
+    "answer": "Kenaikan umum harga barang dan perkhidmatan"
+  },
+  {
+    "id": "16-17-pengetahuan-2",
+    "age": "16-17",
+    "subject": "pengetahuan",
+    "question": "Apakah kata nama bagi orang yang mengajar?",
+    "options": [
+      "Pengurangan eksport",
+      "Kenaikan nilai mata wang",
+      "Penurunan jumlah penduduk",
+      "Pertambahan hujan"
+    ],
+    "answer": "Penurunan jumlah penduduk"
+  },
+  {
+    "id": "16-17-pengetahuan-3",
+    "age": "16-17",
+    "subject": "pengetahuan",
+    "question": "Apakah tanda baca di akhir ayat tanya?",
+    "options": [
+      "Kenaikan nilai mata wang",
+      "Kadar pengangguran sifar",
+      "Pertambahan hujan",
+      "Pengurangan eksport"
+    ],
+    "answer": "Pertambahan hujan"
+  },
+  {
+    "id": "16-17-pengetahuan-4",
+    "age": "16-17",
+    "subject": "pengetahuan",
+    "question": "Apakah kata kerja dalam “Ali berlari pantas”?",
+    "options": [
+      "Kadar pengangguran sifar",
+      "Pertambahan hasil tanaman",
+      "Pengurangan eksport",
+      "Kenaikan nilai mata wang"
+    ],
+    "answer": "Pengurangan eksport"
+  },
+  {
+    "id": "16-17-pengetahuan-5",
+    "age": "16-17",
+    "subject": "pengetahuan",
+    "question": "Apakah bahasa kebangsaan Malaysia?",
+    "options": [
+      "Pertambahan hasil tanaman",
+      "Penurunan cukai",
+      "Kenaikan nilai mata wang",
+      "Kadar pengangguran sifar"
+    ],
+    "answer": "Kenaikan nilai mata wang"
+  },
+  {
+    "id": "16-17-pengetahuan-6",
+    "age": "16-17",
+    "subject": "pengetahuan",
+    "question": "Apakah maksud “jujur”?",
+    "options": [
+      "Penurunan cukai",
+      "Kenaikan simpanan",
+      "Kadar pengangguran sifar",
+      "Pertambahan hasil tanaman"
+    ],
+    "answer": "Kadar pengangguran sifar"
+  },
+  {
+    "id": "16-17-pengetahuan-7",
+    "age": "16-17",
+    "subject": "pengetahuan",
+    "question": "Apakah imbuhan pada perkataan “bermain”?",
+    "options": [
+      "Kenaikan simpanan",
+      "Pengurangan import",
+      "Pertambahan hasil tanaman",
+      "Penurunan cukai"
+    ],
+    "answer": "Pertambahan hasil tanaman"
+  },
+  {
+    "id": "16-17-pengetahuan-8",
+    "age": "16-17",
+    "subject": "pengetahuan",
+    "question": "Apakah penjodoh bilangan bagi pensel?",
+    "options": [
+      "Pengurangan import",
+      "Kenaikan umum harga barang dan perkhidmatan",
+      "Penurunan cukai",
+      "Kenaikan simpanan"
+    ],
+    "answer": "Penurunan cukai"
+  },
+  {
+    "id": "16-17-pengetahuan-9",
+    "age": "16-17",
+    "subject": "pengetahuan",
+    "question": "Apakah sinonim bagi “gembira”?",
+    "options": [
+      "Kenaikan umum harga barang dan perkhidmatan",
+      "Penurunan jumlah penduduk",
+      "Kenaikan simpanan",
+      "Pengurangan import"
+    ],
+    "answer": "Kenaikan simpanan"
+  },
+  {
+    "id": "16-17-pengetahuan-10",
+    "age": "16-17",
+    "subject": "pengetahuan",
+    "question": "Apakah kata sendi bagi “___ sekolah”?",
+    "options": [
+      "Penurunan jumlah penduduk",
+      "Pertambahan hujan",
+      "Pengurangan import",
+      "Kenaikan umum harga barang dan perkhidmatan"
+    ],
+    "answer": "Pengurangan import"
   }
-};
+];

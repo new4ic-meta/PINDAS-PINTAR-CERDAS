@@ -1,18 +1,16 @@
 {
-  "name": "PINDAS + PIYDEN + AFIDAN",
-  "short_name": "PINDAS",
-  "start_url": "./index.html",
-  "scope": "./",
+  "name": "PINDAS • PIYDEN • AFIDAN",
+  "short_name": "PPA Digital",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#081225",
-  "theme_color": "#091225",
-  "description": "Platform pembelajaran, permainan dan pembantu digital.",
+  "background_color": "#07101f",
+  "theme_color": "#07101f",
   "icons": [
     {
-      "src": "./icon.svg",
+      "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }

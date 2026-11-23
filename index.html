@@ -1,104 +1,38 @@
 <!doctype html>
 <html lang="ms">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#091225">
-<meta name="description" content="PINDAS, PIYDEN dan AFIDAN dalam satu platform digital.">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07101f"><meta name="description" content="PINDAS, PIYDEN dan AFIDAN — platform pembelajaran dan digital.">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><link rel="stylesheet" href="styles.css">
 <title>PINDAS • PIYDEN • AFIDAN</title>
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" href="./icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<header class="top">
-  <div class="brand"><span class="brand-mark">🪷</span><div><h1>PINDAS</h1><p>PINTAR CERDAS · Ilmu Membina Masa Depan</p></div></div>
-  <div class="offline" id="networkStatus">● Menyediakan aplikasi…</div>
-</header>
-
-<nav class="main-nav" aria-label="Modul utama">
-  <button class="nav active" data-page="learn">🪷 PINDAS</button>
-  <button class="nav" data-page="play">⚡ PIYDEN</button>
-  <button class="nav" data-page="afidan">🤖 AFIDAN</button>
-</nav>
-
+<header class="topbar"><a class="brand" href="#" aria-label="PINDAS">🪷 <span>PINDAS</span></a><nav><button data-tab="learn" class="nav active">PINDAS</button><button data-tab="game" class="nav">PIYDEN</button><button data-tab="afidan" class="nav">AFIDAN</button></nav></header>
 <main>
-<section id="page-learn" class="page active">
-  <div class="hero">
-    <span class="eyebrow">PUSAT PEMBELAJARAN DIGITAL</span>
-    <h2>Belajar ikut umur.<br><em>Ulang kaji ikut rentak sendiri.</em></h2>
-    <p>Pilih kumpulan umur, pilih subjek dan jawab soalan. Kemajuan asas disimpan pada peranti ini.</p>
-  </div>
-  <div class="panel">
-    <div class="section-head"><div><span class="eyebrow">LANGKAH 01</span><h3>Pilih kumpulan umur</h3></div></div>
-    <div class="age-grid" id="ageChoices">
-      <button class="age selected" data-age="4-6">4–6 Tahun</button>
-      <button class="age" data-age="7-9">7–9 Tahun</button>
-      <button class="age" data-age="10-12">10–12 Tahun</button>
-      <button class="age" data-age="13-15">13–15 Tahun</button>
-      <button class="age" data-age="16-17">16–17 Tahun</button>
-    </div>
-    <div class="section-head subject-head"><div><span class="eyebrow">LANGKAH 02</span><h3>Pilih bidang</h3></div></div>
-    <div id="subjectChoices" class="subject-grid"></div>
-    <div class="quiz-card" id="quizCard">
-      <div class="quiz-meta"><span id="quizSubject">Matematik</span><span id="questionCount">Soalan 1</span></div>
-      <h3 id="questionText">Pilih umur dan bidang untuk bermula.</h3>
-      <div id="answerChoices" class="answers"></div>
-      <div id="quizFeedback" class="feedback" aria-live="polite"></div>
-      <div class="quiz-actions">
-        <button id="nextQuestion" class="primary" disabled>Soalan seterusnya →</button>
-        <button id="restartQuiz" class="ghost">Ulang bidang</button>
-      </div>
-    </div>
-    <div class="progress-line"><span id="progressFill"></span></div>
-    <p class="small" id="progressText">Kemajuan sesi: 0 dijawab</p>
-  </div>
-  <div class="panel note-panel">
-    <h3>📶 Mod luar talian</h3>
-    <p>Selepas laman dibuka ketika ada internet dan fail berjaya dicache, bahan pembelajaran yang disertakan boleh digunakan tanpa internet. Fungsi yang memerlukan data luar atau perkhidmatan pihak ketiga tidak tersedia ketika offline.</p>
-  </div>
+<section class="hero"><p class="eyebrow">PINTAR CERDAS · ILMU MEMBINA MASA DEPAN</p><h1>Satu ruang. Tiga pengalaman.</h1><p>Belajar, bermain dan cipta idea — direka untuk telefon dan komputer.</p></section>
+<section id="learn" class="panel active">
+<div class="section-head"><div><p class="eyebrow">🪷 PINDAS</p><h2>Pusat Pembelajaran Digital</h2><p>Belajar ikut umur. Ulang kaji ikut rentak sendiri.</p></div><span class="pill">BOLEH OFFLINE*</span></div>
+<div class="card"><label for="age">Pilih kumpulan umur</label><select id="age"><option value="4-6">4–6 Tahun</option><option value="7-9" selected>7–9 Tahun</option><option value="10-12">10–12 Tahun</option><option value="13-15">13–15 Tahun</option><option value="16-17">16–17 Tahun</option></select>
+<label for="subject">Pilih subjek</label><select id="subject"><option value="campur">Campuran</option><option value="matematik">Matematik</option><option value="bahasa">Bahasa</option><option value="sains">Sains</option><option value="pengetahuan">Pengetahuan Am</option></select>
+<div class="stats"><div><b id="score">0</b><small>Skor sesi</small></div><div><b id="answered">0</b><small>Dijawab</small></div><div><b id="remaining">—</b><small>Baki soalan</small></div></div>
+<div id="quiz" class="quiz"><p class="muted">Tekan mula untuk memulakan latihan.</p></div>
+<div class="actions"><button id="startQuiz" class="primary">Mula / Soalan seterusnya</button><button id="resetQuiz" class="secondary">Set semula sesi</button></div><p id="quizFeedback" class="feedback" aria-live="polite"></p></div>
+<p class="note">*Soalan dan fungsi asas disimpan pada peranti selepas fail dimuatkan. Sambungan internet mungkin diperlukan untuk pemasangan kali pertama.</p>
 </section>
-
-<section id="page-play" class="page">
-  <div class="hero compact"><span class="eyebrow">PIYDEN ARCADE · V2.0</span><h2>NEON RUSH</h2><p>Uji fokus dan kelajuan. Sentuh orb untuk mengumpul mata.</p></div>
-  <div class="panel game-panel">
-    <div class="stats">
-      <div><small>SKOR</small><strong id="gameScore">0</strong></div>
-      <div><small>MASA</small><strong id="gameTime">45</strong></div>
-      <div><small>REKOD</small><strong id="gameBest">0</strong></div>
-    </div>
-    <div class="combo">COMBO <b id="gameCombo">x3</b></div>
-    <div class="game-controls"><button id="soundToggle" class="ghost">🔊 Bunyi: ON</button><button id="gameRestart" class="ghost">↻ Mula semula</button></div>
-    <div id="gameArea" class="game-area">
-      <div id="gameOverlay" class="game-overlay"><div><h3 id="gameOverlayTitle">NEON RUSH</h3><p id="gameOverlayText">Biru +10 · Merah −15 · Emas +50</p><button id="gameStart" class="primary">MULA MAIN</button></div></div>
-    </div>
-    <p class="game-hint">🔵 BIRU +10 &nbsp; 🔴 MERAH −15 &nbsp; 🟡 EMAS +50</p>
-  </div>
+<section id="game" class="panel">
+<div class="section-head"><div><p class="eyebrow">⚡ PIYDEN · NEON RUSH V2.0</p><h2>Cabaran 45 Saat</h2><p>Kawal pemain dan kumpul orb untuk skor tertinggi.</p></div><span class="pill">45 SEC</span></div>
+<div class="game-stats"><span>MASA <b id="time">45</b></span><span>SKOR <b id="gameScore">0</b></span><span>COMBO <b id="combo">0</b></span></div>
+<canvas id="gameCanvas" width="720" height="420" aria-label="Permainan Neon Rush"></canvas>
+<div class="game-controls"><button id="gameStart" class="primary">Mula permainan</button><div class="dpad"><button data-dir="up">▲</button><div><button data-dir="left">◀</button><button data-dir="down">▼</button><button data-dir="right">▶</button></div></div></div>
+<p class="note">Gerakkan pemain menggunakan kekunci anak panah/WASD atau butang pada skrin. Orb biru +10, merah −15, emas +50.</p><p id="gameMsg" class="feedback" aria-live="polite"></p>
 </section>
-
-<section id="page-afidan" class="page">
-  <div class="hero compact"><span class="eyebrow">AFIDAN · PEMBANTU DIGITAL</span><h2>Idea, cipta dan urus.</h2><p>Alat bantuan ringkas yang boleh digunakan secara asas tanpa akaun atau API key.</p></div>
-  <div class="afidan-grid" id="afidanTools">
-    <button class="tool-card" data-tool="assistant"><span>💬</span><b>AI Assistant</b><small>Pembantu teks asas</small></button>
-    <button class="tool-card" data-tool="writer"><span>✍️</span><b>Penulis Kandungan</b><small>Draf dan idea penulisan</small></button>
-    <button class="tool-card" data-tool="video"><span>🎬</span><b>AI Video Planner</b><small>Rangka video pendek</small></button>
-    <button class="tool-card" data-tool="robotics"><span>🦾</span><b>Robotics</b><small>Nota dan idea robotik</small></button>
-    <button class="tool-card" data-tool="home"><span>🏠</span><b>Smart Home</b><small>Senarai idea rumah pintar</small></button>
-    <button class="tool-card" data-tool="cyber"><span>🛡️</span><b>Cybersecurity</b><small>Tip keselamatan digital</small></button>
-    <button class="tool-card" data-tool="shopping"><span>🛍️</span><b>Smart Shopping</b><small>Banding keperluan dan bajet</small></button>
-  </div>
-  <div class="panel assistant-panel">
-    <div class="section-head"><div><span class="eyebrow">RUANG KERJA AFIDAN</span><h3 id="afidanTitle">AI Assistant</h3></div><span class="local-badge">ASAS · OFFLINE</span></div>
-    <label for="afidanInput">Apa yang anda mahu sediakan?</label>
-    <textarea id="afidanInput" rows="4" placeholder="Taip idea atau arahan ringkas di sini…"></textarea>
-    <button id="afidanRun" class="primary">Jana bantuan</button>
-    <div id="afidanOutput" class="afidan-output" aria-live="polite">Pilih salah satu daripada tujuh fungsi di atas untuk bermula.</div>
-    <p class="small">Nota: Modul ini menyediakan templat dan bantuan asas secara setempat. Ia bukan model AI awan dan tidak menghantar data ke pelayan. Fungsi AI sebenar memerlukan sambungan backend yang selamat dan konfigurasi berasingan.</p>
-  </div>
+<section id="afidan" class="panel">
+<div class="section-head"><div><p class="eyebrow">🤖 AFIDAN</p><h2>Ruang Kerja Digital</h2><p>Susun idea, draf dan tugasan dengan bantuan pintar.</p></div><span id="aiStatus" class="pill">ASAS · OFFLINE</span></div>
+<div class="module-grid"><button class="module active" data-module="assistant">AI Assistant</button><button class="module" data-module="agent">AI Agent</button><button class="module" data-module="video">AI Video</button><button class="module" data-module="robotics">AI Robotics</button><button class="module" data-module="home">Smart Home</button><button class="module" data-module="security">Cybersecurity</button><button class="module" data-module="shopping">AI Shopping</button></div>
+<div class="card"><label for="request">Apa yang anda mahu sediakan?</label><textarea id="request" rows="4" placeholder="Contoh: Resepi tomyam padu"></textarea><div class="actions"><button id="generate" class="primary">Jana bantuan</button><button id="clearAI" class="secondary">Kosongkan</button></div><h3>Hasil bantuan</h3><div id="aiOutput" class="output" aria-live="polite">Masukkan permintaan dan tekan “Jana bantuan”.</div><p class="note">Mod offline menyediakan bantuan asas berasaskan templat. Jawapan AI generatif memerlukan sambungan ONLINE dan API yang sah pada pelayan.</p></div>
 </section>
+<section class="card payment-info"><p class="eyebrow">PEMBAYARAN</p><h2>Persediaan pembayaran</h2><p>Ruang integrasi TNG Business / DuitNow QR disediakan. Pengesahan transaksi mesti dibuat melalui penyedia pembayaran atau semakan pelayan — bukan berdasarkan paparan QR atau mesej pelanggan sahaja.</p><span class="pill">BELUM DIHUBUNGKAN</span></section>
 </main>
-<footer>🪷 PINDAS + ⚡ PIYDEN + 🤖 AFIDAN · Edisi gabungan</footer>
-<script src="./data.js"></script>
-<script src="./app.js"></script>
-</body>
-</html>
+<footer>© PINDAS · PIYDEN · AFIDAN <span>Ilmu Membina Masa Depan</span></footer>
+<script src="data.js"></script><script src="app.js"></script>
+</body></html>
